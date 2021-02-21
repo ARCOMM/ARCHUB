@@ -8,22 +8,30 @@ use \stdClass;
 use Carbon\Carbon;
 use App\Helpers\ArmaConfig;
 use App\Helpers\ArmaScript;
+use App\Models\Portal\User;
+use Spatie\MediaLibrary\Media;
 use App\Helpers\ArmaConfigError;
+use App\Notifications\MissionUpdated;
+use App\Notifications\MissionVerified;
+use Illuminate\Database\Eloquent\Model;
+use App\Notifications\MissionPublished;
+use App\Notifications\MissionNoteAdded;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\MentionedInComment;
+use Kingsley\Mentions\Traits\HasMentions;
+use Kingsley\References\Models\Reference;
+use App\Notifications\MissionCommentAdded;
+use App\Models\Operations\OperationMission;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use App\Helpers\PBOMission\PBOMission;
 use App\Helpers\PBOMission\PBOFile\PBOFile;
-use App\Models\Portal\User;
-use App\Models\Operations\OperationMission;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Mission extends Model implements HasMedia
+class Mission extends Model implements HasMediaConversions
 {
-    use Notifiable;
-    use InteractsWithMedia;
+    use Notifiable,
+        HasMediaTrait,
+        HasMentions;
 
     public $factions = [
         0 => "Opfor",
@@ -112,19 +120,12 @@ class Mission extends Model implements HasMedia
     ];
 
     /**
-     * Side represented as an integer as used by TMF_OrbatSettings
-     * From: https://community.bistudio.com/wiki/BIS_fnc_sideID
-     * 
+     * Appended attributes.
+     *
      * @var array
      */
-    public static $sideMap = [
-        "opfor" => 0,
-        "east" => 0,
-        "blufor" => 1,
-        "west" => 1,
-        "independent" => 2,
-        "resistance" => 2,
-        "civilian" => 3
+    protected $appends = [
+        'ref'
     ];
 
     /**
@@ -135,6 +136,68 @@ class Mission extends Model implements HasMedia
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+
+        static::created(function (Model $model) {
+            $model->reference()->save(
+                new Reference([
+                    'hash' => $model->makeReferenceHash()
+                ])
+            );
+        });
+    }
+
+    /**
+     * Gets the reference for the model.
+     *
+     * @return Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function reference()
+    {
+        return $this->morphOne(Reference::class, 'model');
+    }
+
+    /**
+     * Makes a new reference hash.
+     *
+     * @return string
+     */
+    public function makeReferenceHash()
+    {
+        if (property_exists($this, 'referencePrefix')) {
+            if (is_null($this->referencePrefix)) {
+                return str_random(12);
+            } else {
+                return $this->referencePrefix . '_' . str_random(12);
+            }
+        }
+
+        if (config('references.prefix')) {
+            $prefix = substr(strtolower(class_basename(get_class($this))), 0, 3);
+
+            return $prefix . '_' . str_random(12);
+        }
+
+        return str_random(12);
+    }
+
+    /**
+     * Gets the ref attribute.
+     *
+     * @return string
+     */
+    public function getRefAttribute()
+    {
+        return optional($this->reference)->hash;
+    }
+
+    /**
+     * Discord notification channel.
+     *
+     * @return any
+     */
+    public function routeNotificationForDiscord()
+    {
+        return config('services.discord.channel_id');
     }
 
     /**
@@ -142,7 +205,7 @@ class Mission extends Model implements HasMedia
      *
      * @return void
      */
-    public function registerMediaConversions(Media $media = null): void
+    public function registerMediaConversions(Media $media = null)
     {
         $this->addMediaConversion('thumb')
             ->width(384)
@@ -164,6 +227,24 @@ class Mission extends Model implements HasMedia
         }
 
         return json_decode(json_decode($value));
+    }
+
+    /**
+     * Gets the unread comments on the mission.
+     *
+     * @return Collection App\Models\Missions\MissionComment
+     */
+    public function unreadComments()
+    {
+        $mission = $this;
+
+        $filtered = auth()->user()->unreadNotifications->filter(function ($item) use ($mission) {
+            return
+                $item->type == MissionCommentAdded::class &&
+                $item->data['comment']['mission_id'] == $mission->id;
+        });
+
+        return $filtered;
     }
 
     /**
@@ -374,7 +455,7 @@ class Mission extends Model implements HasMedia
 
         $download = 'ARC_' .
             strtoupper($this->mode == 'adversarial' ? 'tvt' : $this->mode) . '_' .
-            Str::studly($this->display_name) . '_' .
+            studly_case($this->display_name) . '_' .
             trim(substr($this->user->username, 0, 4)) . '_' .
             $revisions . '.' .
             $this->map->class_name . '.' . $format;
@@ -568,7 +649,7 @@ class Mission extends Model implements HasMedia
     public function hasAddon($key)
     {
         foreach ($this->addons() as $addonName) {
-            if (Str::startsWith(strtolower($addonName), strtolower($key))) {
+            if (starts_with(strtolower($addonName), strtolower($key))) {
                 return true;
             }
         }
@@ -589,7 +670,7 @@ class Mission extends Model implements HasMedia
         $contents = $mission->export();
 
         if ($mission->error) {
-            return new ArmaConfigError($mission->errorReason);
+            return new ArmaConfigError($mission->error);
         }
 
         $validationError = $this->ValidateMissionContents($contents);
@@ -605,12 +686,6 @@ class Mission extends Model implements HasMedia
         $briefingsArray = $this->parseBriefings($contents['mission']['briefings']);
         $this->briefings = json_encode($briefingsArray);
         $this->dependencies = json_encode($contents['mission']['dependencies']);
-        try {
-            $this->orbatSettings = json_encode($this->orbatFromOrbatSettings($contents['mission']['orbatSettings'], $contents['mission']['groups']));
-        } catch (Exception $e) {
-            $this->orbatSettings = json_encode(array("Error extracting ORBAT:" => array($e->getMessage())));
-        }
-
         if(array_key_exists('date', $contents['mission'])) {
             $this->date = $contents['mission']['date'];
         }
@@ -857,7 +932,7 @@ class Mission extends Model implements HasMedia
         if($briefings != null) {
             foreach($briefings as $briefing) {
                 $factionId = $this->parseFactionId($briefing[1][0]);
-                if(!$factionLocks[$factionId] || auth()->user()->can('test-missions') || $this->isMine()) {
+                if(!$factionLocks[$factionId] || auth()->user()->hasPermission('mission:view_locked_briefings') || $this->isMine()) {
                     $nav = new stdClass();
                     $nav->name = $briefing[0];
                     $nav->faction = $factionId;
@@ -1013,172 +1088,70 @@ class Mission extends Model implements HasMedia
     }
 
     /**
-     * Returns the mission's orbat
+     * Gets the mission note notifications.
      *
-     * @return array
+     * @return Collection
      */
-    public function getOrbat()
+    public function noteNotifications()
     {
-        return (array)json_decode($this->orbatSettings);
-    }
+        $filtered = auth()->user()->unreadNotifications->filter(function ($item) {
+            return
+                $item->type == MissionNoteAdded::class &&
+                $item->data['note']['mission_id'] == $this->id;
+        });
 
-    public function orbat($faction)
-    {
-        $orbat = $this->getOrbat();
-        if (isset($orbat[$faction])) {
-            return (array)$orbat[$faction];
-        }
-
-        return (array)array();
-    }
-
-    public function orbatFactions()
-    {
-        $orbat = $this->getOrbat();
-        if (is_null($orbat)) {
-            return array();
-        }
-
-        return array_keys($orbat);
+        return $filtered;
     }
 
     /**
-     * Returns a minimal version of orbatSettings for displaying on the website
+     * Gets the mission comments notifications.
      *
-     * @return array
+     * @return Collection
      */
-    private function orbatFromOrbatSettings(array $orbats, array &$groups)
+    public function commentNotifications()
     {
-        foreach ($orbats as &$faction) {
-            $this->minimiseLevel($faction[1]);
-            $faction = $faction[1];
-        }
+        $filtered = auth()->user()->unreadNotifications->filter(function ($item) {
+            return
+                ($item->type == MissionCommentAdded::class &&
+                $item->data['comment']['mission_id'] == $this->id) ||
+                ($item->type == MentionedInComment::class &&
+                $item->data['mission_id'] == $this->id);
+        });
 
-        $orbatGroups = array();
-        foreach ($groups as &$group) {
-            if (isset($group['orbatParent'])) {
-                $faction = self::$sideMap[$group['side']];
-                $orbatParent = $group['orbatParent'];
-                $minimalGroup = array(isset($group['name']) ? $group['name'] : "NOT NAMED", array());
-
-                foreach ($group['units'] as $unit) {
-                    $desc = explode("@", $unit['description'])[0];
-                    array_push($minimalGroup[1], array($desc));
-                }
-
-                if (!isset($orbatGroups[$faction])) {
-                    $orbatGroups[$faction] = array();
-                }
-
-                if (!isset($orbatGroups[$faction][$orbatParent])) {
-                    $orbatGroups[$faction][$orbatParent] = array($minimalGroup);
-                } else {
-                    array_push($orbatGroups[$faction][$orbatParent], $minimalGroup);
-                }
-            }
-        }
-
-        foreach ($orbats as $faction => &$orbat) {
-            if (!is_array($orbat)) {
-                unset($orbats[$faction]);
-                continue;
-            }
-
-            $orbatModified = false;
-            $this->replaceIntWithUnits($orbat[1], $faction, $orbatGroups, $orbatModified);
-
-            if (!$orbatModified) {
-                unset($orbats[$faction]);
-            }
-        }
-
-        $this->removeAllIntsAndEmptyArrays($orbats);
-        // Reindex array after everything has been unset
-        $orbats = array_map('array_values', $orbats);
-
-        $namedOrbats = array();
-        foreach($orbats as $faction => &$orbat) {
-            $factionName = array_search($faction, self::$sideMap);
-            $namedOrbats[$factionName] = &$orbat;
-        }
-
-        return $namedOrbats;
+        return $filtered;
     }
 
     /**
-     * Recursive function used by $this->orbatFromOrbatSettings()
+     * Gets the mission verification notifications.
+     *
+     * @return Collection
      */
-    private function minimiseLevel(array &$level)
+    public function verifiedNotifications()
     {
-        $name = strlen($level[0][1]) > 0 ? $level[0][1] : $level[0][4]; //If an abbrievation is defined then use it, otherwise full name
-        $uniqueId = $level[0][0];
-        $level[0] = $name;
+        $filtered = auth()->user()->unreadNotifications->filter(function ($item) {
+            return
+                $item->type == MissionVerified::class &&
+                $item->data['mission']['id'] == $this->id;
+        });
 
-        if (count($level[1]) === 0) {
-            $level[1] = array($uniqueId);
-        } else {
-            foreach ($level[1] as $i => &$subLevel) {
-                $this->minimiseLevel($subLevel);
-            }
-            array_unshift($level[1], $uniqueId);
-        }
+        return $filtered;
     }
 
-    private function replaceIntWithUnits(array &$item, int &$faction, array &$orbatGroups, bool &$orbatModified)
-    { 
-        if (is_int($item[0])) {
-            if (isset($orbatGroups[$faction][$item[0]])) {
-                $units = &$orbatGroups[$faction][$item[0]];
-                unset($item[0]);
-                
-                $units = array_reverse($units);
-                
-                foreach ($units as $unit) {
-                    array_unshift($item, $unit);
-                }
-                $orbatModified = true;
-            }
-            else {
-                unset($item[0]);
-            }
-        }
-
-        foreach($item as &$subitem) {
-            if (is_array($subitem)) {
-                $this->replaceIntWithUnits($subitem, $faction, $orbatGroups, $orbatModified);
-            }
-        }
-    }
-
-    private function removeAllIntsAndEmptyArrays(array &$item)
+    /**
+     * Gets the mission updated/published notifications.
+     *
+     * @return Collection
+     */
+    public function stateNotifications()
     {
-        // Only have name + empty array - remove entire item
-        if (isset($item[1]) && is_array($item[1]) && empty($item[1])) {
-            $item = NULL;
-            return;
-        }
+        $filtered = auth()->user()->unreadNotifications->filter(function ($item) {
+            return
+                ($item->type == MissionPublished::class &&
+                $item->data['mission']['id'] == $this->id) ||
+                ($item->type == MissionUpdated::class &&
+                $item->data['mission_id'] == $this->id);
+        });
 
-        // Recursively find every int and empty array and replace them will NULL
-        foreach ($item as &$subitem) {
-            if (is_int($subitem)) {
-                $subitem = NULL;
-            } elseif (is_array($subitem)) {
-                if (empty($subitem)) {
-                    $subitem = NULL;
-                } else {
-                    $this->removeAllIntsAndEmptyArrays($subitem);
-                }
-            }
-        }
-
-        // Double check if array is empty now that all the children have been unset
-        if (isset($item[1]) && is_array($item[1]) && empty($item[1])) {
-            $item = NULL;
-            return;
-        }
-
-        // unset() used on a &reference will unset the reference but not the original value
-        // instead we set everything to NULL and use array_filter, which will unset the original value
-        $item = array_filter($item);
+        return $filtered;
     }
 }
