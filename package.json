@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "showdown": "^1.8.6",
-        "axios": "^0.17",
+        "axios": "^0.21",
         "bootstrap": "4.0.0-beta.3",
         "bootstrap-material-design": "4.0.0-beta.4",
         "collect.js": "^3.0.46",
