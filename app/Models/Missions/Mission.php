@@ -670,7 +670,7 @@ class Mission extends Model implements HasMediaConversions
         $contents = $mission->export();
 
         if ($mission->error) {
-            return new ArmaConfigError($mission->error);
+            return new ArmaConfigError($mission->errorReason);
         }
 
         $validationError = $this->ValidateMissionContents($contents);
