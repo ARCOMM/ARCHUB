@@ -47,6 +47,7 @@ Route::get('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@show'
 Route::get('/hub/applications/{status}', 'Join\JoinController@index');
 
 Route::resource('/hub/applications', 'Join\JoinController');
+//});
 
 Route::group(['middleware' => 'can:manage-applications'], function () {
     Route::resource('/hub/applications/api/emails', 'Join\EmailTemplateController');
