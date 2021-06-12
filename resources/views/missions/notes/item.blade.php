@@ -5,7 +5,7 @@
     </span>
 
     <span class="mission-comment-item-username">
-        {{ $note->user->username }}
+        {{ $note->user->name }}
     </span>
 
     <span class="mission-comment-item-timestamp">

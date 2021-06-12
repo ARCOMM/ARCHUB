@@ -54,7 +54,7 @@
         </h1>
 
         <h3 class="mission-author">
-            By {{ $mission->user->username }}
+            By {{ $mission->user->name }}
         </h3>
 
         <header class="mission-nav">

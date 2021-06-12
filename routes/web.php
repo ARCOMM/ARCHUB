@@ -39,15 +39,14 @@ Route::group(['middleware' => 'can:view-applications'], function () {
     Route::post('/hub/applications/api/send-email', 'Join\JoinController@email');
     Route::get('/hub/applications/api/email-submissions', 'Join\JoinController@emailSubmissions');
 
-    // Statuses
-    Route::post('/hub/applications/api/status', 'Join\JoinStatusController@store');
-    Route::put('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@update');
-    Route::get('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@show');
+// Statuses
+Route::post('/hub/applications/api/status', 'Join\JoinStatusController@store');
+Route::put('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@update');
+Route::get('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@show');
 
-    Route::get('/hub/applications/{status}', 'Join\JoinController@index');
+Route::get('/hub/applications/{status}', 'Join\JoinController@index');
 
-    Route::resource('/hub/applications', 'Join\JoinController');
-});
+Route::resource('/hub/applications', 'Join\JoinController');
 
 Route::group(['middleware' => 'can:manage-applications'], function () {
     Route::resource('/hub/applications/api/emails', 'Join\EmailTemplateController');

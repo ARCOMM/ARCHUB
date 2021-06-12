@@ -266,7 +266,7 @@ class MissionController extends Controller
             Discord::missionUpdate($content, $mission, true);
         }
 
-        $updated_by = auth()->user()->username;
+        $updated_by = auth()->user()->name;
 
         return "Verified by {$updated_by}";
     }

@@ -6,7 +6,7 @@
         </span>
 
         <span class="mission-comment-item-username">
-            {{ $comment->user->username }}
+            {{ $comment->user->name }}
         </span>
 
         <span class="mission-comment-item-timestamp" title="{{ $comment->created_at }}">
