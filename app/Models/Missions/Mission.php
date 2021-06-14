@@ -51,13 +51,21 @@ class Mission extends Model implements HasMedia
     ];
 
     /**
+     * Attribute casts.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'loadout_addons' => 'array'
+    ];
+
+    /**
      * The addons that should be warned from using.
      *
      * @var array
      */
     public $addonWarnings = [
-        'rhs',
-        'cfp'
+        'rhs'
     ];
 
     /**
@@ -100,7 +108,7 @@ class Mission extends Model implements HasMedia
     protected $gamemodes = [
         'coop' => 'Cooperative',
         'adversarial' => 'Adversarial',
-        'arcade' => 'Arcade'
+        'preop' => 'Pre-Operation'
     ];
 
     /**
@@ -165,9 +173,9 @@ class Mission extends Model implements HasMedia
      */
     public static function allPast()
     {
-        return Mission::with('user')->with('map')
-            ->where('last_played', '!=', null)
+        return static::where('last_played', '!=', null)
             ->where('last_played', '<', Carbon::now()->toDateTimeString())
+            // ->where('verified', true)
             ->orderBy('last_played', 'desc')
             ->get();
     }
@@ -179,8 +187,8 @@ class Mission extends Model implements HasMedia
      */
     public static function allNew()
     {
-        return Mission::with('user')->with('map')
-            ->where('last_played', null)
+        return static::where('last_played', null)
+            // ->where('verified', true)
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -190,9 +198,9 @@ class Mission extends Model implements HasMedia
      *
      * @return boolean
      */
-    public function hasBeenPlayed()
+    public function isNew()
     {
-        return !is_null($this->last_played);
+        return is_null($this->last_played);
     }
 
     /**
@@ -283,13 +291,17 @@ class Mission extends Model implements HasMedia
      */
     public function banner()
     {
+        if (config('app.env') === 'local') {
+            return '';
+        }
+
         $media = $this->photos();
 
         if (count($media) > 0) {
             return $media[0]->getUrl();
+        } else {
+            return '';
         }
-        
-        return '';
     }
 
     /**
@@ -333,7 +345,12 @@ class Mission extends Model implements HasMedia
             return $media[0]->getUrl('thumb');
         }
 
-        return url('/images/arcomm-placeholder.jpg');
+        if (!is_null($this->map->image_2d)) {
+            return url($this->map->image_2d);
+        }
+
+        // return url('/images/arcomm-placeholder.jpg');
+        return '';
     }
 
     /**
@@ -351,13 +368,18 @@ class Mission extends Model implements HasMedia
      *
      * @return string
      */
-    public function exportedName()
+    public function exportedName($format = 'pbo')
     {
         $revisions = $this->revisions()->count();
-        $filename = pathinfo($this->original["file_name"], PATHINFO_FILENAME);
-        [$filenameNoMap, $map] = explode('.', $filename, 2);
 
-        return "{$filenameNoMap}_{$revisions}.{$map}.pbo";
+        $download = 'ARC_' .
+            strtoupper($this->mode == 'adversarial' ? 'tvt' : $this->mode) . '_' .
+            Str::studly($this->display_name) . '_' .
+            trim(substr($this->user->name, 0, 4)) . '_' .
+            $revisions . '.' .
+            $this->map->class_name . '.' . $format;
+
+        return $download;
     }
 
     /**
@@ -425,17 +447,92 @@ class Mission extends Model implements HasMedia
     }
 
     /**
+     * Gets the full path of the armake exe.
+     *
+     * @return string
+     */
+    public static function armake()
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return resource_path('utils/armake.exe');
+        } else {
+            return 'armake';
+        }
+    }
+
+    /**
      * Creates the downloadable file and returns its full URL.
      *
      * @return string
      */
-    public function download()
+    public function download($format = 'pbo')
     {
-        return Storage::cloud()
-        ->getAdapter()
-        ->getBucket()
-        ->object($this->cloud_pbo)
-        ->signedUrl(new \DateTime('10 min'));
+        $path_to_file = ($format == 'pbo') ? $this->cloud_pbo : $this->cloud_zip;
+
+        if (strlen($path_to_file) == 0) {
+            $path_to_file = "missions/{$this->user_id}/{$this->id}/{$this->exportedName($format)}";
+        }
+
+        $command = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ?
+            'gsutil ' :
+            '/usr/bin/python /usr/lib/google-cloud-sdk/bin/bootstrapping/gsutil.py ';
+
+        $signed_url = shell_exec(
+            $command .
+            'signurl -d 10m ' .
+            base_path('gcs.json') .
+            ' gs://archub/' . $path_to_file .
+            ' 2>&1' // Needed to get output
+        );
+
+        return trim(preg_replace('/([\s\S]+)https:\/\/storage/', 'https://storage', $signed_url));
+    }
+
+    /**
+     * Unpacks the mission PBO and returns the absolute path of the folder.
+     * 
+     * @return string
+     */
+    public function unpack($dirname = '', $pbo_path = '')
+    {
+        $pbo_path = ($pbo_path == '') ? storage_path("app/{$this->pbo_path}") : $pbo_path;
+        $unpacked = ($dirname == '') ?
+            storage_path("app/missions/{$this->user_id}/{$this->id}/unpacked") :
+            storage_path("app/missions/{$this->user_id}/{$dirname}");
+
+        // It should always be the most up-to-date
+        // as we delete unpacked after using them
+        if (file_exists($unpacked)) {
+            return $unpacked;
+        }
+
+        // Unpack the PBO
+        shell_exec(static::armake() . ' unpack -f ' . $pbo_path . ' ' . $unpacked);
+
+        $workingDir = getcwd();
+        chdir($unpacked);
+
+        // Debinarize mission.sqm
+        // If it's not binned, armake exits gracefully
+        shell_exec(static::armake() . ' derapify -f mission.sqm mission.sqm');
+
+        chdir($workingDir);
+
+        return $unpacked;
+    }
+
+    /**
+     * Deletes the unpacked mission directory.
+     *
+     * @return void
+     */
+    public function deleteUnpacked($dirname = '')
+    {
+        $unpacked = ($dirname == '') ?
+            storage_path("missions/{$this->user_id}/{$this->id}/unpacked") :
+            storage_path("missions/{$this->user_id}/{$dirname}");
+
+        Storage::deleteDirectory($unpacked);
     }
 
     /**
@@ -485,17 +582,17 @@ class Mission extends Model implements HasMedia
      *
      * @return void
      */
-    public function storeConfigs($path)
+    public function storeConfigs($pbo_path)
     {
         //parse mission.sqm
-        $mission = new PBOMission(storage_path("app/{$path}"));
+        $mission = new PBOMission($pbo_path);
         $contents = $mission->export();
 
         if ($mission->error) {
             return new ArmaConfigError($mission->errorReason);
         }
 
-        $validationError = $this->validateMissionContents($contents);
+        $validationError = $this->ValidateMissionContents($contents);
         if (!is_null($validationError)) {
             return new ArmaConfigError($validationError);
         }
@@ -523,31 +620,46 @@ class Mission extends Model implements HasMedia
         $this->weather = json_encode($contents['mission']['weather']);
 
         $this->save();
-        $this->deployCloudFiles($path);
+
+        // Move to cloud storage
+        //$this->deployCloudFiles();
 
         return $this;
     }
 
-    private function validateMissionContents($contents) 
+    private function ValidateMissionContents($contents) 
     {
-        $errorText = "";
         $files = $contents['pbo']['files'];
-
-        $definedBriefings = $contents['mission']['briefings'];
-
-        foreach ($definedBriefings as $briefing) {
-            $briefingPath = $briefing[2];
-
-            if (!array_key_exists($briefingPath, $files)) {
-                $errorText .= sprintf("%s is defined in TMF but has no file\n", $briefing[0]);
-            }
+        $expectedFiles = ["mission.sqm", "description.ext"];
+        $expectedFolderCount = ["briefing\\" => ["count" => 0, "ignore" => ["briefing\\briefing_example.sqf"]]];
+        
+        switch ($this->mode) {
+            case "preop":
+                $expectedFolderCount["briefing\\"]["count"] = 0;
+                break;
+            case "coop":
+                $expectedFolderCount["briefing\\"]["count"] = 2;
+                break;
+            case "adversarial":
+                $expectedFolderCount["briefing\\"]["count"] = 3;
+                break;
+            default:
+                return "Unknown mission mode when validating mission contents";
         }
 
-        $expectedFiles = ["mission.sqm", "description.ext"];
+        $errorText = "";
 
         foreach ($expectedFiles as $file) {
             if (!array_key_exists($file, $files)) {
                 $errorText .= sprintf("%s is missing\n", $file);
+            }
+        }
+
+        foreach ($expectedFolderCount as $folder => $expectations) {
+            $fileCount = $this->countFilesInFolder($files, $folder, $expectations["ignore"]);
+
+            if ($fileCount < $expectations["count"]) {
+                $errorText .= sprintf("%s has %d files, should have %d\n", $folder, $fileCount, $expectations["count"]);
             }
         }
 
@@ -557,23 +669,36 @@ class Mission extends Model implements HasMedia
         return null;
     }
 
+    private function countFilesInFolder($files, $folder, $ignore) {
+        $count = 0;
+        foreach ($files as $file) {
+            if ((!in_array($file["path"], $ignore)) && (substr($file["path"], 0, strlen($folder)) === $folder)) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
     /**
      * Deploys the mission files to cloud storage.
      * - PBO Download
+     * - ZIP Download
      *
      * @return any
      */
-    public function deployCloudFiles($path)
+    public function deployCloudFiles()
     {
         $qualified_pbo = "missions/{$this->user_id}/{$this->id}/{$this->exportedName()}";
 
         // Mission PBO
         Storage::cloud()->put(
             $qualified_pbo,
-            file_get_contents(storage_path("app/{$path}"))
+            file_get_contents(storage_path("app/{$this->pbo_path}"))
         );
 
         $this->cloud_pbo = $qualified_pbo;
+        $this->pbo_path = $qualified_pbo;
         $this->save();
     }
 
@@ -720,18 +845,23 @@ class Mission extends Model implements HasMedia
     public function briefingFactions()
     {
         $filledFactions = [];
+        $factionLocks = [
+            0 => $this->locked_0_briefing,
+            1 => $this->locked_1_briefing,
+            2 => $this->locked_2_briefing,
+            3 => $this->locked_3_briefing
+        ];
+
         $briefings = $this->GetBriefings();
 
-        if ($briefings != null) {
-            foreach ($briefings as $briefing) {
+        if($briefings != null) {
+            foreach($briefings as $briefing) {
                 $factionId = $this->parseFactionId($briefing[1][0]);
-                $locked = $this->{'locked_'.strtolower($this->factions[$factionId]).'_briefing'};
-
-                if ($locked == 0 || (!auth()->guest() && ($this->isMine() || auth()->user()->can('test-missions')))) {
+                if(!$factionLocks[$factionId] || auth()->user()->can('test-missions') || $this->isMine()) {
                     $nav = new stdClass();
                     $nav->name = $briefing[0];
                     $nav->faction = $factionId;
-                    $nav->locked = $locked;
+                    $nav->locked = $factionLocks[$factionId];
 
                     array_push($filledFactions, $nav);
                 }
@@ -837,7 +967,7 @@ class Mission extends Model implements HasMedia
         }
 
         if (strpos($name, '_') === false) {
-            abort(400, 'Mission name must be in the format ARC_COOP/TVT/ADE_Name_Author.Map');
+            abort(400, 'Mission name must be in the format ARC_COOP/TVT/PREOP_Name_Author.Map');
             return;
         }
 
@@ -854,23 +984,24 @@ class Mission extends Model implements HasMedia
         }
 
         if (sizeof($parts) < 3) {
-            abort(400, 'Mission name must be in the format ARC_COOP/TVT/ADE_Name_Author.Map');
+            abort(400, 'Mission name must be in the format ARC_COOP/TVT/PREOP_Name_Author.Map');
             return;
         }
 
         $group = $parts[0];
         $mode = strtolower($parts[1]);
-        $validModes = ['coop', 'tvt', 'ade'];
+        $validModes = ['coop', 'co', 'tvt', 'pvp', 'adv', 'preop'];
 
         if (in_array($mode, $validModes)) {
-            if ($mode == 'ade') {
-                $mode = 'arcade';
+            if ($mode == 'co') {
+                $mode = 'coop';
             }
-            else if ($mode == 'tvt') {
+
+            if (in_array($mode, ['tvt', 'pvp', 'adv'])) {
                 $mode = 'adversarial';
             }
         } else {
-            abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or ADE');
+            abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or PREOP');
             return;
         }
 
