@@ -14,7 +14,7 @@
         </h4>
 
         <h6 class="mission-item-author">
-            By {{ $mission->user->name }} on {{ $mission->map->display_name }}
+            By {{ $mission->user->username }} on {{ $mission->map->display_name }}
         </h6>
 
         <p class="mission-item-summary">

@@ -43,7 +43,7 @@ class SettingsController extends Controller
     {
         // Update user's username
         if (strlen($request->username) != 0) {
-            auth()->user()->name = $request->username;
+            auth()->user()->username = $request->username;
             auth()->user()->save();
         }
     }

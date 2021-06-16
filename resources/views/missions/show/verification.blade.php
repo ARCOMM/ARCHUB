@@ -36,7 +36,7 @@
 
         <em>
             @if ($mission->verifiedByUser())
-                Verified by {{ $mission->verifiedByUser()->name }}
+                Verified by {{ $mission->verifiedByUser()->username }}
             @endif
         </em>
 

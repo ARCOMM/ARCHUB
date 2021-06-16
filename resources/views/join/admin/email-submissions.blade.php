@@ -7,7 +7,7 @@
             <br />
 
             <span class="jr-item-meta">
-                Sent by {{ $sent->user->name }} {{ $sent->created_at->diffForHumans() }}
+                Sent by {{ $sent->user->username }} {{ $sent->created_at->diffForHumans() }}
             </span>
         </li>
     @endforeach
