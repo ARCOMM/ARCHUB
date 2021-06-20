@@ -9,24 +9,19 @@
     "type": "project",
     "require": {
         "php": "^7.4",
-        "doctrine/dbal": "^3.1",
         "fideloper/proxy": "4.4.*",
-        "graham-campbell/markdown": "13.1",
         "guzzlehttp/guzzle": "^7.3.0",
+        "invisnik/laravel-steam-auth": "^4.3",
         "laravel/framework": "8.47.*",
         "laravel/legacy-factories": "^1.1",
-        "laravel/sanctum": "^2.11",
-        "laravel/socialite": "^5.2",
-        "laravel/telescope": "^4.5",
         "laravel/tinker": "^2.6",
         "nesbot/carbon": "^2.48",
-        "socialiteproviders/discord": "^4.1",
         "spatie/laravel-medialibrary": "8.*",
         "superbalist/flysystem-google-storage": "7.2.*",
-        "superbalist/laravel-google-cloud-storage": "2.2.*"
+        "superbalist/laravel-google-cloud-storage": "2.2.*",
+        "syntax/steam-api": "^2.3.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.6",
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~1.0",

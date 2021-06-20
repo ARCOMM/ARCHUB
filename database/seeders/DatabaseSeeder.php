@@ -13,11 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            JoinStatusSeeder::class,
-            JoinSourcesSeeder::class,
-            GalleriesSeeder::class,
-            EmailTemplatesSeeder::class,
-        ]);
+        factory(App\Models\JoinRequests\JoinRequest::class, 300)->create();
     }
 }
