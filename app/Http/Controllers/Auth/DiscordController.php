@@ -33,7 +33,15 @@ class DiscordController extends Controller
     {
         $user = Socialite::driver('discord')->user();
 
-        if (Discord::hasARole($user->id, RoleEnum::Member, RoleEnum::Recruit)) {
+        if (!auth()->guest()) {
+            if (is_null(auth()->user()->discord_id)) {
+                auth()->user()->discord_id = $user->id;
+                auth()->user()->save();
+                return redirect('/hub');
+            }
+        }
+
+        if (Discord::isMember($user->id)) {
             return $this->create($user);
         }
 
@@ -55,6 +63,7 @@ class DiscordController extends Controller
             $user = User::create([
                 'discord_id' => $data->id,
                 'username' => $data->name,
+                'email' => $data->email,
                 'avatar' => $data->avatar,
             ]);
         }

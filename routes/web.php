@@ -17,6 +17,8 @@ Route::get('/share/{mission}/briefing/{faction}', 'ShareBriefingController@show'
 //--- Authentication
 Route::get('/auth/redirect', 'Auth\DiscordController@redirect');
 Route::get('/auth/callback', 'Auth\DiscordController@callback');
+Route::get('/auth/steam', 'Auth\SteamController@redirect');
+Route::get('/auth/steamcallback', 'Auth\SteamController@callback');
 
 //--- Public Applications
 Route::get('/join/acknowledged', 'PublicJoinController@acknowledged');
