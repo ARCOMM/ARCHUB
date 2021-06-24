@@ -52,17 +52,17 @@ Route::group(['middleware' => 'can:manage-applications'], function () {
     Route::resource('/hub/applications/api/emails', 'Join\EmailTemplateController');
 });
 
-Route::prefix('hub/operations')->middleware('can:manage-operations')->group(function () {
-    Route::get('/', 'Operations\OperationController@index');
-    Route::post('/', 'Operations\OperationController@create');
-    Route::delete('/{operation}', 'Operations\OperationController@destroy');
-    
-    Route::post('/{operation}/missions', 'Operations\OperationMissionController@store');
-    Route::delete('/{operation}/missions', 'Operations\OperationMissionController@destroy');
-});
-
 //--- Missions
 Route::group(['middleware' => 'can:access-hub'], function () {
+    Route::prefix('hub/operations')->middleware('can:manage-operations')->group(function () {
+        Route::get('/', 'Operations\OperationController@index');
+        Route::post('/', 'Operations\OperationController@store');
+        Route::delete('/{operation}', 'Operations\OperationController@destroy');
+        
+        Route::post('/{operation}/missions', 'Operations\OperationMissionController@store');
+        Route::delete('/{operation}/missions', 'Operations\OperationMissionController@destroy');
+    });
+    
     // Mission Media
     Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
     Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');

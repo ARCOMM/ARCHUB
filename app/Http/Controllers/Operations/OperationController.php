@@ -26,7 +26,7 @@ class OperationController extends Controller
      *
      * @return any
      */
-    public function create(Request $request, Operation $operation)
+    public function store(Request $request, Operation $operation)
     {
         // Get latest operation date
         $latest = $operation->orderBy('starts_at', 'desc')->first();
