@@ -5,33 +5,30 @@ use Laravel\Socialite\Facades\Socialite;
 //--- Home
 Route::get('/', 'PageController@index');
 
+Route::get('/media', 'Missions\MediaController@index');
+Route::get('/roster', 'PageController@roster');
 Route::get('/arma3sync', function () {
     return redirect('https://docs.google.com/document/d/1i-LzCJE0l_7PtOj8WU717mmmzX1U2KaaNGEnj0KzkIw/view');
 });
 
-//--- Shared Missions
-Route::get('/share/{mission}', 'ShareController@show');
-Route::get('/share/{mission}/{panel}', 'SharePanelController@show');
-Route::get('/share/{mission}/briefing/{faction}', 'ShareBriefingController@show');
+Route::prefix('share')->group(function () {
+    Route::get('/{mission}', 'ShareController@show');
+    Route::get('/{mission}/{panel}', 'SharePanelController@show');
+    Route::get('/{mission}/briefing/{faction}', 'ShareBriefingController@show');
+});
 
-//--- Authentication
-Route::get('/auth/redirect', 'Auth\DiscordController@redirect');
-Route::get('/auth/callback', 'Auth\DiscordController@callback');
-Route::get('/auth/steam', 'Auth\SteamController@redirect');
-Route::get('/auth/steamcallback', 'Auth\SteamController@callback');
+Route::prefix('auth')->group(function () {
+    Route::get('/redirect', 'Auth\DiscordController@redirect');
+    Route::get('/callback', 'Auth\DiscordController@callback');
+    Route::get('/steam', 'Auth\SteamController@redirect');
+    Route::get('/steamcallback', 'Auth\SteamController@callback');
+});
 
 //--- Public Applications
 Route::get('/join/acknowledged', 'PublicJoinController@acknowledged');
 Route::resource('join', 'PublicJoinController', [
     'only' => ['index', 'store', 'create']
 ]);
-
-//--- Media
-Route::resource('media', 'MediaController');
-Route::post('/media/delete', 'MediaController@deletePhoto');
-
-//--- Roster
-Route::get('/roster', 'PageController@roster');
 
 Route::group(['middleware' => 'can:view-applications'], function () {
     // Route::get('/hub/applications/transfer', 'JoinController@transferOldRecords');
@@ -55,10 +52,13 @@ Route::group(['middleware' => 'can:manage-applications'], function () {
     Route::resource('/hub/applications/api/emails', 'Join\EmailTemplateController');
 });
 
-Route::group(['middleware' => 'can:manage-operations'], function () {
-    Route::get('/hub/operations', 'Missions\OperationController@index');
-    Route::resource('/api/operations', 'API\OperationController');
-    Route::resource('/api/operations/missions', 'API\OperationMissionController');
+Route::prefix('hub/operations')->middleware('can:manage-operations')->group(function () {
+    Route::get('/', 'Operations\OperationController@index');
+    Route::post('/', 'Operations\OperationController@create');
+    Route::delete('/{operation}', 'Operations\OperationController@destroy');
+    
+    Route::post('/{operation}/missions', 'Operations\OperationMissionController@store');
+    Route::delete('/{operation}/missions', 'Operations\OperationMissionController@destroy');
 });
 
 //--- Missions
@@ -68,12 +68,6 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');
     Route::post('/hub/missions/media/add-video', 'Missions\MediaController@addVideo');
     Route::post('/hub/missions/media/delete-video', 'Missions\MediaController@removeVideo');
-
-    // Mission Operations
-    Route::post('/hub/missions/operations/remove-mission', 'Missions\OperationController@removeMission');
-    Route::post('/hub/missions/operations/add-mission', 'Missions\OperationController@addMission');
-    Route::post('/hub/missions/operations/create-operation', 'Missions\OperationController@create');
-    Route::post('/hub/missions/operations/delete-operation', 'Missions\OperationController@destroy');
 
     // Mission Comments
     Route::resource('/hub/missions/comments', 'Missions\CommentController', [

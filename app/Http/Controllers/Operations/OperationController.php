@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Missions;
+namespace App\Http\Controllers\Operations;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,41 +18,6 @@ class OperationController extends Controller
     public function index()
     {
         return view('missions.operations');
-    }
-
-    /**
-     * Deletes the given operation item.
-     *
-     * @return void
-     */
-    public function removeMission(Request $request)
-    {
-        if ($request->id == -1) return;
-        OperationMission::destroy($request->id);
-    }
-
-    /**
-     * Creates an operation item for the given mission and operation.
-     *
-     * @return integer
-     */
-    public function addMission(Request $request)
-    {
-        $operation = Operation::findOrFail($request->operation_id);
-
-        $exists = OperationMission::where('operation_id', $operation->id)
-            ->where('play_order', $request->play_order)
-            ->first();
-
-        if ($exists) return;
-
-        $item = OperationMission::create([
-            'operation_id' => $operation->id,
-            'mission_id' => $request->mission_id,
-            'play_order' => $request->play_order
-        ]);
-
-        return $item->id;
     }
 
     /**
@@ -97,6 +62,6 @@ class OperationController extends Controller
      */
     public function destroy(Request $request, Operation $operation)
     {
-        $operation->destroy($request->operation_id);
+        Operation::destroy($operation->id);
     }
 }

@@ -19,8 +19,8 @@
 
                 if (isAssigned) {
                     $.ajax({
-                        type: 'POST',
-                        url: '{{ url('/hub/missions/operations/remove-mission') }}',
+                        type: 'DELETE',
+                        url: "{{ url('/hub/operations/1/missions') }}",
                         data: {'id': caller.data('item') || -1},
                         success: function(data) {
                             caller.html('Assign Mission');
@@ -53,10 +53,9 @@
                 if (slot != null) {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ url('/hub/missions/operations/add-mission') }}',
+                        url: "{{ url('/hub/operations') }}/" + operation_id + '/missions',
                         data: {
                             'mission_id': mission_id,
-                            'operation_id': operation_id,
                             'play_order': order
                         },
                         success: function(data) {
@@ -74,7 +73,7 @@
             $('#create-operation-form').submit(function(event) {
                 $.ajax({
                     type: 'POST',
-                    url: '{{ url('/hub/missions/operations/create-operation') }}',
+                    url: "{{ url('/hub/operations') }}",
                     data: $('#create-operation-form').serialize(),
                     success: function(data) {
                         $('.operation-rows').prepend(data);
@@ -88,9 +87,9 @@
                 var caller = $(this);
 
                 $.ajax({
-                    type: 'POST',
-                    url: '{{ url('/hub/missions/operations/delete-operation') }}',
-                    data: {operation_id: caller.data('id')},
+                    type: 'DELETE',
+                    url: "{{ url('/hub/operations') }}/" + caller.data('id'),
+
                     success: function(data) {
                         caller.parents('.operation-item').remove();
                     }
