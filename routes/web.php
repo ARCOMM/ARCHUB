@@ -99,11 +99,10 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         'except' => ['create', 'edit']
     ]);
 
-    Route::get('/hub/settings/avatar-sync', 'Users\SettingsController@avatarSync');
-    Route::resource('/hub/settings', 'Users\SettingsController');
-
-    Route::get('/hub/guides', function () {
-        return view('guides.index');
+    Route::prefix('hub/settings')->group(function() {
+        Route::get('/', 'Users\SettingsController@index');
+        Route::post('/', 'Users\SettingsController@store');
+        Route::get('/avatar-sync', 'Users\SettingsController@avatarSync');
     });
 
     // Hub Index
