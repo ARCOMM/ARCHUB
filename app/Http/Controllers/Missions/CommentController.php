@@ -15,15 +15,9 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, Mission $mission)
     {
-        if (!$request->exists('mission_id')) {
-            abort(403, 'You must pass the mission ID in the URL arguments');
-            return;
-        }
-
-        $comments = Mission::find($request->mission_id)->comments;
-
+        $comments = $mission->comments;
         return view('missions.comments.list', compact('comments'));
     }
 
@@ -33,7 +27,7 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Mission $mission)
     {
         if (strlen(trim($request->text)) == 0) {
             abort(403, 'No comment text provided');
@@ -43,14 +37,13 @@ class CommentController extends Controller
         if ($request->id == -1) {
             // Create a new comment
             $comment = new MissionComment();
-            $comment->mission_id = $request->mission_id;
+            $comment->mission_id = $mission->id;
             $comment->user_id = auth()->user()->id;
             $comment->text = $request->text;
             $comment->published = $request->published;
             $comment->save();
 
             if ($comment->published) {
-                $mission = Mission::findOrFail($request->mission_id);
                 static::discordNotify($comment);
 
                 $comment->update([
@@ -69,7 +62,6 @@ class CommentController extends Controller
             $comment->save();
 
             if ($shouldNotify) {
-                $mission = Mission::findOrFail($request->mission_id);
                 static::discordNotify($comment);
 
                 $comment->update([
@@ -92,7 +84,7 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(MissionComment $comment)
+    public function edit(Mission $mission, MissionComment $comment)
     {
         return json_encode([
             'text' => $comment->text
@@ -105,12 +97,12 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MissionComment $comment)
+    public function destroy(Mission $mission, MissionComment $comment)
     {
         $comment->delete();
     }
 
-    public static function discordNotify(MissionComment $comment)
+    private static function discordNotify(MissionComment $comment)
     {
         $url = "{$comment->mission->url()}/aar#comment-{$comment->id}";
         $message = "**{$comment->user->username}** commented on **{$comment->mission->display_name}**";

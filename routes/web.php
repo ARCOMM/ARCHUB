@@ -38,15 +38,15 @@ Route::group(['middleware' => 'can:view-applications'], function () {
     Route::post('/hub/applications/api/send-email', 'Join\JoinController@email');
     Route::get('/hub/applications/api/email-submissions', 'Join\JoinController@emailSubmissions');
 
-// Statuses
-Route::post('/hub/applications/api/status', 'Join\JoinStatusController@store');
-Route::put('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@update');
-Route::get('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@show');
+    // Statuses
+    Route::post('/hub/applications/api/status', 'Join\JoinStatusController@store');
+    Route::put('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@update');
+    Route::get('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@show');
 
-Route::get('/hub/applications/{status}', 'Join\JoinController@index');
+    Route::get('/hub/applications/{status}', 'Join\JoinController@index');
 
-Route::resource('/hub/applications', 'Join\JoinController');
-//});
+    Route::resource('/hub/applications', 'Join\JoinController');
+});
 
 Route::group(['middleware' => 'can:manage-applications'], function () {
     Route::resource('/hub/applications/api/emails', 'Join\EmailTemplateController');
@@ -54,6 +54,8 @@ Route::group(['middleware' => 'can:manage-applications'], function () {
 
 //--- Missions
 Route::group(['middleware' => 'can:access-hub'], function () {
+    Route::view('/hub', 'missions.index');
+
     Route::prefix('hub/operations')->middleware('can:manage-operations')->group(function () {
         Route::get('/', 'Operations\OperationController@index');
         Route::post('/', 'Operations\OperationController@store');
@@ -62,17 +64,20 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         Route::post('/{operation}/missions', 'Operations\OperationMissionController@store');
         Route::delete('/{operation}/missions', 'Operations\OperationMissionController@destroy');
     });
+
+
+    Route::prefix('hub/missions')->group(function() {
+        Route::get('/{mission}/comments', 'Missions\CommentController@index');
+        Route::post('/{mission}/comments', 'Missions\CommentController@store');
+        Route::delete('/{mission}/comments/{comment}', 'Missions\CommentController@destroy');
+        Route::get('/{mission}/comments/{comment}/edit', 'Missions\CommentController@edit');
+    });
     
     // Mission Media
     Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
     Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');
     Route::post('/hub/missions/media/add-video', 'Missions\MediaController@addVideo');
     Route::post('/hub/missions/media/delete-video', 'Missions\MediaController@removeVideo');
-
-    // Mission Comments
-    Route::resource('/hub/missions/comments', 'Missions\CommentController', [
-        'except' => ['create', 'show', 'update']
-    ]);
 
     // Mission Briefings
     Route::post('/hub/missions/briefing', 'Missions\MissionController@briefing');
@@ -86,8 +91,8 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     Route::post('/hub/missions/{mission}/update', 'Missions\MissionController@update');
     Route::post('/hub/missions/{mission}/set-verification', 'Missions\MissionController@updateVerification');
 
-    // Download
-    Route::get('/hub/missions/{mission}/download', 'Missions\MissionController@download');
+    // Downlaod
+    Route::get('/hub/missions/{mission}/download/{format}', 'Missions\MissionController@download');
 
     // Notes
     Route::resource('/hub/missions/{mission}/notes', 'Missions\NoteController');
@@ -103,18 +108,6 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         Route::get('/', 'Users\SettingsController@index');
         Route::post('/', 'Users\SettingsController@store');
         Route::get('/avatar-sync', 'Users\SettingsController@avatarSync');
-    });
-
-    // Hub Index
-    Route::resource('/hub', 'HubController', [
-        'only' => ['index']
-    ]);
-
-    Route::get('/tokens/create', function (Request $request) {
-        auth()->user()->tokens()->delete();
-        $token = auth()->user()->createToken('api_token');
-    
-        return ['token' => $token->plainTextToken];
     });
 });
 
