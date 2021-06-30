@@ -79,9 +79,10 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     Route::post('/hub/missions/media/add-video', 'Missions\MediaController@addVideo');
     Route::post('/hub/missions/media/delete-video', 'Missions\MediaController@removeVideo');
 
-    // Mission Briefings
-    Route::post('/hub/missions/briefing', 'Missions\MissionController@briefing');
-    Route::post('/hub/missions/briefing/update', 'Missions\MissionController@setBriefingLock');
+    Route::prefix('hub/missions')->group(function() {
+        Route::get('/{mission}/briefing/{faction}', 'Missions\BriefingController@index');
+        Route::put('/{mission}/briefing/{faction}/lock', 'Missions\BriefingController@setLock');
+    });
 
     // Mission ORBAT
     Route::post('/hub/missions/orbat', 'Missions\MissionController@orbat');

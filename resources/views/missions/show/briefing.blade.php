@@ -3,17 +3,13 @@
         $('.mission-briefing-nav a').click(function(event) {
             var caller = $(this);
             var locked = caller.hasClass('locked');
-            var faction = caller.data('faction');
 
             if (locked) return;
 
             $.ajax({
-                type: 'POST',
-                url: '{{ url('/hub/missions/briefing') }}',
-                data: {
-                    mission_id: {{ $mission->id }},
-                    faction: faction
-                },
+                type: 'GET',
+                url: '{{ url("/hub/missions/{$mission->id}/briefing") }}/' + caller.data('faction'),
+
                 success: function(data) {
                     $('.mission-briefing-content').html(data);
                     $('.mission-briefing-nav a').removeClass('active');
