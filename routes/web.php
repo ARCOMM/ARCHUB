@@ -105,13 +105,13 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         'except' => ['create', 'edit']
     ]);
 
+    Route::group(['middleware' => 'can:view-users'], function () {
+        Route::get('/hub/users', 'Users\UserController@index');
+    });
+
     Route::prefix('hub/settings')->group(function() {
         Route::get('/', 'Users\SettingsController@index');
         Route::post('/', 'Users\SettingsController@store');
         Route::get('/avatar-sync', 'Users\SettingsController@avatarSync');
     });
-});
-
-Route::group(['middleware' => 'can:view-users'], function () {
-    Route::resource('/hub/users', 'Users\UserController');
 });
