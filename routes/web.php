@@ -64,7 +64,12 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         Route::post('/{operation}/missions', 'Operations\OperationMissionController@store');
         Route::delete('/{operation}/missions', 'Operations\OperationMissionController@destroy');
     });
-
+    
+    // Mission Media
+    Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
+    Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');
+    Route::post('/hub/missions/media/add-video', 'Missions\MediaController@addVideo');
+    Route::post('/hub/missions/media/delete-video', 'Missions\MediaController@removeVideo');
 
     Route::prefix('hub/missions')->group(function() {
         Route::get('/{mission}/comments', 'Missions\CommentController@index');
@@ -72,12 +77,12 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         Route::delete('/{mission}/comments/{comment}', 'Missions\CommentController@destroy');
         Route::get('/{mission}/comments/{comment}/edit', 'Missions\CommentController@edit');
     });
-    
-    // Mission Media
-    Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
-    Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');
-    Route::post('/hub/missions/media/add-video', 'Missions\MediaController@addVideo');
-    Route::post('/hub/missions/media/delete-video', 'Missions\MediaController@removeVideo');
+
+    Route::prefix('hub/missions')->group(function() {
+        Route::get('/{mission}/notes', 'Missions\NoteController@index');
+        Route::post('/{mission}/notes', 'Missions\NoteController@store');
+        Route::delete('/notes/{note}', 'Missions\NoteController@destroy');
+    });
 
     Route::prefix('hub/missions')->group(function() {
         Route::get('/{mission}/briefing/{faction}', 'Missions\BriefingController@index');
@@ -94,12 +99,6 @@ Route::group(['middleware' => 'can:access-hub'], function () {
 
     // Downlaod
     Route::get('/hub/missions/{mission}/download/{format}', 'Missions\MissionController@download');
-
-    Route::prefix('hub/missions')->group(function() {
-        Route::get('/{mission}/notes', 'Missions\NoteController@index');
-        Route::post('/{mission}/notes', 'Missions\NoteController@store');
-        Route::delete('/notes/{note}', 'Missions\NoteController@destroy');
-    });
 
     // Panels
     Route::get('/hub/missions/{mission}/{panel}', 'Missions\MissionController@panel');
