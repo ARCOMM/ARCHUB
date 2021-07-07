@@ -95,8 +95,11 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     // Downlaod
     Route::get('/hub/missions/{mission}/download/{format}', 'Missions\MissionController@download');
 
-    // Notes
-    Route::resource('/hub/missions/{mission}/notes', 'Missions\NoteController');
+    Route::prefix('hub/missions')->group(function() {
+        Route::get('/{mission}/notes', 'Missions\NoteController@index');
+        Route::post('/{mission}/notes', 'Missions\NoteController@store');
+        Route::delete('/notes/{note}', 'Missions\NoteController@destroy');
+    });
 
     // Panels
     Route::get('/hub/missions/{mission}/{panel}', 'Missions\MissionController@panel');

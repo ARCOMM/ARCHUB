@@ -46,10 +46,10 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: "{{ url('/hub/missions/'.$mission->id) }}/" + caller.data('panel'),
+                    url: '{{ url("/hub/missions/{$mission->id}") }}/' + caller.data('panel'),
+
                     success: function(data) {
                         $('.mission-nav .subnav .subnav-link').removeClass('active');
-                        'hub/missions/{{ $mission->id }}/' + caller.data('panel');
                         caller.addClass('active');
                         $('.mission-inner').html(data);
                     }

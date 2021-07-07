@@ -57,16 +57,6 @@ class NoteController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -79,63 +69,17 @@ class NoteController extends Controller
             return;
         }
 
-        $a = $request->id;
-        if ($request->id == -1) {
-            // Create a new note
-            $note = new MissionNote;
-            $note->user_id = auth()->user()->id;
-            $note->mission_id = $mission->id;
-            $note->text = $request->text;
-            $note->save();
+        $note = new MissionNote;
+        $note->user_id = auth()->user()->id;
+        $note->mission_id = $mission->id;
+        $note->text = $request->text;
+        $note->save();
 
-            $url = "{$note->mission->url()}/notes#note-{$note->id}";
-            $content = "**{$note->user->username}** added a note to **{$note->mission->display_name}**";
-            Discord::missionUpdate($content, $mission, true, true, $url);
-        } else {
-            // Update an existing one
-            $note = MissionNote::find($request->id);
-
-            $note->text = $request->text;
-            $note->save();
-        }
+        $url = "{$note->mission->url()}/notes#note-{$note->id}";
+        $content = "**{$note->user->username}** added a note to **{$note->mission->display_name}**";
+        Discord::missionUpdate($content, $mission, true, $url);
 
         return view('missions.notes.item', compact('note'));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Mission $mission, MissionNote $note)
-    {
-        return json_encode([
-            'text' => $note->text
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Mission $mission)
-    {
-        //
     }
 
     /**
@@ -144,7 +88,7 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mission $mission, MissionNote $note)
+    public function destroy(MissionNote $note)
     {
         if (!$note->isMine()) {
             return;
