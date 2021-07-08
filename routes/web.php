@@ -74,8 +74,8 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     Route::prefix('hub/missions')->group(function() {
         Route::get('/{mission}/comments', 'Missions\CommentController@index');
         Route::post('/{mission}/comments', 'Missions\CommentController@store');
-        Route::delete('/{mission}/comments/{comment}', 'Missions\CommentController@destroy');
-        Route::get('/{mission}/comments/{comment}/edit', 'Missions\CommentController@edit');
+        Route::delete('/comments/{comment}', 'Missions\CommentController@destroy');
+        Route::get('/comments/{comment}/edit', 'Missions\CommentController@edit');
     });
 
     Route::prefix('hub/missions')->group(function() {

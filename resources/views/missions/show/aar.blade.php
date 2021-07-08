@@ -28,7 +28,7 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: '{{ url("/hub/missions/{$mission->id}/comments") }}/' + caller.data('id') + '/edit',
+                    url: '{{ url("/hub/missions/comments") }}/' + caller.data('id') + '/edit',
 
                     success: function(data) {
                         data = JSON.parse(data);
@@ -54,7 +54,7 @@
 
                     $.ajax({
                         type: 'DELETE',
-                        url: '{{ url("/hub/missions/{$mission->id}/comments") }}/' + caller.data('id'),
+                        url: '{{ url("/hub/missions/comments") }}/' + caller.data('id'),
 
                         success: function(data) {
                             caller.parents('.mission-comment-item').remove();
