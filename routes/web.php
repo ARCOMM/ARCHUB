@@ -89,15 +89,16 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         Route::put('/{mission}/briefing/{faction}/lock', 'Missions\BriefingController@setLock');
     });
 
-    // Mission ORBAT
-    Route::post('/hub/missions/orbat', 'Missions\MissionController@orbat');
-
     // Missions
     Route::get('/hub/missions/{mission}/delete', 'Missions\MissionController@destroy');
     Route::post('/hub/missions/{mission}/update', 'Missions\MissionController@update');
     Route::post('/hub/missions/{mission}/set-verification', 'Missions\MissionController@updateVerification');
 
-    // Downlaod
+    Route::prefix('hub/missions')->group(function() {
+        Route::get('/{mission}/orbat/{faction}', 'Missions\MissionController@orbat');
+    });
+
+    // Download
     Route::get('/hub/missions/{mission}/download/{format}', 'Missions\MissionController@download');
 
     // Panels
@@ -106,6 +107,7 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     Route::resource('/hub/missions', 'Missions\MissionController', [
         'except' => ['create', 'edit']
     ]);
+    
 
     Route::group(['middleware' => 'can:view-users'], function () {
         Route::get('/hub/users', 'Users\UserController@index');
