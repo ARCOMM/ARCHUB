@@ -69,7 +69,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('manage-applications', function($user) {
-            // Admins only
+            return $user->hasRole(RoleEnum::Recruiter);
         });
 
         Gate::define('delete-media', function($user) {

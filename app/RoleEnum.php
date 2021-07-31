@@ -8,6 +8,7 @@ class RoleEnum
     const Tester = 1;
     const SeniorTester = 2;
     const Operations = 3;
-    const Staff = 4;
-    const Admin = 5;
+    const Recruiter = 4;
+    const Staff = 5;
+    const Admin = 6;
 }

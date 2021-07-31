@@ -46,6 +46,7 @@ return [
         'tester_role' => env("DISCORD_TESTER_ROLE"),
         'senior_tester_role' => env("DISCORD_SENIOR_TESTER_ROLE"),
         'operations_role' => env("DISCORD_OPERATIONS_ROLE"),
+        'recruiter_role' => env("DISCORD_RECRUITER_ROLE"),
         'staff_role' => env("DISCORD_STAFF_ROLE"),
         'admin_role' => env("DISCORD_ADMIN_ROLE"),
 
