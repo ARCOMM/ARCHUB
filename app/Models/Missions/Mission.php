@@ -844,7 +844,7 @@ class Mission extends Model implements HasMedia
                 $factionId = $this->parseFactionId($briefing[1][0]);
                 $locked = $this->{'locked_'.strtolower($this->factions[$factionId]).'_briefing'};
 
-                if (!auth()->guest() && ($locked == 0 || $this->isMine() || auth()->user()->can('test-missions'))) {
+                if ($locked == 0 || (!auth()->guest() && ($this->isMine() || auth()->user()->can('test-missions')))) {
                     $nav = new stdClass();
                     $nav->name = $briefing[0];
                     $nav->faction = $factionId;
