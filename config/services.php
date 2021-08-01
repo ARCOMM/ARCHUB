@@ -42,6 +42,7 @@ return [
         'token' => env('DISCORD_TOKEN'),
 
         'server_id' => env('DISCORD_SERVER_ID'),
+        'recruit_role' => env('DISCORD_RECRUIT_ROLE'),
         'member_role' => env('DISCORD_MEMBER_ROLE'),
         'tester_role' => env("DISCORD_TESTER_ROLE"),
         'senior_tester_role' => env("DISCORD_SENIOR_TESTER_ROLE"),

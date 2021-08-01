@@ -88,15 +88,22 @@ class Discord
         return self::getUser($discord_id)["roles"];
     }
 
-    public static function hasRole(User $user, int $role)
+    public static function hasARole(User $user, int ...$roles)
     {
         if (!auth()->guest() && is_null(auth()->user()->discord_id)) {
             throw new AuthorizationException;
         }
-        $roleId = self::getRoleIdFromRole($role);
-        $roles = self::getRoles($user->discord_id);
 
-        return in_array($roleId, $roles);
+        $usersRoles = self::getRoles($user->discord_id);
+        foreach ($roles as $role) {
+            $roleId = self::getRoleIdFromRole($role);
+
+            if (in_array($roleId, $usersRoles)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function isMember(int $discord_id)
@@ -109,7 +116,11 @@ class Discord
 
     private static function getRoleIdFromRole(int $role)
     {
-        if ($role == RoleEnum::Member)
+        if ($role == RoleEnum::Recruit)
+        {
+            return config('services.discord.recruit_role');
+        }
+        else if ($role == RoleEnum::Member)
         {
             return config('services.discord.member_role');
         }
