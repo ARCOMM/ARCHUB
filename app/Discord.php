@@ -124,6 +124,10 @@ class Discord
         {
             return config('services.discord.member_role');
         }
+        else if ($role == RoleEnum::Retired)
+        {
+            return config('services.discord.retired_role');
+        }
         else if ($role == RoleEnum::Tester)
         {
             return config('services.discord.tester_role');

@@ -34,7 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('access-hub', function($user) {
-            return $user->hasARole(RoleEnum::Member, RoleEnum::Recruit);
+            return $user->hasARole(RoleEnum::Member, RoleEnum::Recruit, RoleEnum::Retired);
         });
 
         Gate::define('test-missions', function($user) {
