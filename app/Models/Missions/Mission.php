@@ -371,9 +371,10 @@ class Mission extends Model implements HasMedia
     public function exportedName($format = 'pbo')
     {
         $revisions = $this->revisions()->count();
-        $fileName = pathinfo($this->original["file_name"], PATHINFO_FILENAME);
-        
-        return "{$fileName}_{$revisions}.{$format}";
+        $filename = pathinfo($this->original["file_name"], PATHINFO_FILENAME);
+        [$filenameNoMap, $map] = explode('.', $filename, 2);
+
+        return "{$filenameNoMap}_{$revisions}.{$map}.{$format}";
     }
 
     /**
