@@ -41,7 +41,7 @@ class DiscordController extends Controller
             }
         }
 
-        if (Discord::isMember($user->id)) {
+        if (Discord::hasARole($user->id, RoleEnum::Member, RoleEnum::Recruit)) {
             return $this->create($user);
         }
 

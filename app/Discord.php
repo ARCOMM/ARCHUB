@@ -88,13 +88,9 @@ class Discord
         return self::getUser($discord_id)["roles"];
     }
 
-    public static function hasARole(User $user, int ...$roles)
+    public static function hasARole(int $discord_id, int ...$roles)
     {
-        if (!auth()->guest() && is_null(auth()->user()->discord_id)) {
-            throw new AuthorizationException;
-        }
-
-        $usersRoles = self::getRoles($user->discord_id);
+        $usersRoles = self::getRoles($discord_id);
         foreach ($roles as $role) {
             $roleId = self::getRoleIdFromRole($role);
 
@@ -102,16 +98,7 @@ class Discord
                 return true;
             }
         }
-
         return false;
-    }
-
-    public static function isMember(int $discord_id)
-    {
-        $roleId = self::getRoleIdFromRole(RoleEnum::Member);
-        $roles = self::getRoles($discord_id);
-
-        return in_array($roleId, $roles);
     }
 
     private static function getRoleIdFromRole(int $role)

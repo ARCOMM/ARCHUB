@@ -45,7 +45,7 @@ class User extends Authenticatable implements HasMedia
 
     public function hasARole(int ...$roles)
     {
-        return Discord::hasARole($this, ...$roles);
+        return Discord::hasARole($this->discord_id, ...$roles);
     }
 
     /**
