@@ -84,7 +84,7 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Mission $mission, MissionComment $comment)
+    public function edit(Request $request, MissionComment $comment)
     {
         return json_encode([
             'text' => $comment->text
@@ -97,7 +97,7 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mission $mission, MissionComment $comment)
+    public function destroy(Request $request, MissionComment $comment)
     {
         $comment->delete();
     }
