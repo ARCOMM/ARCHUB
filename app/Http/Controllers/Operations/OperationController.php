@@ -62,6 +62,6 @@ class OperationController extends Controller
      */
     public function destroy(Request $request, Operation $operation)
     {
-        Operation::destroy($operation->id);
+        $operation->delete();
     }
 }
