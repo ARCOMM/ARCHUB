@@ -65,7 +65,8 @@ class Mission extends Model implements HasMedia
      * @var array
      */
     public $addonWarnings = [
-        'rhs'
+        'rhs',
+        'cfp'
     ];
 
     /**
