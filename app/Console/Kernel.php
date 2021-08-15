@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        Commands\RenameModes::class,
         Commands\MigrateOldApps::class,
         Commands\ConvertIdToRevisions::class,
     ];

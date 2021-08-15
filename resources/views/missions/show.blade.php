@@ -18,7 +18,7 @@
     @endsection
 @else
     @section('header-color')
-        {{ (['coop' => 'info', 'adversarial' => 'danger', 'preop' => 'success'])[$mission->mode] }}
+        {{ (['coop' => 'info', 'adversarial' => 'danger', 'arcade' => 'success'])[$mission->mode] }}
     @endsection
 @endif
 

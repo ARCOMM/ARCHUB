@@ -109,7 +109,7 @@ class Mission extends Model implements HasMedia
     protected $gamemodes = [
         'coop' => 'Cooperative',
         'adversarial' => 'Adversarial',
-        'preop' => 'Pre-Operation'
+        'arcade' => 'Arcade'
     ];
 
     /**
@@ -622,7 +622,7 @@ class Mission extends Model implements HasMedia
         $expectedFolderCount = ["briefing\\" => ["count" => 0, "ignore" => ["briefing\\briefing_example.sqf"]]];
         
         switch ($this->mode) {
-            case "preop":
+            case "arcade":
                 $expectedFolderCount["briefing\\"]["count"] = 0;
                 break;
             case "coop":
@@ -950,7 +950,7 @@ class Mission extends Model implements HasMedia
         }
 
         if (strpos($name, '_') === false) {
-            abort(400, 'Mission name must be in the format ARC_COOP/TVT/PREOP_Name_Author.Map');
+            abort(400, 'Mission name must be in the format ARC_COOP/TVT/ADE_Name_Author.Map');
             return;
         }
 
@@ -967,24 +967,23 @@ class Mission extends Model implements HasMedia
         }
 
         if (sizeof($parts) < 3) {
-            abort(400, 'Mission name must be in the format ARC_COOP/TVT/PREOP_Name_Author.Map');
+            abort(400, 'Mission name must be in the format ARC_COOP/TVT/ADE_Name_Author.Map');
             return;
         }
 
         $group = $parts[0];
         $mode = strtolower($parts[1]);
-        $validModes = ['coop', 'co', 'tvt', 'pvp', 'adv', 'preop'];
+        $validModes = ['coop', 'tvt', 'ade'];
 
         if (in_array($mode, $validModes)) {
-            if ($mode == 'co') {
-                $mode = 'coop';
+            if ($mode == 'ade') {
+                $mode = 'arcade';
             }
-
-            if (in_array($mode, ['tvt', 'pvp', 'adv'])) {
+            else if ($mode == 'tvt') {
                 $mode = 'adversarial';
             }
         } else {
-            abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or PREOP');
+            abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or ADE');
             return;
         }
 
