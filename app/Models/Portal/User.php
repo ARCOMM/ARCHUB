@@ -45,6 +45,10 @@ class User extends Authenticatable implements HasMedia
 
     public function hasARole(int ...$roles)
     {
+        if (is_null($this->discord_id)) {
+            throw new AuthorizationException;
+        }
+
         return Discord::hasARole($this->discord_id, ...$roles);
     }
 
