@@ -55,10 +55,4 @@ return [
         'archub_webhook' => env('DISCORD_ARCHUB_WEBHOOK'),
         'staff_webhook' => env('DISCORD_STAFF_WEBHOOK'),
     ],
-
-    'steam' => [
-        'client_id' => null,
-        'client_secret' => env('STEAM_CLIENT_SECRET'),
-        'redirect' => env('STEAM_REDIRECT_URI')
-      ],
 ];

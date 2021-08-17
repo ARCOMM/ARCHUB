@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Steam;
 use App\JoinRequest;
 use App\Http\Requests;
 use App\Models\Portal\User;

@@ -7,7 +7,7 @@
 ### Site Features
 - Full mobile support
 - Built in notifications
-- Steam authentication
+- Discord authentication
 
 ![Screenshot 1](http://i.imgur.com/PHG3FFl.png)
 
@@ -38,7 +38,7 @@
 - Assign missions to operations, in order
 
 ### User Features
-- Sync avatar from Steam
+- Sync avatar from Discord
 - Change username
 - Permissions system
 

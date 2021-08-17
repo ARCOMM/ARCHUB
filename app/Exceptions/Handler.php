@@ -48,9 +48,6 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof \Illuminate\Auth\Access\AuthorizationException && !auth()->guest() && is_null(auth()->user()->discord_id)) {
-            return redirect('/auth/redirect');
-        }
         return parent::render($request, $exception);
     }
 
