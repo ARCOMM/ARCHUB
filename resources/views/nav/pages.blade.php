@@ -31,6 +31,13 @@
             Chat Commands
         </a>
 
+        <a
+            href="https://docs.google.com/document/d/1PHaM-6em5acDyNg3PRfn2TXrGsgAZemZaVyEmChuVdM"
+            target="_newtab"
+            class="dropdown-item">
+            Modset Installation
+        </a>
+
         @foreach (Storage::disk('guides')->files() as $file)
             <a
                 href="{{ url("/guides/$file") }}"
