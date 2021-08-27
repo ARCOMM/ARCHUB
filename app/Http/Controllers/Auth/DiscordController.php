@@ -55,7 +55,6 @@ class DiscordController extends Controller
             $user = User::create([
                 'discord_id' => $data->id,
                 'username' => $data->name,
-                'email' => $data->email,
                 'avatar' => $data->avatar,
             ]);
         }

@@ -69,7 +69,6 @@ class RenameModes extends Command
             }
 
             $mission->update([
-                'pbo_path' => $newCloudPbo,
                 'cloud_pbo' => $newCloudPbo,
                 'cloud_zip' => $newCloudZip,
             ]);

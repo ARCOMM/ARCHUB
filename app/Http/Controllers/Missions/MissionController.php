@@ -45,7 +45,6 @@ class MissionController extends Controller
             $mission->summary = '';
             $mission->mode = $details->mode;
             $mission->map_id = $details->map->id;
-            $mission->pbo_path = '';
             $mission->briefings = '';
             $mission->save();
 
@@ -55,11 +54,10 @@ class MissionController extends Controller
                 'original.pbo'
             );
 
-            $mission->pbo_path = $path;
             $mission->save();
 
             // Unpack PBO and store configs in mission record as JSON objects
-            $configs = $mission->storeConfigs(storage_path("app/{$path}"));
+            $configs = $mission->storeConfigs($path);
 
             // If errors in configs, return message
             if (get_class($configs) == 'App\Helpers\ArmaConfigError') {
@@ -131,7 +129,6 @@ class MissionController extends Controller
                 $mission->summary = '';
                 $mission->mode = $details->mode;
                 $mission->map_id = $details->map->id;
-                $mission->pbo_path = '';
                 $mission->briefings = '';
                 $mission->save();
 
@@ -141,7 +138,6 @@ class MissionController extends Controller
                     'original.pbo'
                 );
 
-                $mission->pbo_path = $path;
                 $mission->save();
 
                 // Create revision item
@@ -151,7 +147,7 @@ class MissionController extends Controller
                 ]);
 
                 // Unpack PBO and store configs in mission record as JSON objects
-                $configs = $mission->storeConfigs(storage_path("app/{$path}"));
+                $configs = $mission->storeConfigs($path);
 
                 $path = "missions/{$mission->user_id}/{$mission->id}";
 
@@ -166,7 +162,6 @@ class MissionController extends Controller
                     $mission->display_name = $old_mission->display_name;
                     $mission->mode = $old_mission->mode;
                     $mission->map_id = $old_mission->map_id;
-                    $mission->pbo_path = $old_mission->pbo_path;
                     $mission->display_name = $old_mission_displayname;
                     $mission->summary = $old_mission_summary;
                     $mission->briefings = $old_mission->briefings;

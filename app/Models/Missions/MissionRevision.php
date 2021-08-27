@@ -14,6 +14,5 @@ class MissionRevision extends Model
     protected $fillable = [
         'mission_id',
         'user_id',
-        'text'
     ];
 }

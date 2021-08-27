@@ -51,15 +51,6 @@ class Mission extends Model implements HasMedia
     ];
 
     /**
-     * Attribute casts.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'loadout_addons' => 'array'
-    ];
-
-    /**
      * The addons that should be warned from using.
      *
      * @var array
@@ -477,53 +468,6 @@ class Mission extends Model implements HasMedia
     }
 
     /**
-     * Unpacks the mission PBO and returns the absolute path of the folder.
-     * 
-     * @return string
-     */
-    public function unpack($dirname = '', $pbo_path = '')
-    {
-        $pbo_path = ($pbo_path == '') ? storage_path("app/{$this->pbo_path}") : $pbo_path;
-        $unpacked = ($dirname == '') ?
-            storage_path("app/missions/{$this->user_id}/{$this->id}/unpacked") :
-            storage_path("app/missions/{$this->user_id}/{$dirname}");
-
-        // It should always be the most up-to-date
-        // as we delete unpacked after using them
-        if (file_exists($unpacked)) {
-            return $unpacked;
-        }
-
-        // Unpack the PBO
-        shell_exec(static::armake() . ' unpack -f ' . $pbo_path . ' ' . $unpacked);
-
-        $workingDir = getcwd();
-        chdir($unpacked);
-
-        // Debinarize mission.sqm
-        // If it's not binned, armake exits gracefully
-        shell_exec(static::armake() . ' derapify -f mission.sqm mission.sqm');
-
-        chdir($workingDir);
-
-        return $unpacked;
-    }
-
-    /**
-     * Deletes the unpacked mission directory.
-     *
-     * @return void
-     */
-    public function deleteUnpacked($dirname = '')
-    {
-        $unpacked = ($dirname == '') ?
-            storage_path("missions/{$this->user_id}/{$this->id}/unpacked") :
-            storage_path("missions/{$this->user_id}/{$dirname}");
-
-        Storage::deleteDirectory($unpacked);
-    }
-
-    /**
      * Gets the missions weather
      *
      * @return object
@@ -570,10 +514,10 @@ class Mission extends Model implements HasMedia
      *
      * @return void
      */
-    public function storeConfigs($pbo_path)
+    public function storeConfigs($path)
     {
         //parse mission.sqm
-        $mission = new PBOMission($pbo_path);
+        $mission = new PBOMission(storage_path("app/{$path}"));
         $contents = $mission->export();
 
         if ($mission->error) {
@@ -608,9 +552,7 @@ class Mission extends Model implements HasMedia
         $this->weather = json_encode($contents['mission']['weather']);
 
         $this->save();
-
-        // Move to cloud storage
-        $this->deployCloudFiles();
+        $this->deployCloudFiles($path);
 
         return $this;
     }
@@ -675,18 +617,17 @@ class Mission extends Model implements HasMedia
      *
      * @return any
      */
-    public function deployCloudFiles()
+    public function deployCloudFiles($path)
     {
         $qualified_pbo = "missions/{$this->user_id}/{$this->id}/{$this->exportedName()}";
 
         // Mission PBO
         Storage::cloud()->put(
             $qualified_pbo,
-            file_get_contents(storage_path("app/{$this->pbo_path}"))
+            file_get_contents(storage_path("app/{$path}"))
         );
 
         $this->cloud_pbo = $qualified_pbo;
-        $this->pbo_path = $qualified_pbo;
         $this->save();
     }
 
