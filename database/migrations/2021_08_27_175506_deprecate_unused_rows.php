@@ -26,6 +26,7 @@ class DeprecateUnusedRows extends Migration
             $table->dropColumn('published');
             $table->dropColumn('loadout_addons');
             $table->dropColumn('pbo_path');
+            $table->dropColumn('version');
         });
     }
 
