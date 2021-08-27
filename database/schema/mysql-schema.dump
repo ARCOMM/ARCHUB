@@ -193,7 +193,6 @@ CREATE TABLE `mission_revisions` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `mission_id` int unsigned NOT NULL,
   `user_id` int unsigned NOT NULL,
-  `text` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -233,8 +232,6 @@ CREATE TABLE `missions` (
   `mode` enum('coop','adversarial','arcade') COLLATE utf8_unicode_ci DEFAULT 'coop',
   `summary` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `map_id` int unsigned NOT NULL,
-  `pbo_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `published` tinyint(1) NOT NULL DEFAULT '0',
   `locked_blufor_briefing` tinyint(1) NOT NULL DEFAULT '0',
   `locked_opfor_briefing` tinyint(1) NOT NULL DEFAULT '0',
   `locked_indfor_briefing` tinyint(1) NOT NULL DEFAULT '0',
@@ -245,10 +242,8 @@ CREATE TABLE `missions` (
   `sqm_json` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `ext_json` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `cfg_json` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
-  `version` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `cloud_pbo` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `cloud_zip` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `loadout_addons` json DEFAULT NULL,
   `briefings` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `dependencies` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
   `date` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -357,9 +352,7 @@ CREATE TABLE `users` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `steam_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `access_level` int NOT NULL DEFAULT '1',
   `remember_token` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `discord_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -432,3 +425,4 @@ INSERT INTO `migrations` VALUES (43,'2019_12_14_000001_create_personal_access_to
 INSERT INTO `migrations` VALUES (45,'2021_06_27_192914_create_mission_subscriptions_table',15);
 INSERT INTO `migrations` VALUES (46,'2021_08_15_171428_rename_preop_to_arcade',16);
 INSERT INTO `migrations` VALUES (47,'2021_08_17_225133_deprecate_unused_tables',17);
+INSERT INTO `migrations` VALUES (49,'2021_08_27_175506_deprecate_unused_rows',18);
