@@ -90,8 +90,8 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     Route::post('/hub/missions/{mission}/update', 'Missions\MissionController@update');
     Route::post('/hub/missions/{mission}/set-verification', 'Missions\MissionController@updateVerification');
 
-    // Downlaod
-    Route::get('/hub/missions/{mission}/download/{format}', 'Missions\MissionController@download');
+    // Download
+    Route::get('/hub/missions/{mission}/download', 'Missions\MissionController@download');
 
     // Notes
     Route::resource('/hub/missions/{mission}/notes', 'Missions\NoteController');

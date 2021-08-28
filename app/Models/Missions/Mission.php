@@ -360,13 +360,13 @@ class Mission extends Model implements HasMedia
      *
      * @return string
      */
-    public function exportedName($format = 'pbo')
+    public function exportedName()
     {
         $revisions = $this->revisions()->count();
         $filename = pathinfo($this->original["file_name"], PATHINFO_FILENAME);
         [$filenameNoMap, $map] = explode('.', $filename, 2);
 
-        return "{$filenameNoMap}_{$revisions}.{$map}.{$format}";
+        return "{$filenameNoMap}_{$revisions}.{$map}.pbo";
     }
 
     /**
@@ -434,36 +434,16 @@ class Mission extends Model implements HasMedia
     }
 
     /**
-     * Gets the full path of the armake exe.
-     *
-     * @return string
-     */
-    public static function armake()
-    {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            return resource_path('utils/armake.exe');
-        } else {
-            return 'armake';
-        }
-    }
-
-    /**
      * Creates the downloadable file and returns its full URL.
      *
      * @return string
      */
-    public function download($format = 'pbo')
+    public function download()
     {
-        $path_to_file = ($format == 'pbo') ? $this->cloud_pbo : $this->cloud_zip;
-
-        if (strlen($path_to_file) == 0) {
-            $path_to_file = "missions/{$this->user_id}/{$this->id}/{$this->exportedName($format)}";
-        }
-
         return Storage::cloud()
         ->getAdapter()
         ->getBucket()
-        ->object($path_to_file)
+        ->object($this->cloud_pbo)
         ->signedUrl(new \DateTime('10 min'));
     }
 
@@ -613,7 +593,6 @@ class Mission extends Model implements HasMedia
     /**
      * Deploys the mission files to cloud storage.
      * - PBO Download
-     * - ZIP Download
      *
      * @return any
      */

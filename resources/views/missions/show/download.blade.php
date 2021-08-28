@@ -12,7 +12,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: "{{ url('/hub/missions/'.$mission->id.'/download') }}/" + caller.data('format'),
+                url: "{{ url('/hub/missions/'.$mission->id.'/download') }}",
                 beforeSend: function() {
                     caller.prepend('<i class="fa fa-spin fa-refresh m-r-1"></i>');
                     caller.addClass('pending');
@@ -36,6 +36,6 @@
     </a>
 
     <div class="dropdown-menu">
-        <a href="javascript:void(0)" class="dropdown-item download-mission" data-format="pbo">PBO</a>
+        <a href="javascript:void(0)" class="dropdown-item download-mission">Download</a>
     </div>
 </li>

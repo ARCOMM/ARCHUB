@@ -40,8 +40,7 @@ class ConvertIdToRevisions extends Command
     public function handle()
     {
         foreach (Mission::all() as $mission) {
-            $newCloudPbo = "missions/{$mission->user_id}/{$mission->id}/{$mission->exportedName('pbo')}";
-            $newCloudZip = "missions/{$mission->user_id}/{$mission->id}/{$mission->exportedName('zip')}";
+            $newCloudPbo = "missions/{$mission->user_id}/{$mission->id}/{$mission->exportedName()}";
 
             if (Storage::cloud()->exists($mission->cloud_pbo) && !Storage::cloud()->exists($newCloudPbo)) {
                 Storage::cloud()->move($mission->cloud_pbo, $newCloudPbo);
@@ -49,7 +48,6 @@ class ConvertIdToRevisions extends Command
 
             $mission->update([
                 'cloud_pbo' => $newCloudPbo,
-                'cloud_zip' => $newCloudZip,
             ]);
         }
     }

@@ -115,7 +115,6 @@ class MissionController extends Controller
                 $old_mission_summary = $mission->summary;
 
                 $old_mission_cloud_pbo_dir = $mission->cloud_pbo;
-                $old_mission_cloud_zip_dir = $mission->cloud_zip;
 
                 Storage::cloud()->move($old_mission_cloud_pbo_dir, "x{$old_mission_cloud_pbo_dir}");
 
@@ -277,9 +276,9 @@ class MissionController extends Controller
      *
      * @return string
      */
-    public function download(Mission $mission, $format = 'pbo')
+    public function download(Mission $mission)
     {
-        return $mission->download($format);
+        return $mission->download();
     }
 
     /**

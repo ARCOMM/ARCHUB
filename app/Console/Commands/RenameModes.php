@@ -61,8 +61,7 @@ class RenameModes extends Command
                 'file_name' => $new_filename,
             ]);
 
-            $newCloudPbo = "missions/{$mission->user_id}/{$mission->id}/{$mission->exportedName('pbo')}";
-            $newCloudZip = "missions/{$mission->user_id}/{$mission->id}/{$mission->exportedName('zip')}";
+            $newCloudPbo = "missions/{$mission->user_id}/{$mission->id}/{$mission->exportedName()}";
 
             if (Storage::cloud()->exists($mission->cloud_pbo) && !Storage::cloud()->exists($newCloudPbo)) {
                 Storage::cloud()->move($mission->cloud_pbo, $newCloudPbo);
@@ -70,7 +69,6 @@ class RenameModes extends Command
 
             $mission->update([
                 'cloud_pbo' => $newCloudPbo,
-                'cloud_zip' => $newCloudZip,
             ]);
         }
     }
