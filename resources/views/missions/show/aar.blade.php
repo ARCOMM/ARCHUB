@@ -15,7 +15,8 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: '{{ url('/hub/missions/comments') }}/' + id + '/edit',
+                    url: '{{ url("/hub/missions/comments") }}/' + id + '/edit',
+
                     success: function(data) {
                         data = JSON.parse(data);
                         $('#submit-mission-comment input[name="id"]').val(id);
@@ -37,11 +38,11 @@
 
                 if (canDelete) {
                     var caller = $(this);
-                    var id = caller.data('id');
 
                     $.ajax({
                         type: 'DELETE',
-                        url: '{{ url("/hub/missions/comments") }}/' + id,
+                        url: '{{ url("/hub/missions/comments") }}/' + caller.data('id'),
+
                         success: function(data) {
                             caller.parents('.mission-comment-item').remove();
                         }
@@ -70,7 +71,6 @@
                             url: '{{ url('/hub/missions/comments?mission_id=' . $mission->id) }}',
                             success: function(data) {
                                 $('.mission-comments').html(data);
-                                runConvert();
                             }
                         });
                     },
