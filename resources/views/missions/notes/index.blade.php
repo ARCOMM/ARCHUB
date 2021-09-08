@@ -1,18 +1,5 @@
 <script>
     $(document).ready(function(e) {
-        var runConvert = function() {
-            $('.mission-comment-item-text').each(function(idx, span) {
-                var jspan = $(span);
-
-                if (!jspan.hasClass('md-converted')) {
-                    span.innerHTML = window.mdconvert.makeHtml(span.innerText);
-                    jspan.addClass('md-converted');
-                }
-            });
-        };
-
-        runConvert();
-
         $(document).on('click', '.mission-note-delete', function(event) {
             var caller = $(this);
 
@@ -40,8 +27,6 @@
                 success: function(data) {
                     $('.mission-comments').append(data);
                     $('.has-mentions').html('');
-
-                    runConvert();
 
                     form[0].reset();
                 }
@@ -86,14 +71,11 @@
 <div class="mission-comments-form pull-left w-100">
     <form method="post" id="submit-mission-comment">
         <input type="hidden" name="mentions" id="mentions" value="">
-        <textarea class="form-control" id="submit-mission-comment-text" name="text" style="display:none"></textarea>
 
-        <span
+        <textarea
+            class="form-control-editable form-control mission-aar-textarea m-b-3 m-t-3"
             id="submit-mission-comment-text-real"
-            class="form-control-editable has-mentions mission-aar-textarea form-control m-b-3 m-t-3"
-            contenteditable="plaintext-only"
-            placeholder="Write a note..."
-            for="#submit-mission-comment-text"></span>
+            name="text">{!! (!is_null($mission->draft())) ? $mission->draft()->text : '' !!}</textarea>
 
         <a
             class="pull-left m-l-3"

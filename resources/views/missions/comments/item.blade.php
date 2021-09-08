@@ -20,13 +20,13 @@
                 </a>
 
                 <a href="javascript:void(0)" class="btn btn-sm m-a-0 mission-comment-control mission-comment-control-delete" data-id="{{ $comment->id }}" title="Delete">
-                    <i class="fa fa-times"></i>
+                    <i class="fa fa-trash"></i>
                 </a>
             @endif
         </span>
 
         <span class="mission-comment-item-text">
-            {!! nl2br($comment->text) !!}
+            @markdown($comment->text)
         </span>
     </div>
 @endif

@@ -21,6 +21,6 @@
     </span>
 
     <span class="mission-comment-item-text">
-        {!! nl2br($note->text) !!}
+        @markdown($note->text)
     </span>
 </div>
