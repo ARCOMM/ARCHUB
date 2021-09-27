@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             JoinStatusSeeder::class,
+            JoinSourcesSeeder::class,
         ]);
     }
 }
