@@ -1,0 +1,428 @@
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `email_submissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `email_submissions` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL,
+  `join_request_id` int unsigned NOT NULL,
+  `subject` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `email_submissions_user_id_foreign` (`user_id`),
+  KEY `email_submissions_join_request_id_foreign` (`join_request_id`),
+  CONSTRAINT `email_submissions_join_request_id_foreign` FOREIGN KEY (`join_request_id`) REFERENCES `join_requests` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `email_submissions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `email_templates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `email_templates` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `subject` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `content` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `locked` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `galleries`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `galleries` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `permalink` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `container` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `join_requests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `join_requests` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `age` int unsigned NOT NULL,
+  `location` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `steam` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `available` tinyint(1) NOT NULL,
+  `apex` tinyint(1) NOT NULL,
+  `groups` tinyint(1) NOT NULL,
+  `experience` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `bio` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `source_id` int unsigned NOT NULL DEFAULT '1',
+  `source_text` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status_id` int unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `join_requests_source_id_foreign` (`source_id`),
+  KEY `join_requests_status_id_foreign` (`status_id`),
+  CONSTRAINT `join_requests_source_id_foreign` FOREIGN KEY (`source_id`) REFERENCES `join_sources` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `join_requests_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `join_statuses` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `join_sources`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `join_sources` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `join_statuses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `join_statuses` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `text` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `permalink` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `position` int NOT NULL DEFAULT '99',
+  `protected` tinyint unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `maps`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `maps` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `display_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `class_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `ecosystem` enum('default','woodland','winter','desert','tropical','urban','mediterranean') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'default',
+  `image_2d` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `image_3d` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `media` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `model_id` int unsigned NOT NULL,
+  `model_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `collection_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `file_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `disk` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `size` int unsigned NOT NULL,
+  `manipulations` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `custom_properties` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `order_column` int unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `mime_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `responsive_images` json NOT NULL,
+  `uuid` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `conversions_disk` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `media_uuid_unique` (`uuid`),
+  KEY `media_model_id_model_type_index` (`model_id`,`model_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `mission_comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `mission_comments` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `mission_id` int unsigned NOT NULL,
+  `user_id` int unsigned NOT NULL,
+  `text` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `published` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mission_comments_mission_id_foreign` (`mission_id`),
+  KEY `mission_comments_user_id_foreign` (`user_id`),
+  CONSTRAINT `mission_comments_mission_id_foreign` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `mission_comments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `mission_notes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `mission_notes` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` int unsigned NOT NULL,
+  `mission_id` int unsigned NOT NULL,
+  `text` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mission_notes_user_id_foreign` (`user_id`),
+  KEY `mission_notes_mission_id_foreign` (`mission_id`),
+  CONSTRAINT `mission_notes_mission_id_foreign` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `mission_notes_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `mission_revisions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `mission_revisions` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `mission_id` int unsigned NOT NULL,
+  `user_id` int unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mission_revisions_mission_id_foreign` (`mission_id`),
+  KEY `mission_revisions_user_id_foreign` (`user_id`),
+  CONSTRAINT `mission_revisions_mission_id_foreign` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `mission_revisions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `mission_subscriptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `mission_subscriptions` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `mission_id` int unsigned NOT NULL,
+  `discord_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mission_subscriptions_mission_id_foreign` (`mission_id`),
+  KEY `mission_subscriptions_discord_id_foreign` (`discord_id`),
+  CONSTRAINT `mission_subscriptions_discord_id_foreign` FOREIGN KEY (`discord_id`) REFERENCES `users` (`discord_id`) ON DELETE CASCADE,
+  CONSTRAINT `mission_subscriptions_mission_id_foreign` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `missions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `missions` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_played` timestamp NULL DEFAULT NULL,
+  `user_id` int unsigned NOT NULL,
+  `file_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `display_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `mode` enum('coop','adversarial','arcade') COLLATE utf8_unicode_ci DEFAULT 'coop',
+  `summary` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `map_id` int unsigned NOT NULL,
+  `locked_blufor_briefing` tinyint(1) NOT NULL DEFAULT '0',
+  `locked_opfor_briefing` tinyint(1) NOT NULL DEFAULT '0',
+  `locked_indfor_briefing` tinyint(1) NOT NULL DEFAULT '0',
+  `locked_civilian_briefing` tinyint(1) NOT NULL DEFAULT '0',
+  `locked_gamemaster_briefing` tinyint(1) NOT NULL DEFAULT '0',
+  `verified` tinyint(1) NOT NULL DEFAULT '0',
+  `verified_by` int unsigned DEFAULT NULL,
+  `sqm_json` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `ext_json` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `cfg_json` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `cloud_pbo` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `briefings` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `dependencies` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `date` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `time` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `weather` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `orbatSettings` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`id`),
+  KEY `missions_user_id_foreign` (`user_id`),
+  KEY `missions_map_id_foreign` (`map_id`),
+  KEY `missions_verified_by_foreign` (`verified_by`),
+  CONSTRAINT `missions_map_id_foreign` FOREIGN KEY (`map_id`) REFERENCES `maps` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `missions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `missions_verified_by_foreign` FOREIGN KEY (`verified_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `operation_missions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `operation_missions` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `operation_id` int unsigned NOT NULL,
+  `mission_id` int unsigned NOT NULL,
+  `play_order` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `operation_missions_operation_id_foreign` (`operation_id`),
+  KEY `operation_missions_mission_id_foreign` (`mission_id`),
+  CONSTRAINT `operation_missions_mission_id_foreign` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `operation_missions_operation_id_foreign` FOREIGN KEY (`operation_id`) REFERENCES `operations` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `operations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `operations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `starts_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `personal_access_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `tokenable_id` bigint unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `token` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `abilities` text COLLATE utf8_unicode_ci,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `telescope_entries`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `telescope_entries` (
+  `sequence` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8_unicode_ci NOT NULL,
+  `batch_id` char(36) COLLATE utf8_unicode_ci NOT NULL,
+  `family_hash` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `should_display_on_index` tinyint(1) NOT NULL DEFAULT '1',
+  `type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `content` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`sequence`),
+  UNIQUE KEY `telescope_entries_uuid_unique` (`uuid`),
+  KEY `telescope_entries_batch_id_index` (`batch_id`),
+  KEY `telescope_entries_family_hash_index` (`family_hash`),
+  KEY `telescope_entries_created_at_index` (`created_at`),
+  KEY `telescope_entries_type_should_display_on_index_index` (`type`,`should_display_on_index`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `telescope_entries_tags`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `telescope_entries_tags` (
+  `entry_uuid` char(36) COLLATE utf8_unicode_ci NOT NULL,
+  `tag` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  KEY `telescope_entries_tags_entry_uuid_tag_index` (`entry_uuid`,`tag`),
+  KEY `telescope_entries_tags_tag_index` (`tag`),
+  CONSTRAINT `telescope_entries_tags_entry_uuid_foreign` FOREIGN KEY (`entry_uuid`) REFERENCES `telescope_entries` (`uuid`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `telescope_monitoring`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `telescope_monitoring` (
+  `tag` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `steam_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `discord_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_discord_id_unique` (`discord_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `videos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `videos` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_id` int unsigned NOT NULL,
+  `mission_id` int unsigned NOT NULL,
+  `video_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `videos_user_id_foreign` (`user_id`),
+  KEY `videos_mission_id_foreign` (`mission_id`),
+  CONSTRAINT `videos_mission_id_foreign` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `videos_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+INSERT INTO `migrations` VALUES (1,'2016_09_09_140712_create_join_requests_table',1);
+INSERT INTO `migrations` VALUES (2,'2016_09_10_222958_create_users',1);
+INSERT INTO `migrations` VALUES (3,'2016_09_10_222959_create_comments',1);
+INSERT INTO `migrations` VALUES (4,'2016_09_13_173542_create_media_table',1);
+INSERT INTO `migrations` VALUES (5,'2016_09_13_210017_create_galleries_table',1);
+INSERT INTO `migrations` VALUES (6,'2017_02_21_183832_create_map_table',1);
+INSERT INTO `migrations` VALUES (7,'2017_02_21_183834_create_mission_tables',1);
+INSERT INTO `migrations` VALUES (8,'2017_02_22_132805_create_mission_comments_table',1);
+INSERT INTO `migrations` VALUES (9,'2017_02_25_143506_create_operation_table',1);
+INSERT INTO `migrations` VALUES (10,'2017_02_28_220421_create_videos_table',1);
+INSERT INTO `migrations` VALUES (11,'2017_03_24_211422_add_mission_check_flag',1);
+INSERT INTO `migrations` VALUES (12,'2017_03_26_203316_add_verified_by_field',1);
+INSERT INTO `migrations` VALUES (13,'2017_03_27_113701_add_config_json_fields',1);
+INSERT INTO `migrations` VALUES (14,'2017_03_29_184625_create_permissions_tables',1);
+INSERT INTO `migrations` VALUES (15,'2017_03_31_150725_create_email_templates_table',1);
+INSERT INTO `migrations` VALUES (16,'2017_04_02_213425_create_mission_notes_table',1);
+INSERT INTO `migrations` VALUES (17,'2017_04_03_013412_create_notifications_table',1);
+INSERT INTO `migrations` VALUES (18,'2017_04_13_125846_add_mission_cloud_fields',1);
+INSERT INTO `migrations` VALUES (19,'2017_04_23_205251_create_attendances_table',1);
+INSERT INTO `migrations` VALUES (20,'2017_04_24_191319_create_mission_comment_mentions_table',1);
+INSERT INTO `migrations` VALUES (21,'2017_04_26_172118_create_mentions_table',1);
+INSERT INTO `migrations` VALUES (22,'2017_04_26_181314_depreciate_mission_comment_mentions',1);
+INSERT INTO `migrations` VALUES (23,'2017_05_02_141859_create_mission_revisions_table',1);
+INSERT INTO `migrations` VALUES (24,'2017_05_07_165417_update_media_table',1);
+INSERT INTO `migrations` VALUES (25,'2017_07_18_170336_create_email_submissions_table',1);
+INSERT INTO `migrations` VALUES (26,'2017_07_20_211414_create_absences_table',1);
+INSERT INTO `migrations` VALUES (27,'2018_01_13_152859_add_loadout_addons_column',2);
+INSERT INTO `migrations` VALUES (28,'2018_01_25_134904_create_references_table',3);
+INSERT INTO `migrations` VALUES (29,'2018_05_23_173507_create_staff_proxies_table',4);
+INSERT INTO `migrations` VALUES (30,'2018_05_23_182940_create_new_attendance_table',5);
+INSERT INTO `migrations` VALUES (31,'2018_05_25_224551_add_mission_id_to_attendance',6);
+INSERT INTO `migrations` VALUES (32,'2020_06_09_193750_add_mission_contents_to_mission_table',7);
+INSERT INTO `migrations` VALUES (33,'2021_02_27_194518_add_orbatsettings_to_missions_table',8);
+INSERT INTO `migrations` VALUES (34,'2021_05_30_191354_add_responsive_images_to_media_table',9);
+INSERT INTO `migrations` VALUES (35,'2021_06_16_200352_deprecate_absences_and_attendances',10);
+INSERT INTO `migrations` VALUES (37,'2021_06_01_202948_medialibrary_v8_update_media_table',11);
+INSERT INTO `migrations` VALUES (39,'2021_06_20_225552_add_discord_id_to_users_table',12);
+INSERT INTO `migrations` VALUES (40,'2018_08_08_100000_create_telescope_entries_table',13);
+INSERT INTO `migrations` VALUES (43,'2019_12_14_000001_create_personal_access_tokens_table',14);
+INSERT INTO `migrations` VALUES (45,'2021_06_27_192914_create_mission_subscriptions_table',15);
+INSERT INTO `migrations` VALUES (46,'2021_08_15_171428_rename_preop_to_arcade',16);
+INSERT INTO `migrations` VALUES (47,'2021_08_17_225133_deprecate_unused_tables',17);
+INSERT INTO `migrations` VALUES (49,'2021_08_27_175506_deprecate_unused_rows',18);
+INSERT INTO `migrations` VALUES (50,'2021_08_28_182415_delete_cloud_zip',19);
