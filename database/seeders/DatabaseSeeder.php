@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             JoinStatusSeeder::class,
             JoinSourcesSeeder::class,
             GalleriesSeeder::class,
+            EmailTemplatesSeeder::class,
         ]);
     }
 }
