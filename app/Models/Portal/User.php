@@ -55,6 +55,8 @@ class User extends Authenticatable implements HasMedia
      */
     public function missions()
     {
-        return Mission::where('user_id', $this->id)->orderBy('created_at', 'desc')->get();
+        return Mission::with('user')->with('map')
+        ->where('user_id', $this->id)
+        ->orderBy('created_at', 'desc')->get();
     }
 }
