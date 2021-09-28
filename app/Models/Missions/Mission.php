@@ -165,9 +165,9 @@ class Mission extends Model implements HasMedia
      */
     public static function allPast()
     {
-        return static::where('last_played', '!=', null)
+        return Mission::with('user')->with('map')
+            ->where('last_played', '!=', null)
             ->where('last_played', '<', Carbon::now()->toDateTimeString())
-            // ->where('verified', true)
             ->orderBy('last_played', 'desc')
             ->get();
     }
@@ -179,8 +179,8 @@ class Mission extends Model implements HasMedia
      */
     public static function allNew()
     {
-        return static::where('last_played', null)
-            // ->where('verified', true)
+        return Mission::with('user')->with('map')
+            ->where('last_played', null)
             ->orderBy('created_at', 'desc')
             ->get();
     }
