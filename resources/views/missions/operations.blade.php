@@ -144,7 +144,7 @@
 
         <ul class="mission-group pull-left">
             @foreach (Mission::allNew() as $mission)
-                @include('missions.item', ['mission' => $mission])
+                @include('missions.item', ['mission' => $mission, 'isTester' => true])
             @endforeach
         </ul>
 
@@ -152,7 +152,7 @@
 
         <ul class="mission-group pull-left">
             @foreach (Mission::allPast() as $mission)
-                @include('missions.item', ['mission' => $mission])
+                @include('missions.item', ['mission' => $mission, 'isTester' => true])
             @endforeach
         </ul>
     </div>
