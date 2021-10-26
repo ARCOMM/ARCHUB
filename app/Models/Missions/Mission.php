@@ -504,7 +504,7 @@ class Mission extends Model implements HasMedia
             return new ArmaConfigError($mission->errorReason);
         }
 
-        $validationError = $this->ValidateMissionContents($contents);
+        $validationError = $this->validateMissionContents($contents);
         if (!is_null($validationError)) {
             return new ArmaConfigError($validationError);
         }
@@ -537,27 +537,22 @@ class Mission extends Model implements HasMedia
         return $this;
     }
 
-    private function ValidateMissionContents($contents) 
+    private function validateMissionContents($contents) 
     {
+        $errorText = "";
         $files = $contents['pbo']['files'];
-        $expectedFiles = ["mission.sqm", "description.ext"];
-        $expectedFolderCount = ["briefing\\" => ["count" => 0, "ignore" => ["briefing\\briefing_example.sqf"]]];
-        
-        switch ($this->mode) {
-            case "arcade":
-                $expectedFolderCount["briefing\\"]["count"] = 0;
-                break;
-            case "coop":
-                $expectedFolderCount["briefing\\"]["count"] = 2;
-                break;
-            case "adversarial":
-                $expectedFolderCount["briefing\\"]["count"] = 3;
-                break;
-            default:
-                return "Unknown mission mode when validating mission contents";
+
+        $definedBriefings = $contents['mission']['briefings'];
+
+        foreach ($definedBriefings as $briefing) {
+            $briefingPath = $briefing[2];
+
+            if (!array_key_exists($briefingPath, $files)) {
+                $errorText .= sprintf("%s is defined in TMF but has no file\n", $briefing[0]);
+            }
         }
 
-        $errorText = "";
+        $expectedFiles = ["mission.sqm", "description.ext"];
 
         foreach ($expectedFiles as $file) {
             if (!array_key_exists($file, $files)) {
@@ -565,29 +560,10 @@ class Mission extends Model implements HasMedia
             }
         }
 
-        foreach ($expectedFolderCount as $folder => $expectations) {
-            $fileCount = $this->countFilesInFolder($files, $folder, $expectations["ignore"]);
-
-            if ($fileCount < $expectations["count"]) {
-                $errorText .= sprintf("%s has %d files, should have %d\n", $folder, $fileCount, $expectations["count"]);
-            }
-        }
-
         if (strlen($errorText) > 0) {
             return $errorText;
         }
         return null;
-    }
-
-    private function countFilesInFolder($files, $folder, $ignore) {
-        $count = 0;
-        foreach ($files as $file) {
-            if ((!in_array($file["path"], $ignore)) && (substr($file["path"], 0, strlen($folder)) === $folder)) {
-                $count++;
-            }
-        }
-
-        return $count;
     }
 
     /**
