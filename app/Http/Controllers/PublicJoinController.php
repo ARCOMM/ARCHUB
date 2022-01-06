@@ -56,7 +56,7 @@ class PublicJoinController extends Controller
 
         $this->validate($request, [
             'name' => 'required|max:255',
-            'age' => 'required|integer|min:' . config('app.min_age'),
+            'age' => 'required|integer',
             'location' => 'required',
             'email' => 'required|email',
             'steam' => 'required|url',

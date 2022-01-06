@@ -13,7 +13,6 @@ return [
 
     'name' => env('APP_NAME'),
     'op_time' => env('SITE_OP_TIME'),
-    'min_age' => env('JR_MIN_AGE', 18),
     'donate_url' => env('DONATE_URL', 'javascript:void(0)'),
 
     /*

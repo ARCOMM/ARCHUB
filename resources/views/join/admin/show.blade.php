@@ -84,7 +84,7 @@
                         {{ $jr->email }}
                     </td>
 
-                    <td width="50%" class="{{ ($jr->age < env('JR_MIN_AGE')) ? 'text-danger' : 'text-success' }}">
+                    <td width="50%" class="{{ ($jr->age) ? 'text-success' : 'text-danger' }}">
                         <i class="jr-icon fa fa-calendar"></i>
                         {{ $jr->age }}
                     </td>
