@@ -39,7 +39,7 @@
                     });
                 </script>
 
-                @if (!$mission->existsInOperation() || auth()->user()->can('manage-missions'))
+                @if (auth()->user()->can('manage-missions') || !($mission->existsInOperation() || $mission->hasBeenPlayed()))
                     <a
                         href="{{ url('/hub/missions/' . $mission->id . '/delete') }}"
                         class="dropdown-item"
@@ -56,10 +56,10 @@
 <div class="mission-inner">
     <div class="mission-nav" style="{{ !$can_see_nav ? 'box-shadow:none' : '' }}">
         <span class="mission-version">
-            @if ($mission->isNew())
-                PUBLISHED {{ $mission->created_at->diffForHumans() }}
+            @if ($mission->hasBeenPlayed())
+                LAST PLAYED {{ $mission->last_played->diffForHumans() }} 
             @else
-                LAST PLAYED {{ $mission->last_played->diffForHumans() }}
+                PUBLISHED {{ $mission->created_at->diffForHumans() }}
             @endif
         </span>
     </div>

@@ -27,7 +27,7 @@
         <hr class="m-t-3">
 
         <p class="text-xs-center p-t-3">
-            @if (!$mission->isNew())
+            @if ($mission->hasBeenPlayed())
                 Last played {{ $mission->last_played->diffForHumans() }}
             @else
                 Mission has not been played in an operation yet! Soon&trade;

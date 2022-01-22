@@ -190,9 +190,9 @@ class Mission extends Model implements HasMedia
      *
      * @return boolean
      */
-    public function isNew()
+    public function hasBeenPlayed()
     {
-        return is_null($this->last_played);
+        return !is_null($this->last_played);
     }
 
     /**
