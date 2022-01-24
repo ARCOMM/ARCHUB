@@ -283,17 +283,13 @@ class Mission extends Model implements HasMedia
      */
     public function banner()
     {
-        if (config('app.env') === 'local') {
-            return '';
-        }
-
         $media = $this->photos();
 
         if (count($media) > 0) {
             return $media[0]->getUrl();
-        } else {
-            return '';
         }
+        
+        return '';
     }
 
     /**
@@ -337,12 +333,7 @@ class Mission extends Model implements HasMedia
             return $media[0]->getUrl('thumb');
         }
 
-        if (!is_null($this->map->image_2d)) {
-            return url($this->map->image_2d);
-        }
-
-        // return url('/images/arcomm-placeholder.jpg');
-        return '';
+        return url('/images/arcomm-placeholder.jpg');
     }
 
     /**
