@@ -44,7 +44,7 @@ class MissionController extends Controller
             $mission->display_name = $request->file->getClientOriginalName();
             $mission->summary = '';
             $mission->mode = $details->mode;
-            $mission->map_id = $details->map->id;
+            $mission->map_name = $details->map_name;
             $mission->briefings = '';
             $mission->save();
 
@@ -127,7 +127,7 @@ class MissionController extends Controller
                 $mission->display_name = $request->file->getClientOriginalName();
                 $mission->summary = '';
                 $mission->mode = $details->mode;
-                $mission->map_id = $details->map->id;
+                $mission->map_name = $details->map_name;
                 $mission->briefings = '';
                 $mission->save();
 
@@ -160,7 +160,7 @@ class MissionController extends Controller
                     $mission->file_name = $old_mission->file_name;
                     $mission->display_name = $old_mission->display_name;
                     $mission->mode = $old_mission->mode;
-                    $mission->map_id = $old_mission->map_id;
+                    $mission->map_name = $old_mission->map_name;
                     $mission->display_name = $old_mission_displayname;
                     $mission->summary = $old_mission_summary;
                     $mission->briefings = $old_mission->briefings;

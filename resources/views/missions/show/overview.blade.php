@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-4 mission-overview-card">
         <h4>
-            {{ $mission->fulltextGamemode() }} on {{ $mission->map->display_name }}
+            {{ $mission->fulltextGamemode() }} on {{ $mission->map_name }}
         </h4>
 
         <h6>

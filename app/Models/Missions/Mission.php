@@ -165,7 +165,7 @@ class Mission extends Model implements HasMedia
      */
     public static function allPast()
     {
-        return Mission::with('user')->with('map')
+        return Mission::with('user')
             ->where('last_played', '!=', null)
             ->where('last_played', '<', Carbon::now()->toDateTimeString())
             ->orderBy('last_played', 'desc')
@@ -179,7 +179,7 @@ class Mission extends Model implements HasMedia
      */
     public static function allNew()
     {
-        return Mission::with('user')->with('map')
+        return Mission::with('user')
             ->where('last_played', null)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -193,16 +193,6 @@ class Mission extends Model implements HasMedia
     public function hasBeenPlayed()
     {
         return !is_null($this->last_played);
-    }
-
-    /**
-     * Gets the missions map.
-     *
-     * @return App\Models\Missions\Map
-     */
-    public function map()
-    {
-        return $this->belongsTo(Map::class);
     }
 
     /**
@@ -833,7 +823,7 @@ class Mission extends Model implements HasMedia
     }
 
     /**
-     * Gets mission mode and map details from name.
+     * Gets mode and map from mission name.
      * Validates mission names and aborts if invalid name.
      *
      * @return object
@@ -853,21 +843,12 @@ class Mission extends Model implements HasMedia
         $name = substr($name, 0, -4);
         $mapName = last(explode('.', $name));
         $parts = explode('_', rtrim($name, ".{$mapName}"));
-        $map = Map::whereRaw('LOWER(class_name) = ?', [strtolower($mapName)])->first();
-
-        if (is_null($map)) {
-            $map = new Map();
-            $map->display_name = $mapName;
-            $map->class_name = $mapName;
-            $map->save();
-        }
 
         if (sizeof($parts) < 3) {
             abort(400, 'Mission name must be in the format ARC_COOP/TVT/ADE_Name_Author.Map');
             return;
         }
 
-        $group = $parts[0];
         $mode = strtolower($parts[1]);
         $validModes = ['coop', 'tvt', 'ade'];
 
@@ -885,7 +866,7 @@ class Mission extends Model implements HasMedia
 
         $details = new stdClass();
         $details->mode = $mode;
-        $details->map = $map;
+        $details->map = $mapName;
 
         return $details;
     }
