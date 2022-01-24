@@ -17,27 +17,30 @@ use Carbon\Carbon;
 */
 
 Artisan::command('check-missions', function () {
-    $missions = Mission::whereRaw('last_played is null')->get();
+    $missions = Mission::all();
 
     foreach ($missions as $mission) {
-        $this->comment("Checking [{$mission->id}] {$mission->display_name}...");
-        $item = OperationMission::where('mission_id', $mission->id)->first();
+        $item = OperationMission::where('mission_id', $mission->id)->orderBy('created_at', 'desc')->first();
 
         if (!$item) {
-            $this->comment("Not selected [{$mission->id}] {$mission->display_name}");
+            $this->comment("Never slotted [{$mission->id}] {$mission->display_name}");
             continue;
         }
 
         $header = $item->operation;
         $now = Carbon::now();
 
-        if ($header->starts_at->lt($now)) {
+        if (!$header->starts_at->lt($now)) {
+            $this->comment("Currently slotted [{$mission->id}] {$mission->display_name}");
+            continue;
+        }
+
+        $wasPlayed = !is_null($mission->last_played);
+        if (!$wasPlayed || ($wasPlayed && ($mission->last_played < $header->starts_at))) {
+            $prev = $mission->last_played->toDateTimeString();
             $mission->last_played = $header->starts_at;
             $mission->save();
-            $this->comment("Updated [{$mission->id}] {$mission->display_name} to {$mission->last_played->toDateTimeString()}");
-            continue;
-        } else {
-            $this->comment("Not played yet [{$mission->id}] {$mission->display_name}");
+            $this->comment("Updated [{$mission->id}] {$mission->display_name} from {$prev} to {$mission->last_played->toDateTimeString()}");      
         }
     }
 })->describe('Handles the last played timestamp for all missions');
