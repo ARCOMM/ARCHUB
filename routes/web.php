@@ -37,7 +37,6 @@ Route::group(['middleware' => 'can:view-applications'], function () {
     Route::post('/hub/applications/api/send-email', 'Join\JoinController@email');
     Route::get('/hub/applications/api/email-submissions', 'Join\JoinController@emailSubmissions');
 
-    // Statuses
     Route::post('/hub/applications/api/status', 'Join\JoinStatusController@store');
     Route::put('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@update');
     Route::get('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@show');
@@ -51,7 +50,6 @@ Route::group(['middleware' => 'can:manage-applications'], function () {
     Route::resource('/hub/applications/api/emails', 'Join\EmailTemplateController');
 });
 
-//--- Missions
 Route::group(['middleware' => 'can:access-hub'], function () {
     Route::view('/hub', 'missions.index');
 
@@ -65,6 +63,13 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     });
 
     Route::prefix('hub/missions')->group(function() {
+        Route::get('/', 'Missions\MissionController@index');
+        Route::post('/', 'Missions\MissionController@store');
+        Route::get('/{mission}', 'Missions\MissionController@show');
+
+        Route::get('/{mission}/download', 'Missions\MissionController@download');
+        Route::get('/{mission}/orbat/{faction}', 'Missions\MissionController@orbat');
+
         Route::get('/{mission}/comments', 'Missions\CommentController@index');
         Route::post('/{mission}/comments', 'Missions\CommentController@store');
         Route::delete('/comments/{comment}', 'Missions\CommentController@destroy');
@@ -76,30 +81,7 @@ Route::group(['middleware' => 'can:access-hub'], function () {
 
         Route::get('/{mission}/briefing/{faction}', 'Missions\BriefingController@index');
         Route::put('/{mission}/briefing/{faction}/lock', 'Missions\BriefingController@setLock');
-
-        Route::get('/{mission}/orbat/{faction}', 'Missions\MissionController@orbat');
     });
-
-    Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
-    Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');
-    Route::post('/hub/missions/media/add-video', 'Missions\MediaController@addVideo');
-    Route::post('/hub/missions/media/delete-video', 'Missions\MediaController@removeVideo');
-
-    // Missions
-    Route::get('/hub/missions/{mission}/delete', 'Missions\MissionController@destroy');
-    Route::post('/hub/missions/{mission}/update', 'Missions\MissionController@update');
-    Route::post('/hub/missions/{mission}/set-verification', 'Missions\MissionController@updateVerification');
-
-    // Download
-    Route::get('/hub/missions/{mission}/download', 'Missions\MissionController@download');
-
-    // Panels
-    Route::get('/hub/missions/{mission}/{panel}', 'Missions\MissionController@panel');
-
-    Route::resource('/hub/missions', 'Missions\MissionController', [
-        'except' => ['create', 'edit']
-    ]);
-    
 
     Route::group(['middleware' => 'can:view-users'], function () {
         Route::get('/hub/users', 'Users\UserController@index');
@@ -110,4 +92,22 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         Route::post('/', 'Users\SettingsController@store');
         Route::get('/avatar-sync', 'Users\SettingsController@avatarSync');
     });
+
+    Route::get('/tokens/create', function (Request $request) {
+        auth()->user()->tokens()->delete();
+        $token = auth()->user()->createToken('api_token');
+
+        return ['token' => $token->plainTextToken];
+    });
+
+    // TODO: Rework these endpoints
+    Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
+    Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');
+    Route::post('/hub/missions/media/add-video', 'Missions\MediaController@addVideo');
+    Route::post('/hub/missions/media/delete-video', 'Missions\MediaController@removeVideo');
+
+    Route::get('/hub/missions/{mission}/delete', 'Missions\MissionController@destroy');
+    Route::post('/hub/missions/{mission}/update', 'Missions\MissionController@update');
+    Route::post('/hub/missions/{mission}/set-verification', 'Missions\MissionController@updateVerification');
+    Route::get('/hub/missions/{mission}/{panel}', 'Missions\MissionController@panel');
 });
