@@ -508,7 +508,6 @@ class Mission extends Model implements HasMedia
         $briefingsArray = $this->parseBriefings($contents['mission']['briefings']);
         $this->briefings = json_encode($briefingsArray);
         $this->dependencies = json_encode($contents['mission']['dependencies']);
-
         try {
             $this->orbatSettings = json_encode($this->orbatFromOrbatSettings($contents['mission']['orbatSettings'], $contents['mission']['groups']));
         } catch (Exception $e) {
@@ -518,11 +517,9 @@ class Mission extends Model implements HasMedia
         if(array_key_exists('date', $contents['mission'])) {
             $this->date = $contents['mission']['date'];
         }
-
         if(array_key_exists('time', $contents['mission'])) {
             $this->time = $contents['mission']['time'];
         }
-
         $this->weather = json_encode($contents['mission']['weather']);
 
         $this->save();
@@ -868,7 +865,8 @@ class Mission extends Model implements HasMedia
         if (in_array($mode, $validModes)) {
             if ($mode == 'ade') {
                 $mode = 'arcade';
-            } else if ($mode == 'tvt') {
+            } 
+            else if ($mode == 'tvt') {
                 $mode = 'adversarial';
             }
         } else {
@@ -1001,9 +999,9 @@ class Mission extends Model implements HasMedia
             if (isset($orbatGroups[$faction][$item[0]])) {
                 $units = &$orbatGroups[$faction][$item[0]];
                 unset($item[0]);
-
+                
                 $units = array_reverse($units);
-
+                
                 foreach ($units as $unit) {
                     array_unshift($item, $unit);
                 }
