@@ -865,7 +865,7 @@ class Mission extends Model implements HasMedia
         if (in_array($mode, $validModes)) {
             if ($mode == 'ade') {
                 $mode = 'arcade';
-            } 
+            }
             else if ($mode == 'tvt') {
                 $mode = 'adversarial';
             }
