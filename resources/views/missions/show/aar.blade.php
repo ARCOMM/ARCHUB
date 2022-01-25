@@ -8,20 +8,6 @@
 
 <div class="mission-comments-form pull-left w-100">
     <script>
-        $(document).ready(function(e) {
-            var runConvert = function() {
-                $('.mission-comment-item-text').each(function(idx, span) {
-                    var jspan = $(span);
-
-                    if (!jspan.hasClass('md-converted')) {
-                        span.innerHTML = window.mdconvert.makeHtml(span.innerText);
-                        jspan.addClass('md-converted');
-                    }
-                });
-            };
-
-            runConvert();
-
             $(document).on('click', '.mission-comment-control-edit', function(event) {
                 var caller = $(this);
                 var id = caller.data('id');
@@ -86,7 +72,6 @@
 
                             success: function(data) {
                                 $('.mission-comments').html(data);
-                                runConvert();
                             }
                         });
                     },
@@ -164,16 +149,9 @@
         <input type="hidden" name="mentions" value="" id="mentions-list">
 
         <textarea
-            class="form-control"
+            class="form-control-editable form-control mission-aar-textarea m-b-3 m-t-3"
             id="submit-mission-comment-text"
-            name="text"
-            style="display:none">{!! (!is_null($mission->draft())) ? $mission->draft()->text : '' !!}</textarea>
-
-        <div
-            class="form-control-editable has-mentions mission-aar-textarea form-control m-b-3 m-t-3"
-            contenteditable="plaintext-only"
-            placeholder="Your mission experience..."
-            for="#submit-mission-comment-text">{!! (!is_null($mission->draft())) ? $mission->draft()->text : '' !!}</div>
+            name="text">{!! (!is_null($mission->draft())) ? $mission->draft()->text : '' !!}</textarea>
 
         <span id="auto-save-hint" class="pull-left text-muted p-l-3"></span>
 

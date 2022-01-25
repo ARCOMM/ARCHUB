@@ -69,15 +69,24 @@ class NoteController extends Controller
             return;
         }
 
-        $note = new MissionNote;
-        $note->user_id = auth()->user()->id;
-        $note->mission_id = $mission->id;
-        $note->text = $request->text;
-        $note->save();
+        if ($request->id == -1) {
+            // Create a new note
+            $note = new MissionNote;
+            $note->user_id = auth()->user()->id;
+            $note->mission_id = $mission->id;
+            $note->text = $request->text;
+            $note->save();
 
-        $url = "{$note->mission->url()}/notes#note-{$note->id}";
-        $content = "**{$note->user->username}** added a note to **{$note->mission->display_name}**";
-        Discord::missionUpdate($content, $mission, true, $url);
+            $url = "{$note->mission->url()}/notes#note-{$note->id}";
+            $content = "**{$note->user->username}** added a note to **{$note->mission->display_name}**";
+            Discord::missionUpdate($content, $mission, true, true, $url);
+        } else {
+            // Update an existing one
+            $note = MissionNote::find($request->id);
+
+            $note->text = $request->text;
+            $note->save();
+        }
 
         return view('missions.notes.item', compact('note'));
     }

@@ -19,9 +19,9 @@ class PBOMission {
   public $errorReason;
 
   private static $errorReasons = array(
-    'EMPTY_MISSION' => 'Błąd odczytu pliku misji (mission.sqm) lub jego brak.',
-    'INVALID_MAP' => 'Niepoprawna nazwa mapy. Sprawdź nazwę pliku.',
-    'XML_ERROR' => 'Błąd parsowania xml (stringtable.xml). Powód: %s'
+    'EMPTY_MISSION' => 'Error reading mission file (mission.sqm) or lacking it ',
+    'INVALID_MAP' => 'Wrong map name. Check file\'s name.',
+    'XML_ERROR' => 'Error parsing xml (stringtable.xml). Reason: %s'
   );
 
   function __construct(string $filepath, ?string $filename = null) {
