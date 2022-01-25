@@ -8,30 +8,22 @@ use \stdClass;
 use Carbon\Carbon;
 use App\Helpers\ArmaConfig;
 use App\Helpers\ArmaScript;
-use App\Models\Portal\User;
-use Spatie\MediaLibrary\Media;
 use App\Helpers\ArmaConfigError;
-use App\Notifications\MissionUpdated;
-use App\Notifications\MissionVerified;
-use Illuminate\Database\Eloquent\Model;
-use App\Notifications\MissionPublished;
-use App\Notifications\MissionNoteAdded;
-use Illuminate\Notifications\Notifiable;
-use App\Notifications\MentionedInComment;
-use Kingsley\Mentions\Traits\HasMentions;
-use Kingsley\References\Models\Reference;
-use App\Notifications\MissionCommentAdded;
-use App\Models\Operations\OperationMission;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use App\Helpers\PBOMission\PBOMission;
 use App\Helpers\PBOMission\PBOFile\PBOFile;
+use App\Models\Portal\User;
+use App\Models\Operations\OperationMission;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Mission extends Model implements HasMediaConversions
+class Mission extends Model implements HasMedia
 {
-    use Notifiable,
-        HasMediaTrait,
-        HasMentions;
+    use Notifiable;
+    use InteractsWithMedia;
 
     public $factions = [
         0 => "Opfor",
@@ -59,21 +51,13 @@ class Mission extends Model implements HasMediaConversions
     ];
 
     /**
-     * Attribute casts.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'loadout_addons' => 'array'
-    ];
-
-    /**
      * The addons that should be warned from using.
      *
      * @var array
      */
     public $addonWarnings = [
-        'rhs'
+        'rhs',
+        'cfp'
     ];
 
     /**
@@ -116,16 +100,23 @@ class Mission extends Model implements HasMediaConversions
     protected $gamemodes = [
         'coop' => 'Cooperative',
         'adversarial' => 'Adversarial',
-        'preop' => 'Pre-Operation'
+        'arcade' => 'Arcade'
     ];
 
     /**
-     * Appended attributes.
-     *
+     * Side represented as an integer as used by TMF_OrbatSettings
+     * From: https://community.bistudio.com/wiki/BIS_fnc_sideID
+     * 
      * @var array
      */
-    protected $appends = [
-        'ref'
+    public static $sideMap = [
+        "opfor" => 0,
+        "east" => 0,
+        "blufor" => 1,
+        "west" => 1,
+        "independent" => 2,
+        "resistance" => 2,
+        "civilian" => 3
     ];
 
     /**
@@ -136,68 +127,6 @@ class Mission extends Model implements HasMediaConversions
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-
-        static::created(function (Model $model) {
-            $model->reference()->save(
-                new Reference([
-                    'hash' => $model->makeReferenceHash()
-                ])
-            );
-        });
-    }
-
-    /**
-     * Gets the reference for the model.
-     *
-     * @return Illuminate\Database\Eloquent\Relations\MorphOne
-     */
-    public function reference()
-    {
-        return $this->morphOne(Reference::class, 'model');
-    }
-
-    /**
-     * Makes a new reference hash.
-     *
-     * @return string
-     */
-    public function makeReferenceHash()
-    {
-        if (property_exists($this, 'referencePrefix')) {
-            if (is_null($this->referencePrefix)) {
-                return str_random(12);
-            } else {
-                return $this->referencePrefix . '_' . str_random(12);
-            }
-        }
-
-        if (config('references.prefix')) {
-            $prefix = substr(strtolower(class_basename(get_class($this))), 0, 3);
-
-            return $prefix . '_' . str_random(12);
-        }
-
-        return str_random(12);
-    }
-
-    /**
-     * Gets the ref attribute.
-     *
-     * @return string
-     */
-    public function getRefAttribute()
-    {
-        return optional($this->reference)->hash;
-    }
-
-    /**
-     * Discord notification channel.
-     *
-     * @return any
-     */
-    public function routeNotificationForDiscord()
-    {
-        return config('services.discord.channel_id');
     }
 
     /**
@@ -205,7 +134,7 @@ class Mission extends Model implements HasMediaConversions
      *
      * @return void
      */
-    public function registerMediaConversions(Media $media = null)
+    public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
             ->width(384)
@@ -230,33 +159,15 @@ class Mission extends Model implements HasMediaConversions
     }
 
     /**
-     * Gets the unread comments on the mission.
-     *
-     * @return Collection App\Models\Missions\MissionComment
-     */
-    public function unreadComments()
-    {
-        $mission = $this;
-
-        $filtered = auth()->user()->unreadNotifications->filter(function ($item) use ($mission) {
-            return
-                $item->type == MissionCommentAdded::class &&
-                $item->data['comment']['mission_id'] == $mission->id;
-        });
-
-        return $filtered;
-    }
-
-    /**
      * Gets all past missions (last played is in past and not null).
      *
      * @return Collection App\Models\Missions\Mission
      */
     public static function allPast()
     {
-        return static::where('last_played', '!=', null)
+        return Mission::with('user')->with('map')
+            ->where('last_played', '!=', null)
             ->where('last_played', '<', Carbon::now()->toDateTimeString())
-            // ->where('verified', true)
             ->orderBy('last_played', 'desc')
             ->get();
     }
@@ -268,8 +179,8 @@ class Mission extends Model implements HasMediaConversions
      */
     public static function allNew()
     {
-        return static::where('last_played', null)
-            // ->where('verified', true)
+        return Mission::with('user')->with('map')
+            ->where('last_played', null)
             ->orderBy('created_at', 'desc')
             ->get();
     }
@@ -279,9 +190,9 @@ class Mission extends Model implements HasMediaConversions
      *
      * @return boolean
      */
-    public function isNew()
+    public function hasBeenPlayed()
     {
-        return is_null($this->last_played);
+        return !is_null($this->last_played);
     }
 
     /**
@@ -372,17 +283,13 @@ class Mission extends Model implements HasMediaConversions
      */
     public function banner()
     {
-        if (config('app.env') === 'local') {
-            return '';
-        }
-
         $media = $this->photos();
 
         if (count($media) > 0) {
             return $media[0]->getUrl();
-        } else {
-            return '';
         }
+        
+        return '';
     }
 
     /**
@@ -426,12 +333,7 @@ class Mission extends Model implements HasMediaConversions
             return $media[0]->getUrl('thumb');
         }
 
-        if (!is_null($this->map->image_2d)) {
-            return url($this->map->image_2d);
-        }
-
-        // return url('/images/arcomm-placeholder.jpg');
-        return '';
+        return url('/images/arcomm-placeholder.jpg');
     }
 
     /**
@@ -449,18 +351,13 @@ class Mission extends Model implements HasMediaConversions
      *
      * @return string
      */
-    public function exportedName($format = 'pbo')
+    public function exportedName()
     {
         $revisions = $this->revisions()->count();
+        $filename = pathinfo($this->original["file_name"], PATHINFO_FILENAME);
+        [$filenameNoMap, $map] = explode('.', $filename, 2);
 
-        $download = 'ARC_' .
-            strtoupper($this->mode == 'adversarial' ? 'tvt' : $this->mode) . '_' .
-            studly_case($this->display_name) . '_' .
-            trim(substr($this->user->username, 0, 4)) . '_' .
-            $revisions . '.' .
-            $this->map->class_name . '.' . $format;
-
-        return $download;
+        return "{$filenameNoMap}_{$revisions}.{$map}.pbo";
     }
 
     /**
@@ -528,92 +425,17 @@ class Mission extends Model implements HasMediaConversions
     }
 
     /**
-     * Gets the full path of the armake exe.
-     *
-     * @return string
-     */
-    public static function armake()
-    {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            return resource_path('utils/armake.exe');
-        } else {
-            return 'armake';
-        }
-    }
-
-    /**
      * Creates the downloadable file and returns its full URL.
      *
      * @return string
      */
-    public function download($format = 'pbo')
+    public function download()
     {
-        $path_to_file = ($format == 'pbo') ? $this->cloud_pbo : $this->cloud_zip;
-
-        if (strlen($path_to_file) == 0) {
-            $path_to_file = "missions/{$this->user_id}/{$this->id}/{$this->exportedName($format)}";
-        }
-
-        $command = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ?
-            'gsutil ' :
-            '/usr/bin/python /usr/lib/google-cloud-sdk/bin/bootstrapping/gsutil.py ';
-
-        $signed_url = shell_exec(
-            $command .
-            'signurl -d 10m ' .
-            base_path('gcs.json') .
-            ' gs://archub/' . $path_to_file .
-            ' 2>&1' // Needed to get output
-        );
-
-        return trim(preg_replace('/([\s\S]+)https:\/\/storage/', 'https://storage', $signed_url));
-    }
-
-    /**
-     * Unpacks the mission PBO and returns the absolute path of the folder.
-     * 
-     * @return string
-     */
-    public function unpack($dirname = '', $pbo_path = '')
-    {
-        $pbo_path = ($pbo_path == '') ? storage_path("app/{$this->pbo_path}") : $pbo_path;
-        $unpacked = ($dirname == '') ?
-            storage_path("app/missions/{$this->user_id}/{$this->id}/unpacked") :
-            storage_path("app/missions/{$this->user_id}/{$dirname}");
-
-        // It should always be the most up-to-date
-        // as we delete unpacked after using them
-        if (file_exists($unpacked)) {
-            return $unpacked;
-        }
-
-        // Unpack the PBO
-        shell_exec(static::armake() . ' unpack -f ' . $pbo_path . ' ' . $unpacked);
-
-        $workingDir = getcwd();
-        chdir($unpacked);
-
-        // Debinarize mission.sqm
-        // If it's not binned, armake exits gracefully
-        shell_exec(static::armake() . ' derapify -f mission.sqm mission.sqm');
-
-        chdir($workingDir);
-
-        return $unpacked;
-    }
-
-    /**
-     * Deletes the unpacked mission directory.
-     *
-     * @return void
-     */
-    public function deleteUnpacked($dirname = '')
-    {
-        $unpacked = ($dirname == '') ?
-            storage_path("missions/{$this->user_id}/{$this->id}/unpacked") :
-            storage_path("missions/{$this->user_id}/{$dirname}");
-
-        Storage::deleteDirectory($unpacked);
+        return Storage::cloud()
+        ->getAdapter()
+        ->getBucket()
+        ->object($this->cloud_pbo)
+        ->signedUrl(new \DateTime('10 min'));
     }
 
     /**
@@ -649,7 +471,7 @@ class Mission extends Model implements HasMediaConversions
     public function hasAddon($key)
     {
         foreach ($this->addons() as $addonName) {
-            if (starts_with(strtolower($addonName), strtolower($key))) {
+            if (Str::startsWith(strtolower($addonName), strtolower($key))) {
                 return true;
             }
         }
@@ -663,17 +485,17 @@ class Mission extends Model implements HasMediaConversions
      *
      * @return void
      */
-    public function storeConfigs($pbo_path)
+    public function storeConfigs($path)
     {
         //parse mission.sqm
-        $mission = new PBOMission($pbo_path);
+        $mission = new PBOMission(storage_path("app/{$path}"));
         $contents = $mission->export();
 
         if ($mission->error) {
-            return new ArmaConfigError($mission->error);
+            return new ArmaConfigError($mission->errorReason);
         }
 
-        $validationError = $this->ValidateMissionContents($contents);
+        $validationError = $this->validateMissionContents($contents);
         if (!is_null($validationError)) {
             return new ArmaConfigError($validationError);
         }
@@ -686,55 +508,49 @@ class Mission extends Model implements HasMediaConversions
         $briefingsArray = $this->parseBriefings($contents['mission']['briefings']);
         $this->briefings = json_encode($briefingsArray);
         $this->dependencies = json_encode($contents['mission']['dependencies']);
+
+        try {
+            $this->orbatSettings = json_encode($this->orbatFromOrbatSettings($contents['mission']['orbatSettings'], $contents['mission']['groups']));
+        } catch (Exception $e) {
+            $this->orbatSettings = json_encode(array("Error extracting ORBAT:" => array($e->getMessage())));
+        }
+
         if(array_key_exists('date', $contents['mission'])) {
             $this->date = $contents['mission']['date'];
         }
+
         if(array_key_exists('time', $contents['mission'])) {
             $this->time = $contents['mission']['time'];
         }
+
         $this->weather = json_encode($contents['mission']['weather']);
 
         $this->save();
-
-        // Move to cloud storage
-        $this->deployCloudFiles();
+        $this->deployCloudFiles($path);
 
         return $this;
     }
 
-    private function ValidateMissionContents($contents) 
+    private function validateMissionContents($contents) 
     {
+        $errorText = "";
         $files = $contents['pbo']['files'];
-        $expectedFiles = ["mission.sqm", "description.ext"];
-        $expectedFolderCount = ["briefing\\" => ["count" => 0, "ignore" => ["briefing\\briefing_example.sqf"]]];
-        
-        switch ($this->mode) {
-            case "preop":
-                $expectedFolderCount["briefing\\"]["count"] = 0;
-                break;
-            case "coop":
-                $expectedFolderCount["briefing\\"]["count"] = 2;
-                break;
-            case "adversarial":
-                $expectedFolderCount["briefing\\"]["count"] = 3;
-                break;
-            default:
-                return "Unknown mission mode when validating mission contents";
+
+        $definedBriefings = $contents['mission']['briefings'];
+
+        foreach ($definedBriefings as $briefing) {
+            $briefingPath = $briefing[2];
+
+            if (!array_key_exists($briefingPath, $files)) {
+                $errorText .= sprintf("%s is defined in TMF but has no file\n", $briefing[0]);
+            }
         }
 
-        $errorText = "";
+        $expectedFiles = ["mission.sqm", "description.ext"];
 
         foreach ($expectedFiles as $file) {
             if (!array_key_exists($file, $files)) {
                 $errorText .= sprintf("%s is missing\n", $file);
-            }
-        }
-
-        foreach ($expectedFolderCount as $folder => $expectations) {
-            $fileCount = $this->countFilesInFolder($files, $folder, $expectations["ignore"]);
-
-            if ($fileCount < $expectations["count"]) {
-                $errorText .= sprintf("%s has %d files, should have %d\n", $folder, $fileCount, $expectations["count"]);
             }
         }
 
@@ -744,36 +560,23 @@ class Mission extends Model implements HasMediaConversions
         return null;
     }
 
-    private function countFilesInFolder($files, $folder, $ignore) {
-        $count = 0;
-        foreach ($files as $file) {
-            if ((!in_array($file["path"], $ignore)) && (substr($file["path"], 0, strlen($folder)) === $folder)) {
-                $count++;
-            }
-        }
-
-        return $count;
-    }
-
     /**
      * Deploys the mission files to cloud storage.
      * - PBO Download
-     * - ZIP Download
      *
      * @return any
      */
-    public function deployCloudFiles()
+    public function deployCloudFiles($path)
     {
         $qualified_pbo = "missions/{$this->user_id}/{$this->id}/{$this->exportedName()}";
 
         // Mission PBO
         Storage::cloud()->put(
             $qualified_pbo,
-            file_get_contents(storage_path("app/{$this->pbo_path}"))
+            file_get_contents(storage_path("app/{$path}"))
         );
 
         $this->cloud_pbo = $qualified_pbo;
-        $this->pbo_path = $qualified_pbo;
         $this->save();
     }
 
@@ -920,23 +723,18 @@ class Mission extends Model implements HasMediaConversions
     public function briefingFactions()
     {
         $filledFactions = [];
-        $factionLocks = [
-            0 => $this->locked_0_briefing,
-            1 => $this->locked_1_briefing,
-            2 => $this->locked_2_briefing,
-            3 => $this->locked_3_briefing
-        ];
-
         $briefings = $this->GetBriefings();
 
-        if($briefings != null) {
-            foreach($briefings as $briefing) {
+        if ($briefings != null) {
+            foreach ($briefings as $briefing) {
                 $factionId = $this->parseFactionId($briefing[1][0]);
-                if(!$factionLocks[$factionId] || auth()->user()->hasPermission('mission:view_locked_briefings') || $this->isMine()) {
+                $locked = $this->{'locked_'.strtolower($this->factions[$factionId]).'_briefing'};
+
+                if ($locked == 0 || (!auth()->guest() && ($this->isMine() || auth()->user()->can('test-missions')))) {
                     $nav = new stdClass();
                     $nav->name = $briefing[0];
                     $nav->faction = $factionId;
-                    $nav->locked = $factionLocks[$factionId];
+                    $nav->locked = $locked;
 
                     array_push($filledFactions, $nav);
                 }
@@ -1042,7 +840,7 @@ class Mission extends Model implements HasMediaConversions
         }
 
         if (strpos($name, '_') === false) {
-            abort(400, 'Mission name must be in the format ARC_COOP/TVT/PREOP_Name_Author.Map');
+            abort(400, 'Mission name must be in the format ARC_COOP/TVT/ADE_Name_Author.Map');
             return;
         }
 
@@ -1059,24 +857,22 @@ class Mission extends Model implements HasMediaConversions
         }
 
         if (sizeof($parts) < 3) {
-            abort(400, 'Mission name must be in the format ARC_COOP/TVT/PREOP_Name_Author.Map');
+            abort(400, 'Mission name must be in the format ARC_COOP/TVT/ADE_Name_Author.Map');
             return;
         }
 
         $group = $parts[0];
         $mode = strtolower($parts[1]);
-        $validModes = ['coop', 'co', 'tvt', 'pvp', 'adv', 'preop'];
+        $validModes = ['coop', 'tvt', 'ade'];
 
         if (in_array($mode, $validModes)) {
-            if ($mode == 'co') {
-                $mode = 'coop';
-            }
-
-            if (in_array($mode, ['tvt', 'pvp', 'adv'])) {
+            if ($mode == 'ade') {
+                $mode = 'arcade';
+            } else if ($mode == 'tvt') {
                 $mode = 'adversarial';
             }
         } else {
-            abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or PREOP');
+            abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or ADE');
             return;
         }
 
@@ -1088,70 +884,172 @@ class Mission extends Model implements HasMediaConversions
     }
 
     /**
-     * Gets the mission note notifications.
+     * Returns the mission's orbat
      *
-     * @return Collection
+     * @return array
      */
-    public function noteNotifications()
+    public function getOrbat()
     {
-        $filtered = auth()->user()->unreadNotifications->filter(function ($item) {
-            return
-                $item->type == MissionNoteAdded::class &&
-                $item->data['note']['mission_id'] == $this->id;
-        });
+        return (array)json_decode($this->orbatSettings);
+    }
 
-        return $filtered;
+    public function orbat($faction)
+    {
+        $orbat = $this->getOrbat();
+        if (isset($orbat[$faction])) {
+            return (array)$orbat[$faction];
+        }
+
+        return (array)array();
+    }
+
+    public function orbatFactions()
+    {
+        $orbat = $this->getOrbat();
+        if (is_null($orbat)) {
+            return array();
+        }
+
+        return array_keys($orbat);
     }
 
     /**
-     * Gets the mission comments notifications.
+     * Returns a minimal version of orbatSettings for displaying on the website
      *
-     * @return Collection
+     * @return array
      */
-    public function commentNotifications()
+    private function orbatFromOrbatSettings(array $orbats, array &$groups)
     {
-        $filtered = auth()->user()->unreadNotifications->filter(function ($item) {
-            return
-                ($item->type == MissionCommentAdded::class &&
-                $item->data['comment']['mission_id'] == $this->id) ||
-                ($item->type == MentionedInComment::class &&
-                $item->data['mission_id'] == $this->id);
-        });
+        foreach ($orbats as &$faction) {
+            $this->minimiseLevel($faction[1]);
+            $faction = $faction[1];
+        }
 
-        return $filtered;
+        $orbatGroups = array();
+        foreach ($groups as &$group) {
+            if (isset($group['orbatParent'])) {
+                $faction = self::$sideMap[$group['side']];
+                $orbatParent = $group['orbatParent'];
+                $minimalGroup = array(isset($group['name']) ? $group['name'] : "NOT NAMED", array());
+
+                foreach ($group['units'] as $unit) {
+                    $desc = explode("@", $unit['description'])[0];
+                    array_push($minimalGroup[1], array($desc));
+                }
+
+                if (!isset($orbatGroups[$faction])) {
+                    $orbatGroups[$faction] = array();
+                }
+
+                if (!isset($orbatGroups[$faction][$orbatParent])) {
+                    $orbatGroups[$faction][$orbatParent] = array($minimalGroup);
+                } else {
+                    array_push($orbatGroups[$faction][$orbatParent], $minimalGroup);
+                }
+            }
+        }
+
+        foreach ($orbats as $faction => &$orbat) {
+            if (!is_array($orbat)) {
+                unset($orbats[$faction]);
+                continue;
+            }
+
+            $orbatModified = false;
+            $this->replaceIntWithUnits($orbat[1], $faction, $orbatGroups, $orbatModified);
+
+            if (!$orbatModified) {
+                unset($orbats[$faction]);
+            }
+        }
+
+        $this->removeAllIntsAndEmptyArrays($orbats);
+        // Reindex array after everything has been unset
+        $orbats = array_map('array_values', $orbats);
+
+        $namedOrbats = array();
+        foreach($orbats as $faction => &$orbat) {
+            $factionName = array_search($faction, self::$sideMap);
+            $namedOrbats[$factionName] = &$orbat;
+        }
+
+        return $namedOrbats;
     }
 
     /**
-     * Gets the mission verification notifications.
-     *
-     * @return Collection
+     * Recursive function used by $this->orbatFromOrbatSettings()
      */
-    public function verifiedNotifications()
+    private function minimiseLevel(array &$level)
     {
-        $filtered = auth()->user()->unreadNotifications->filter(function ($item) {
-            return
-                $item->type == MissionVerified::class &&
-                $item->data['mission']['id'] == $this->id;
-        });
+        $name = strlen($level[0][1]) > 0 ? $level[0][1] : $level[0][4]; //If an abbrievation is defined then use it, otherwise full name
+        $uniqueId = $level[0][0];
+        $level[0] = $name;
 
-        return $filtered;
+        if (count($level[1]) === 0) {
+            $level[1] = array($uniqueId);
+        } else {
+            foreach ($level[1] as $i => &$subLevel) {
+                $this->minimiseLevel($subLevel);
+            }
+            array_unshift($level[1], $uniqueId);
+        }
     }
 
-    /**
-     * Gets the mission updated/published notifications.
-     *
-     * @return Collection
-     */
-    public function stateNotifications()
-    {
-        $filtered = auth()->user()->unreadNotifications->filter(function ($item) {
-            return
-                ($item->type == MissionPublished::class &&
-                $item->data['mission']['id'] == $this->id) ||
-                ($item->type == MissionUpdated::class &&
-                $item->data['mission_id'] == $this->id);
-        });
+    private function replaceIntWithUnits(array &$item, int &$faction, array &$orbatGroups, bool &$orbatModified)
+    { 
+        if (is_int($item[0])) {
+            if (isset($orbatGroups[$faction][$item[0]])) {
+                $units = &$orbatGroups[$faction][$item[0]];
+                unset($item[0]);
 
-        return $filtered;
+                $units = array_reverse($units);
+
+                foreach ($units as $unit) {
+                    array_unshift($item, $unit);
+                }
+                $orbatModified = true;
+            }
+            else {
+                unset($item[0]);
+            }
+        }
+
+        foreach($item as &$subitem) {
+            if (is_array($subitem)) {
+                $this->replaceIntWithUnits($subitem, $faction, $orbatGroups, $orbatModified);
+            }
+        }
+    }
+
+    private function removeAllIntsAndEmptyArrays(array &$item)
+    {
+        // Only have name + empty array - remove entire item
+        if (isset($item[1]) && is_array($item[1]) && empty($item[1])) {
+            $item = NULL;
+            return;
+        }
+
+        // Recursively find every int and empty array and replace them will NULL
+        foreach ($item as &$subitem) {
+            if (is_int($subitem)) {
+                $subitem = NULL;
+            } elseif (is_array($subitem)) {
+                if (empty($subitem)) {
+                    $subitem = NULL;
+                } else {
+                    $this->removeAllIntsAndEmptyArrays($subitem);
+                }
+            }
+        }
+
+        // Double check if array is empty now that all the children have been unset
+        if (isset($item[1]) && is_array($item[1]) && empty($item[1])) {
+            $item = NULL;
+            return;
+        }
+
+        // unset() used on a &reference will unset the reference but not the original value
+        // instead we set everything to NULL and use array_filter, which will unset the original value
+        $item = array_filter($item);
     }
 }
