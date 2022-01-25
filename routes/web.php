@@ -20,8 +20,6 @@ Route::prefix('share')->group(function () {
 Route::prefix('auth')->group(function () {
     Route::get('/redirect', 'Auth\DiscordController@redirect');
     Route::get('/callback', 'Auth\DiscordController@callback');
-    Route::get('/steam', 'Auth\SteamController@redirect');
-    Route::get('/steamcallback', 'Auth\SteamController@callback');
 });
 
 //--- Public Applications
