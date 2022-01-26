@@ -2,7 +2,6 @@
 
 use Laravel\Socialite\Facades\Socialite;
 
-//--- Home
 Route::get('/', 'PageController@index');
 
 Route::get('/media', 'Missions\MediaController@index');
@@ -10,6 +9,9 @@ Route::get('/roster', 'PageController@roster');
 Route::get('/arma3sync', function () {
     return redirect('https://docs.google.com/document/d/1i-LzCJE0l_7PtOj8WU717mmmzX1U2KaaNGEnj0KzkIw/view');
 });
+
+Route::get('/join', 'PublicJoinController@index');
+Route::post('/join', 'PublicJoinController@store');
 
 Route::prefix('share')->group(function () {
     Route::get('/{mission}', 'ShareController@show');
@@ -21,12 +23,6 @@ Route::prefix('auth')->group(function () {
     Route::get('/redirect', 'Auth\DiscordController@redirect');
     Route::get('/callback', 'Auth\DiscordController@callback');
 });
-
-//--- Public Applications
-Route::get('/join/acknowledged', 'PublicJoinController@acknowledged');
-Route::resource('join', 'PublicJoinController', [
-    'only' => ['index', 'store', 'create']
-]);
 
 Route::group(['middleware' => 'can:view-applications'], function () {
     Route::get('/hub/applications/api/items', 'Join\JoinController@items');
