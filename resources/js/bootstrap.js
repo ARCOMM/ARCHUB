@@ -24,9 +24,6 @@ window.collect = require('collect.js');
 
 window.Tribute = require('tributejs');
 
-import Mentions from './laravel-mentions';
-window.Mentions = Mentions;
-
 // window.axios.defaults.headers.common = {
 //     'X-CSRF-TOKEN': window.Laravel.csrfToken,
 //     'X-Requested-With': 'XMLHttpRequest'
