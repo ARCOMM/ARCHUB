@@ -1,5 +1,9 @@
+@import "bootstrap/scss/functions"; 
+@import "bootstrap/scss/variables"; 
+
 @import 'variables';
-@import 'node_modules/bootstrap-material-design/scss/bootstrap-material-design';
+@import 'mixins';
+
 @import 'node_modules/magnific-popup/dist/magnific-popup';
 @import 'node_modules/font-awesome/css/font-awesome';
 @import 'laravel-mentions';
@@ -42,7 +46,6 @@ body {
     }
 }
 
-@import 'mixins';
 @import 'header';
 @import 'mission';
 @import 'pulse';

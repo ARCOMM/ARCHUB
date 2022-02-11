@@ -239,7 +239,7 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  bottom: calc(-100% / 1.618);
+  bottom: -61.804697157%;
   width: 50%;
   background-position: center;
   background-repeat: no-repeat;
