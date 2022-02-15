@@ -37,7 +37,7 @@ Artisan::command('check-missions', function () {
 
         $wasPlayed = !is_null($mission->last_played);
         if (!$wasPlayed || ($wasPlayed && ($mission->last_played < $header->starts_at))) {
-            $prev = $mission->last_played->toDateTimeString();
+            $prev = $wasPlayed ? $mission->last_played->toDateTimeString() : "null";
             $mission->last_played = $header->starts_at;
             $mission->save();
             $this->comment("Updated [{$mission->id}] {$mission->display_name} from {$prev} to {$mission->last_played->toDateTimeString()}");      
