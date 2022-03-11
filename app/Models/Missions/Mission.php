@@ -758,13 +758,12 @@ class Mission extends Model implements HasMedia
     {
         $filledSubjects = [];
         $briefing = $this->GetBriefing($factionId);
-        $factionName = $briefing[0];
         $contents = $briefing[3];
 
         foreach($contents as $name => $section) {
             $formattedSection = new stdClass();
             $formattedSection->title = $name;
-            $formattedSection->paragraphs = $this->FormatParagraphs($section);
+            $formattedSection->paragraphs = $this->formatParagraphs($section);
             $formattedSection->locked = $this->{'locked_' . $factionId . '_briefing'};
             array_push($filledSubjects, $formattedSection);
         }
@@ -784,10 +783,8 @@ class Mission extends Model implements HasMedia
         throw new Exception("Faction does not have a briefing file specified");
     }
 
-    private function FormatParagraphs($paragraph) {
-        $paragraph = str_replace("<font size='18'>", "<b>", $paragraph);
-
-        return str_replace("</font>", "</b>", $paragraph);
+    private function formatParagraphs($paragraphs) {
+        return preg_replace("~<font(.*?)>(.*?)<\/font>~", "<b>$2</b>", $paragraphs);
     }
 
     private function parseBriefings($briefings) {   
