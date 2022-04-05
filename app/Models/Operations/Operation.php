@@ -58,7 +58,7 @@ class Operation extends Model
      */
     public static function nextWeek()
     {
-        return Operation::where('starts_at', '>', Carbon::now()->toDateTimeString())->orderBy('starts_at', 'asc')->first();
+        return Operation::where('starts_at', '>', Carbon::now()->subHours(3)->toDateTimeString())->orderBy('starts_at', 'asc')->first();
     }
 
     /**
@@ -68,7 +68,7 @@ class Operation extends Model
      */
     public static function lastWeek()
     {
-        return Operation::where('starts_at', '<', Carbon::now()->toDateTimeString())->orderBy('starts_at', 'desc')->first();
+        return Operation::where('starts_at', '<', Carbon::now()->subHours(3)->toDateTimeString())->orderBy('starts_at', 'desc')->first();
     }
 
     /**
