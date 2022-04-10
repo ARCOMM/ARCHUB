@@ -5,6 +5,7 @@ use Illuminate\Http\Response;
 use App\Models\Portal\User;
 use App\Models\Missions\Mission;
 use App\Models\Missions\MissionSubscription;
+use App\Models\Operations\Operation;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,5 +32,28 @@ Route::middleware('auth:sanctum')->post('missions/{mission}/subscribe', function
     }
 
     $existing->delete();
+    return response()->noContent(204);
+});
+
+Route::middleware('auth:sanctum')->get('operations/next', function (Request $request) {
+    $operation = Operation::nextWeek();
+
+    if (!is_null($operation)) {
+        $opMissions = $operation->missions()->get();
+        $missions = [];
+        
+        foreach ($opMissions as $opMission) {
+            $mission = $opMission->mission()->select('id', 'user_id', 'display_name', 'mode', 'summary')->first();
+            $maker = User::where('id', $mission->user_id)->select('username')->first();
+
+            $mission['maker'] = $maker['username'];
+            unset($mission['user_id']);
+
+            array_push($missions, $mission);
+        }
+        
+        return $missions;
+    }
+
     return response()->noContent(204);
 });
