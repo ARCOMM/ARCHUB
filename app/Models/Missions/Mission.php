@@ -724,16 +724,19 @@ class Mission extends Model implements HasMedia
 
         if ($briefings != null) {
             foreach ($briefings as $briefing) {
-                $factionId = $this->parseFactionId($briefing[1][0]);
-                $locked = $this->{'locked_'.strtolower($this->factions[$factionId]).'_briefing'};
+                // Skip briefings that aren't assigned to a faction
+                if (!empty($briefing[1])) {
+                    $factionId = $this->parseFactionId($briefing[1][0]);
+                    $locked = $this->{'locked_'.strtolower($this->factions[$factionId]).'_briefing'};
 
-                if ($locked == 0 || (!auth()->guest() && ($this->isMine() || auth()->user()->can('test-missions')))) {
-                    $nav = new stdClass();
-                    $nav->name = $briefing[0];
-                    $nav->faction = $factionId;
-                    $nav->locked = $locked;
+                    if ($locked == 0 || (!auth()->guest() && ($this->isMine() || auth()->user()->can('test-missions')))) {
+                        $nav = new stdClass();
+                        $nav->name = $briefing[0];
+                        $nav->faction = $factionId;
+                        $nav->locked = $locked;
 
-                    array_push($filledFactions, $nav);
+                        array_push($filledFactions, $nav);
+                    }
                 }
             }
         }
