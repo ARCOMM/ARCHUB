@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Helpers\ArmaConfigError;
 use App\Helpers\PBOMission\PBOMission;
 use App\Models\Portal\User;
-use App\Models\Missions\Tag;
+use App\Models\Tags\MissionTag;
 use App\Models\Operations\OperationMission;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -271,6 +271,11 @@ class Mission extends Model implements HasMedia
     public function revisions()
     {
         return $this->hasMany('App\Models\Missions\MissionRevision');
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(MissionTag::class);
     }
 
     /**
@@ -707,16 +712,6 @@ class Mission extends Model implements HasMedia
     public function time()
     {
         return $this->time;
-    }
-
-    public function getTags() 
-    {
-        return Tag::all();
-    }
-
-    public function addTag($tag) 
-    {
-        return Tag::insertOrIgnore(["text" => $tag]);
     }
 
     /**

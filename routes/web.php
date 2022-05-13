@@ -1,6 +1,6 @@
 <?php
 
-use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Route;
 
 //--- Home
 Route::get('/', 'PageController@index');
@@ -61,6 +61,11 @@ Route::group(['middleware' => 'can:manage-operations'], function () {
 
 //--- Missions
 Route::group(['middleware' => 'can:access-hub'], function () {
+    Route::get('/hub/missions/tags', 'Missions\MissionTagController@allTags');
+    Route::get('/hub/missions/{mission}/tags', 'Missions\MissionTagController@index');
+    Route::post('/hub/missions/{mission}/tags', 'Missions\MissionTagController@store');
+    Route::delete('/hub/missions/{mission}/tags', 'Missions\MissionTagController@destroy');
+
     // Mission Media
     Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
     Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Missions;
+namespace App\Models\Tags;
 
 use Illuminate\Database\Eloquent\Model;
 

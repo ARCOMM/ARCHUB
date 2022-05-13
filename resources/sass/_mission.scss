@@ -699,9 +699,6 @@ $mission-banner-author-font-sizes: (
 }
 
 .mission-tags {
-    // .select2-container--default .select2-selection--multiple {
-    //     border: solid #f10000 1px;
-    // }
     .select2-container {
         max-width: 100%;
 
@@ -710,48 +707,3 @@ $mission-banner-author-font-sizes: (
         }
     }
 }
-
-// .missions-tags {
-//     .select2-container {
-//         border: solid #f10000
-//     }
-    // .select2-container--default.select2-container--focus .select2-selection--multiple {
-
-    // }
-    // .select2-container {
-    //     max-width: 100%;
-
-    //     .select2-selection--multiple {
-    //         background-color: transparent;
-    //         border: solid #333 1px;
-    //         height: 34px;
-
-    //         .select2-selection__rendered {
-    //             color: #AAA;
-    //             line-height: 34px;
-    //         }
-    //     }
-
-    //     &--open {
-    //         .select2-selection--multiple {
-    //             border: solid #AAA 1px;
-    //         }
-    //     }
-    // }
-
-    // .select2-results {
-    //     background-color: #100f0f;
-
-    //     .select2-results__option {
-    //         &--selected {
-    //             background-color: #100f0f;
-    //             color: white;
-    //         }
-
-    //         &--highlighted.select2-results__option--selectable {
-    //             background-color: white;
-    //             color: black;
-    //         }
-    //     }
-    // }
-// }

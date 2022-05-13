@@ -4,24 +4,46 @@
             multiple: true,
             placeholder: "Tags",
             tags: true,
+        });
 
-            createTag: function (params) {
-                var term = $.trim(params.term);
+        $.ajax({
+            type: 'GET',
+            url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
 
-                if (term === '') {
-                    return null;
-                }
+            success: function(selectedTagIds) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ url("/hub/missions/tags") }}',
 
-                return {
-                    id: term,
-                    text: term
-                }
+                    success: function(data) {
+                        $.each(data, function(index, value) {
+                            var selected = selectedTagIds.indexOf(value["id"]) != -1;
+                            var newOption = new Option(value["name"], index, selected, selected);
+                            $('select').append(newOption).trigger('change');
+                        });
+                    }
+                });
             }
         });
 
         $('select').on('select2:select', function(e) {
-            var data = e.params.data;
-            $mission.addTag(data["text"]);
+            $.ajax({
+                type: 'POST',
+                url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
+                data: {
+                    "tag": e.params.data["text"],
+                }
+            });
+        });
+
+        $('select').on('select2:unselect', function(e) {
+            $.ajax({
+                type: 'DELETE',
+                url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
+                data: {
+                    "tag": e.params.data["text"],
+                }
+            });
         });
     });
 </script>
@@ -110,8 +132,5 @@
 
 <div class="mission-tags">
     <select name="tags" class="form-control">
-        @foreach ($mission->getTags() as $tag)
-            <option value="{{ $tag->name }}">{{ $tag->name }}</option>
-        @endforeach
     </select>
 </div>
