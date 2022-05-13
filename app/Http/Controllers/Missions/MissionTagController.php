@@ -12,7 +12,8 @@ class MissionTagController extends Controller
 {
     public function allTags(Request $request)
     {
-        return Tag::all()->toArray();
+        return Tag::orderBy('name', 'ASC')->get()
+        ->all();
     }
 
     public function index(Request $request, Mission $mission)
