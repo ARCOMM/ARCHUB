@@ -8,14 +8,13 @@
 
 <div class="mission-comments-form pull-left w-100">
     <script>
-        $(document).ready(function(e) {
             $(document).on('click', '.mission-comment-control-edit', function(event) {
                 var caller = $(this);
                 var id = caller.data('id');
 
                 $.ajax({
                     type: 'GET',
-                    url: '{{ url("/hub/missions/comments") }}/' + id + '/edit',
+                    url: '{{ url("/hub/missions/comments") }}/' + caller.data('id') + '/edit',
 
                     success: function(data) {
                         data = JSON.parse(data);
@@ -56,8 +55,9 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '{{ url('/hub/missions/comments') }}',
+                    url: '{{ url("/hub/missions/{$mission->id}/comments") }}',
                     data: $('#submit-mission-comment').serialize(),
+
                     success: function(data) {
                         $('#submit-mission-comment input[name="id"]').val(-1);
                         $('#submit-mission-comment textarea[name="text"]').val('');
@@ -68,7 +68,8 @@
 
                         $.ajax({
                             type: 'GET',
-                            url: '{{ url('/hub/missions/comments?mission_id=' . $mission->id) }}',
+                            url: '{{ url("/hub/missions/{$mission->id}/comments") }}',
+
                             success: function(data) {
                                 $('.mission-comments').html(data);
                             }
@@ -87,8 +88,9 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '{{ url('/hub/missions/comments') }}',
+                    url: '{{ url("/hub/missions/{$mission->id}/comments") }}',
                     data: $('#submit-mission-comment').serialize(),
+                    
                     success: function(data) {
                         $('#submit-mission-comment input[name="id"]').val(data.trim());
                         $('#auto-save-hint').fadeIn().html('Saved Draft');

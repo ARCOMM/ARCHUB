@@ -11,6 +11,12 @@ use Hash;
 
 class MediaController extends Controller
 {
+    public function index(Request $request)
+    {
+        $missions = Mission::all();
+        return view('media.index', compact('missions'));
+    }
+
     /**
      * Uploads the given media to the given mission.
      *

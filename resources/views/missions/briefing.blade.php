@@ -3,17 +3,13 @@
         $(document).ready(function(e) {
             $('#lock-briefing').click(function(event) {
                 var caller = $(this);
-                var id = caller.data('id');
-                var faction = caller.data('faction');
                 var locked = caller.data('locked');
 
                 $.ajax({
-                    type: 'POST',
-                    url: '{{ url('/hub/missions/briefing/update') }}',
+                    type: 'PUT',
+                    url: '{{ url("/hub/missions") }}/' + caller.data('id') + '/briefing/' + caller.data('faction') + '/lock',
                     data: {
-                        'mission_id': id,
-                        'faction': faction,
-                        'locked': locked
+                        'locked': locked,
                     },
                     success: function(data) {
                         caller.data('locked', (locked == 1) ? 0 : 1);

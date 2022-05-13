@@ -2,15 +2,11 @@
     $(document).ready(function(e) {
         $('.mission-orbat-nav a').click(function(event) {
             var caller = $(this);
-            var faction = caller.data('faction');
 
             $.ajax({
-                type: 'POST',
-                url: '{{ url('/hub/missions/orbat') }}',
-                data: {
-                    mission_id: {{ $mission->id }},
-                    faction: faction
-                },
+                type: 'GET',
+                url: '{{ url("/hub/missions/{$mission->id}/orbat") }}/' + caller.data('faction'),
+
                 success: function(data) {
                     $('.mission-orbat-content').html(data);
                     $('.mission-orbat-nav a').removeClass('active');

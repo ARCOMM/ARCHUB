@@ -208,39 +208,8 @@ class MissionController extends Controller
         return redirect('/hub/missions');
     }
 
-    /**
-     * Shows the given mission's briefing.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function briefing(Request $request)
+    public function orbat(Request $request, Mission $mission, string $faction)
     {
-        $mission = Mission::find($request->mission_id);
-        $faction = $request->faction;
-        return view('missions.briefing', compact('mission', 'faction'));
-    }
-
-    /**
-     * Locks/unlocks the given briefing faction for the given mission.
-     *
-     * @return void
-     */
-    public function setBriefingLock(Request $request)
-    {
-        $mission = Mission::find($request->mission_id);
-
-        if (!$mission->isMine() && !auth()->user()->can('manage-missions')) {
-            abort(403, 'You are not authorised to edit this mission');
-            return;
-        }
-
-        $mission->lockBriefing($request->faction, $request->locked);
-    }
-
-    public function orbat(Request $request)
-    {
-        $mission = Mission::find($request->mission_id);
-        $faction = $request->faction;
         return view('missions.orbat', compact('mission', 'faction'));
     }
 

@@ -13,34 +13,13 @@ use App\Models\JoinRequests\JoinRequest;
 class PublicJoinController extends Controller
 {
     /**
-     * Constructor method for PublicJoinController.
-     *
-     * @return type
-     */
-    public function __construct()
-    {
-        // TODO Middleware
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return $this->create();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
         $sources = JoinSource::all();
-
         return view('join.public.form', compact('sources'));
     }
 
@@ -76,18 +55,7 @@ class PublicJoinController extends Controller
 
         Mail::to($jr->email)->send(new JoinRequestAcknowledged);
 
-        return redirect('/join/acknowledged?email=' . $jr->email);
-    }
-
-    /**
-     * Shows the acknowledged view.
-     *
-     * @return view
-     */
-    public function acknowledged(Request $request)
-    {
-        $email = $request->email;
-
+        $email = $jr->email;
         return view('join.public.confirmation', compact('email'));
     }
 }
