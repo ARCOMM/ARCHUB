@@ -17,6 +17,7 @@
             multiple: true,
             placeholder: "Tags",
             tags: true,
+            dropdownParent: $('#filter_modal')
         });
 
         $.ajax({
@@ -45,9 +46,34 @@
             });
         }
 
+        function clear() {
+            $('#filter_select').val(null).trigger('change');
+        }
+
         document.getElementById("filter_btn").addEventListener("click", filter)
+        document.getElementById("clear_btn").addEventListener("click", clear)
     });
 </script>
+
+<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#filter_modal">
+    Filter
+</button>
+
+<div class="modal" id="filter_modal" tabindex="-1" role="dialog" aria-labelledby="modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="mission-tags">
+                    <select name="tags" class="form-control" style="width: 100%" id="filter_select"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="clear_btn">Clear</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="filter_btn">Apply</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="missions-pinned">
     <div class="missions-pinned-groups">
@@ -79,13 +105,6 @@
                 @endforeach
             </ul>
         @endif
-    </div>
-</div>
-
-<div class="mission-tags">
-    <select name="tags" class="form-control" id="filter_select"></select>
-    <div class="text-center">
-        <button type="button" class="btn btn-primary text-center" id="filter_btn">Filter</filter>
     </div>
 </div>
 
