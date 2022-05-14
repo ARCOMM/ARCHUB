@@ -76,6 +76,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasARole(RoleEnum::Operations);
         });
 
+        Gate::define('manage-tags', function($user) {
+            return $user->hasARole(RoleEnum::Operations);
+        });
+
         Gate::define('manage-public-media', function($user) {
             // Admins only
         });

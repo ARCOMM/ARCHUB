@@ -20095,6 +20095,21 @@ header .subnav .subnav-link.active {
 .mission-tags .select2-container .select2-selection--multiple {
   border: solid #eee 1px;
 }
+.mission-tags .select2-container .select2-selection__choice {
+  color: white;
+  background-color: #007bff;
+  border: none;
+}
+.mission-tags .select2-container .select2-selection__choice__remove {
+  color: white;
+}
+.mission-tags .select2-container .select2-selection__choice__remove:hover, .mission-tags .select2-container .select2-selection__choice__remove:active, .mission-tags .select2-container .select2-selection__choice__remove:focus {
+  color: white;
+  background-color: #0852a1;
+}
+.mission-tags .select2-container .select2-search__field {
+  padding-bottom: 22px;
+}
 .mission-tags .btn-primary {
   color: white;
   background-color: #007bff;
@@ -20105,6 +20120,11 @@ header .subnav .subnav-link.active {
   color: white;
   background-color: #007bff;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+.mission-tags .badge {
+  margin-right: 8px;
+  font-size: 100%;
+  background-color: #007bff;
 }
 
 .pulse {

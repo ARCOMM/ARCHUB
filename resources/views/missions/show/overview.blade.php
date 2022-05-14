@@ -1,52 +1,79 @@
-<script>
-    $(document).ready(function(event) {
-        $('select').select2({
-            multiple: true,
-            placeholder: "Tags",
-            tags: true,
-        });
+@if ($mission->isMine() || auth()->user()->can('manage-tags'))
+    <script>
+        $(document).ready(function(event) {
+            $('select').select2({
+                multiple: true,
+                placeholder: "Tags",
+                tags: true,
+            });
 
-        $.ajax({
-            type: 'GET',
-            url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
+            $.ajax({
+                type: 'GET',
+                url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
 
-            success: function(selectedTagIds) {
+                success: function(selectedTagIds) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '{{ url("/hub/missions/tags") }}',
+
+                        success: function(data) {
+                            $.each(data, function(index, value) {
+                                var selected = selectedTagIds.indexOf(value["id"]) != -1;
+                                var newOption = new Option(value["name"], index, selected, selected);
+                                $('select').append(newOption).trigger('change');
+                            });
+                        }
+                    });
+                }
+            });
+
+            $('select').on('select2:select', function(e) {
                 $.ajax({
-                    type: 'GET',
-                    url: '{{ url("/hub/missions/tags") }}',
-
-                    success: function(data) {
-                        $.each(data, function(index, value) {
-                            var selected = selectedTagIds.indexOf(value["id"]) != -1;
-                            var newOption = new Option(value["name"], index, selected, selected);
-                            $('select').append(newOption).trigger('change');
-                        });
+                    type: 'POST',
+                    url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
+                    data: {
+                        "tag": e.params.data["text"],
                     }
                 });
-            }
-        });
+            });
 
-        $('select').on('select2:select', function(e) {
+            $('select').on('select2:unselect', function(e) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
+                    data: {
+                        "tag": e.params.data["text"],
+                    }
+                });
+            });
+        });
+    </script>
+@else
+    <script>
+        $(document).ready(function(event) {
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
-                data: {
-                    "tag": e.params.data["text"],
+
+                success: function(selectedTagIds) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '{{ url("/hub/missions/tags") }}',
+
+                        success: function(data) {
+                            $.each(data, function(index, value) {
+                                var selected = selectedTagIds.indexOf(value["id"]) != -1;
+                                if (selected) {
+                                    $('.mission-tags').append('<span class="badge badge-primary">' + value["name"] + '</span>');
+                                }
+                            });
+                        }
+                    });
                 }
             });
         });
-
-        $('select').on('select2:unselect', function(e) {
-            $.ajax({
-                type: 'DELETE',
-                url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
-                data: {
-                    "tag": e.params.data["text"],
-                }
-            });
-        });
-    });
-</script>
+    </script>
+@endif
 
 <div class="row">
     <div class="col-md-4 mission-overview-card">
@@ -131,6 +158,7 @@
 </div>
 
 <div class="mission-tags">
-    <select name="tags" class="form-control">
-    </select>
+    @if ($mission->isMine() || auth()->user()->can('manage-tags'))
+        <select name="tags" class="form-control"></select>
+    @endif
 </div>
