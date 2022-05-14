@@ -1,6 +1,5 @@
 @php
     use App\Models\Operations\Operation;
-    use App\Models\Missions\Mission;
 @endphp
 
 @php
@@ -9,10 +8,6 @@
         $nextOperationMissions = $nextOperation->missions;
     }
     $prevOperation = Operation::lastWeek();
-
-    $myMissions = auth()->user()->missions();
-    $newMissions = Mission::allNew();
-    $pastMissions = Mission::allPast();
     $isTester = auth()->user()->can('test-missions');
 @endphp
 
