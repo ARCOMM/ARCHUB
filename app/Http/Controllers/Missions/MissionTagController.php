@@ -40,9 +40,11 @@ class MissionTagController extends Controller
         MissionTag::where('mission_id', $mission->id)->where('tag_id', $tag->id)
         ->delete();
 
-        $tagUsed = MissionTag::where('tag_id', $tag->id)->first();
-        if (is_null($tagUsed)) {
-            $tag->delete();
+        if ($request->user()->can('manage-tags')) {
+            $tagUsed = MissionTag::where('tag_id', $tag->id)->first();
+            if (is_null($tagUsed)) {
+                $tag->delete();
+            }
         }
     }
 

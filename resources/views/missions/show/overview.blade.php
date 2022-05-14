@@ -1,10 +1,14 @@
-@if ($mission->isMine() || auth()->user()->can('manage-tags'))
+@php
+    $canManageTags = auth()->user()->can('manage-tags');
+@endphp
+
+@if ($mission->isMine() || $canManageTags)
     <script>
         $(document).ready(function(event) {
             $('select').select2({
                 multiple: true,
                 placeholder: "Tags",
-                tags: true,
+                tags: "{{ $canManageTags }}",
             });
 
             $.ajax({
@@ -158,7 +162,7 @@
 </div>
 
 <div class="mission-tags">
-    @if ($mission->isMine() || auth()->user()->can('manage-tags'))
+    @if ($mission->isMine() || $canManageTags)
         <select name="tags" class="form-control"></select>
     @endif
 </div>

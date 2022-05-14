@@ -16,7 +16,6 @@
         $('#filter_select').select2({
             multiple: true,
             placeholder: "Tags",
-            tags: true,
             dropdownParent: $('#filter_modal')
         });
 
@@ -48,6 +47,7 @@
 
         function clear() {
             $('#filter_select').val(null).trigger('change');
+            filter();
         }
 
         document.getElementById("filter_btn").addEventListener("click", filter)
