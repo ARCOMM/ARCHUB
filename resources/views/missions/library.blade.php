@@ -60,7 +60,7 @@
 </button>
 
 <div class="modal" id="filter_modal" tabindex="-1" role="dialog" aria-labelledby="modal_label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="mission-tags">
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="clear_btn">Clear</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="clear_btn">Clear</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" id="filter_btn">Apply</button>
             </div>
         </div>
