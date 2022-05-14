@@ -66,6 +66,8 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     Route::post('/hub/missions/{mission}/tags', 'Missions\MissionTagController@store');
     Route::delete('/hub/missions/{mission}/tags', 'Missions\MissionTagController@destroy');
 
+    Route::post('/hub/missions/search', 'Missions\MissionTagController@search');
+
     // Mission Media
     Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
     Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');

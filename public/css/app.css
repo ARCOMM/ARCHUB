@@ -20095,6 +20095,17 @@ header .subnav .subnav-link.active {
 .mission-tags .select2-container .select2-selection--multiple {
   border: solid #eee 1px;
 }
+.mission-tags .btn-primary {
+  color: white;
+  background-color: #007bff;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.mission-tags .btn-primary:hover, .mission-tags .btn-primary:active, .mission-tags .btn-primary:focus {
+  color: white;
+  background-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
 
 .pulse {
   width: 1.5rem;

@@ -45,4 +45,31 @@ class MissionTagController extends Controller
             $tag->delete();
         }
     }
+
+    public function search(Request $request)
+    {
+        $activeTags = json_decode($request->tags, true);
+        if (!$activeTags) {
+            return view('missions.search');
+        }
+
+        $activeTagNames = array();
+        foreach ($activeTags as $tag) {
+            array_push($activeTagNames, $tag["text"]);
+        }
+
+        $tags = Tag::whereIn('name', $activeTagNames)->get()
+        ->pluck('id')
+        ->toArray();
+
+        $results = MissionTag::selectRaw('mission_id, count(*) as total')
+        ->whereIn('tag_id', $tags)
+        ->groupBy('mission_id')
+        ->get()
+        ->where('total', count($tags)) // Only get results which match *all* tags
+        ->pluck('mission_id')
+        ->toArray();
+        
+        return view('missions.search', compact('results'));
+    }
 }

@@ -706,4 +706,19 @@ $mission-banner-author-font-sizes: (
             border: solid #eee 1px;
         }
     }
+
+    .btn-primary {
+        color: white;
+        background-color: #007bff;
+        margin-top: 15px;
+        margin-bottom: 15px;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: white;
+            background-color: #007bff;
+            box-shadow: 0 0 0 .2rem rgba(0,123,255,.5);
+        }
+    }
 }
