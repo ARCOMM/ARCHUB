@@ -14,7 +14,7 @@
 <script>
     $(document).ready(function(event) {
         $('#author_select').select2({
-            placeholder: "Author",
+            placeholder: "Mission maker",
             dropdownParent: $('#filter_modal'),
             ajax: {
                 delay: 250,
@@ -47,11 +47,13 @@
         });
 
         function filter() {
+            var author = $('#author_select').select2('data')
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 url: "{{ url('/hub/missions/search') }}",
                 data: {
-                    tags: JSON.stringify($('#filter_select').select2('data'))
+                    "author": author.length > 0 ? author[0]["text"] : null,
+                    "tags[]": $('#filter_select').select2('data').map(item => item.text)
                 },
 
                 success: function(data) {
@@ -61,6 +63,7 @@
         }
 
         function clear() {
+            $('#author_select').val(null).trigger('change');
             $('#filter_select').val(null).trigger('change');
             filter();
         }

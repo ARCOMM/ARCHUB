@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tags\Tag;
 use App\Models\Tags\MissionTag;
 use App\Models\Missions\Mission;
+use App\Models\Portal\User;
 
 class MissionTagController extends Controller
 {
@@ -50,25 +51,30 @@ class MissionTagController extends Controller
 
     public function search(Request $request)
     {
-        $activeTags = json_decode($request->tags, true);
-        if (!$activeTags) {
+        $author = $request->query('author');
+        $activeTags = $request->query('tags');
+        if (!$activeTags && !$author) {
             return view('missions.search');
         }
 
-        $activeTagNames = array();
-        foreach ($activeTags as $tag) {
-            array_push($activeTagNames, $tag["text"]);
-        }
+        $results = MissionTag::join('missions', 'mission_tags.mission_id', '=', 'missions.id')
+        ->selectRaw('mission_tags.mission_id, missions.user_id, count(*) as total')
+        ->when($author, function ($query, $author) {
+            $user = User::where('username', $author)->first();
+            return $query->where('user_id', $user->id);
+        })
+        ->when($activeTags, function ($query, $activeTags) {
+            $tags = Tag::whereIn('name', $activeTags)->get()
+            ->pluck('id')
+            ->toArray();
 
-        $tags = Tag::whereIn('name', $activeTagNames)->get()
-        ->pluck('id')
-        ->toArray();
-
-        $results = MissionTag::selectRaw('mission_id, count(*) as total')
-        ->whereIn('tag_id', $tags)
+            return $query->whereIn('tag_id', $tags);
+        })
         ->groupBy('mission_id')
+        ->when($activeTags, function ($query, $activeTags) {
+            return $query->having('total', count($activeTags)); // Only get results which match *all* tags;
+        })
         ->get()
-        ->where('total', count($tags)) // Only get results which match *all* tags
         ->pluck('mission_id')
         ->toArray();
         
