@@ -94,7 +94,6 @@
     use App\Models\Operations\Operation;
 @endphp
 
-<!-- {{-- style="margin-top: -20px;margin-right: 1rem;" --}} -->
 <div class="large-panel-content full-page mb-5">
     <div class="pull-left w-100">
         <form id="create-operation-form" class="pull-right">
@@ -124,4 +123,3 @@
         </table>
     </div>
 </div>
-
