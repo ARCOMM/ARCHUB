@@ -1,11 +1,5 @@
 <a href="{{ url('/hub/missions') }}" class="nav-item nav-link hidden-sm-down active">Missions</a>
 
-@can('manage-operations')
-    <a href="{{ url('/hub/operations') }}" class="nav-item nav-link hidden-sm-down">
-        Operations
-    </a>
-@endcan
-
 @can('view-applications')
     <a href="{{ url('/hub/applications') }}" class="nav-item nav-link hidden-sm-down">
         Applications
@@ -80,12 +74,6 @@
                 class="list-group-item list-group-item-action">
                 Missions
             </a>
-
-            @can('manage-operations')
-                <a href="{{ url('/hub/operations') }}" class="list-group-item list-group-item-action">
-                    Operations
-                </a>
-            @endcan
 
             @can('view-applications')
                 <a href="{{ url('/hub/applications') }}" class="list-group-item list-group-item-action">

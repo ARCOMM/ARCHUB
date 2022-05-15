@@ -55,6 +55,11 @@
     });
 </script>
 
+
+@can('manage-operations')
+    @include('missions.operations')
+@endcan
+
 <div class="missions-pinned">
     <div class="missions-pinned-groups">
         @if ($nextOperation)
