@@ -55,7 +55,6 @@
     });
 </script>
 
-
 @can('manage-operations')
     @include('missions.operations')
 @endcan
