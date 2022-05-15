@@ -13,6 +13,21 @@
 
 <script>
     $(document).ready(function(event) {
+        $('#author_select').select2({
+            placeholder: "Author",
+            dropdownParent: $('#filter_modal'),
+            ajax: {
+                delay: 250,
+                type: 'GET',
+                url: '{{ url("/hub/users/search") }}',
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
+
         $('#filter_select').select2({
             multiple: true,
             placeholder: "Tags",
@@ -103,6 +118,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="mission-tags">
+                    <select name="author" class="form-control" style="width: 100%" id="author_select"></select>
                     <select name="tags" class="form-control" style="width: 100%" id="filter_select"></select>
                 </div>
             </div>

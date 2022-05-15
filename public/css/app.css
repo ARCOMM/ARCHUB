@@ -20121,6 +20121,13 @@ header .subnav .subnav-link.active {
   height: 40px;
 }
 
+.modal-content .modal-body {
+  padding-bottom: 0px;
+}
+.modal-content .modal-body .select2-container {
+  margin-bottom: 20px;
+}
+
 .pulse {
   width: 1.5rem;
   height: 1.5rem;

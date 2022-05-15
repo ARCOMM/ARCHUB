@@ -65,8 +65,10 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     Route::get('/hub/missions/{mission}/tags', 'Missions\MissionTagController@index');
     Route::post('/hub/missions/{mission}/tags', 'Missions\MissionTagController@store');
     Route::delete('/hub/missions/{mission}/tags', 'Missions\MissionTagController@destroy');
-
     Route::post('/hub/missions/search', 'Missions\MissionTagController@search');
+
+    Route::get('/hub/users', 'Users\UserController@index');
+    Route::get('/hub/users/search', 'Users\UserController@search');
 
     // Mission Media
     Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
@@ -128,8 +130,4 @@ Route::group(['middleware' => 'can:access-hub'], function () {
     
         return ['token' => $token->plainTextToken];
     });
-});
-
-Route::group(['middleware' => 'can:view-users'], function () {
-    Route::resource('/hub/users', 'Users\UserController');
 });
