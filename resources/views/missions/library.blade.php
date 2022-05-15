@@ -55,26 +55,6 @@
     });
 </script>
 
-<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#filter_modal">
-    Filter
-</button>
-
-<div class="modal" id="filter_modal" tabindex="-1" role="dialog" aria-labelledby="modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="mission-tags">
-                    <select name="tags" class="form-control" style="width: 100%" id="filter_select"></select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="clear_btn">Clear</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="filter_btn">Apply</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="missions-pinned">
     <div class="missions-pinned-groups">
         @if ($nextOperation)
@@ -105,6 +85,28 @@
                 @endforeach
             </ul>
         @endif
+    </div>
+</div>
+
+<div class="filter-div">
+    <button type="button" class="btn btn-primary btn-raised float-right" data-toggle="modal" data-target="#filter_modal">
+        Filter
+    </button>
+</div>
+
+<div class="modal" id="filter_modal" tabindex="-1" role="dialog" aria-labelledby="modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="mission-tags">
+                    <select name="tags" class="form-control" style="width: 100%" id="filter_select"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="clear_btn">Clear</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="filter_btn">Apply</button>
+            </div>
+        </div>
     </div>
 </div>
 

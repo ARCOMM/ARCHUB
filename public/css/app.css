@@ -20116,6 +20116,11 @@ header .subnav .subnav-link.active {
   background-color: #007bff;
 }
 
+.filter-div {
+  width: 95%;
+  height: 40px;
+}
+
 .pulse {
   width: 1.5rem;
   height: 1.5rem;
