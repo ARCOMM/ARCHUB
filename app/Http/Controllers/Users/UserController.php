@@ -25,6 +25,7 @@ class UserController extends Controller
         $term = $request->query('term');
         $users = User::select('id', 'username as text')
         ->where('username', 'like', '%'.$term.'%')
+        ->orderBy('username', 'ASC')
         ->get();
 
         return $users;

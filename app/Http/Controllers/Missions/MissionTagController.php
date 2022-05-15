@@ -57,25 +57,26 @@ class MissionTagController extends Controller
             return view('missions.search');
         }
 
-        $results = MissionTag::join('missions', 'mission_tags.mission_id', '=', 'missions.id')
-        ->selectRaw('mission_tags.mission_id, missions.user_id, count(*) as total')
+        $results = Mission::
+        when($activeTags, function ($query, $activeTags) {
+            return $query->leftJoin('mission_tags', 'missions.id', '=', 'mission_tags.mission_id');
+        })
+        ->selectRaw('missions.id')
+        ->when($activeTags, function ($query, $activeTags) {
+            $tags = Tag::whereIn('name', $activeTags)->get()
+            ->pluck('id')
+            ->toArray();
+            return $query->selectRaw('count(*) as total')->whereIn('tag_id', $tags);
+        })
         ->when($author, function ($query, $author) {
             $user = User::where('username', $author)->first();
             return $query->where('user_id', $user->id);
         })
         ->when($activeTags, function ($query, $activeTags) {
-            $tags = Tag::whereIn('name', $activeTags)->get()
-            ->pluck('id')
-            ->toArray();
-
-            return $query->whereIn('tag_id', $tags);
-        })
-        ->groupBy('mission_id')
-        ->when($activeTags, function ($query, $activeTags) {
-            return $query->having('total', count($activeTags)); // Only get results which match *all* tags;
+            return $query->groupBy('id')->having('total', count($activeTags)); // Only get results which match *all* tags;
         })
         ->get()
-        ->pluck('mission_id')
+        ->pluck('id')
         ->toArray();
         
         return view('missions.search', compact('results'));
