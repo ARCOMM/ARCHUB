@@ -32,14 +32,14 @@
         });
 
         $('.mission-item').click(function(event) {
-            event.preventDefault();
-
-            var caller = $(this);
-            var mission_id = caller.data('id');
-            var operation_id = slot.parents('.operation-item').data('id');
-            var order = slot.data('order');
-
             if (slot != null) {
+                event.preventDefault();
+
+                var caller = $(this);
+                var mission_id = caller.data('id');
+                var operation_id = slot.parents('.operation-item').data('id');
+                var order = slot.data('order');
+
                 $.ajax({
                     type: 'POST',
                     url: '{{ url('/hub/missions/operations/add-mission') }}',
@@ -55,6 +55,7 @@
                         slot.removeClass('unassigned');
                         slot.addClass('assigned');
                         $('.operations-mission-browser').addClass('hide');
+                        slot = null;
                     }
                 });
             }
