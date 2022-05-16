@@ -4,6 +4,6 @@ namespace App;
 
 class ChannelEnum
 {
-    const Archub = 0;
-    const Staff = 1;
+    const ARCHUB = 0;
+    const STAFF = 1;
 }

@@ -40,7 +40,9 @@ class User extends Authenticatable implements HasMedia
      *
      * @return void
      */
-    public function registerMediaConversions(Media $media = null): void {}
+    public function registerMediaConversions(Media $media = null): void
+    {
+    }
 
     public function hasARole(int ...$roles)
     {

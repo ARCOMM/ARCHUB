@@ -33,7 +33,7 @@ class DiscordController extends Controller
     {
         $user = Socialite::driver('discord')->user();
 
-        if (Discord::hasARole($user->id, RoleEnum::Member, RoleEnum::Recruit)) {
+        if (Discord::hasARole($user->id, RoleEnum::MEMBER, RoleEnum::RECRUIT)) {
             return $this->create($user);
         }
 

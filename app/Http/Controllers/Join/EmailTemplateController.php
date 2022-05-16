@@ -102,7 +102,9 @@ class EmailTemplateController extends Controller
      */
     public function destroy(EmailTemplate $email)
     {
-        if ($email->locked) return;
+        if ($email->locked) {
+            return;
+        }
 
         $email->delete();
     }

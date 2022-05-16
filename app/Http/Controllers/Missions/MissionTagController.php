@@ -29,7 +29,7 @@ class MissionTagController extends Controller
         $tag = Tag::firstOrCreate(['name' => $request->tag]);
 
         MissionTag::firstOrCreate([
-            'mission_id' => $mission->id, 
+            'mission_id' => $mission->id,
             'tag_id' => $tag->id
         ]);
     }
@@ -73,7 +73,8 @@ class MissionTagController extends Controller
             return $query->where('user_id', $user->id);
         })
         ->when($activeTags, function ($query, $activeTags) {
-            return $query->groupBy('id')->having('total', count($activeTags)); // Only get results which match *all* tags;
+            // Only get results which match *all* tags;
+            return $query->groupBy('id')->having('total', count($activeTags));
         })
         ->get()
         ->pluck('id')

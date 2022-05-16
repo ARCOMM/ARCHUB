@@ -27,7 +27,9 @@ class OperationController extends Controller
      */
     public function removeMission(Request $request)
     {
-        if ($request->id == -1) return;
+        if ($request->id == -1) {
+            return;
+        }
         OperationMission::destroy($request->id);
     }
 
@@ -44,7 +46,9 @@ class OperationController extends Controller
             ->where('play_order', $request->play_order)
             ->first();
 
-        if ($exists) return;
+        if ($exists) {
+            return;
+        }
 
         $item = OperationMission::create([
             'operation_id' => $operation->id,

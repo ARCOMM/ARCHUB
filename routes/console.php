@@ -40,7 +40,10 @@ Artisan::command('check-missions', function () {
             $prev = $wasPlayed ? $mission->last_played->toDateTimeString() : "null";
             $mission->last_played = $header->starts_at;
             $mission->save();
-            $this->comment("Updated [{$mission->id}] {$mission->display_name} from {$prev} to {$mission->last_played->toDateTimeString()}");      
+            $this->comment(
+                "Updated [{$mission->id}] {$mission->display_name}" .
+                " from {$prev} to {$mission->last_played->toDateTimeString()}"
+            );
         }
     }
 })->describe('Handles the last played timestamp for all missions');

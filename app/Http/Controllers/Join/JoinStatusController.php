@@ -65,7 +65,9 @@ class JoinStatusController extends Controller
      */
     public function store(Request $request)
     {
-        if (empty($request->text) || strlen($request->text) > 12) return;
+        if (empty($request->text) || strlen($request->text) > 12) {
+            return;
+        }
 
         $permalink = Str::slug($request->text, '-');
 
@@ -112,7 +114,9 @@ class JoinStatusController extends Controller
      */
     public function update(Request $request, JoinRequest $jr)
     {
-        if (!isset($request->join_request_id) || !isset($request->new_status_id)) return;
+        if (!isset($request->join_request_id) || !isset($request->new_status_id)) {
+            return;
+        }
 
         $jr->status_id = $request->new_status_id;
         $jr->save();

@@ -49,8 +49,12 @@ class JoinController extends Controller
      *
      * @return any
      */
-    public function __construct(JoinRequest $joinRequests, JoinStatus $joinStatuses, EmailTemplate $emails, EmailSubmission $emailSubmission)
-    {
+    public function __construct(
+        JoinRequest $joinRequests,
+        JoinStatus $joinStatuses,
+        EmailTemplate $emails,
+        EmailSubmission $emailSubmission
+    ) {
         $this->joinRequests = $joinRequests;
         $this->joinStatuses = $joinStatuses;
         $this->emails = $emails;
@@ -85,7 +89,9 @@ class JoinController extends Controller
     {
         $joinStatuses = $this->joinStatuses->orderBy('position', 'asc')->get();
         $emails = $this->emails->all();
-        $emailSubmissions = $this->emailSubmission->where('join_request_id', $jr->id)->orderBy('created_at', 'asc')->get();
+        $emailSubmissions = $this->emailSubmission->where('join_request_id', $jr->id)
+        ->orderBy('created_at', 'asc')
+        ->get();
 
         return view('join.admin.show', compact('jr', 'joinStatuses', 'emails', 'emailSubmissions'));
     }

@@ -16,15 +16,15 @@ class PageController extends Controller
      *
      * @return view
      */
-	public function index()
+    public function index()
     {
         $banners = Storage::disk('images')->allFiles('banners');
-        $banners = collect($banners)->map(function($file) {
+        $banners = collect($banners)->map(function ($file) {
             return url('images/'.$file);
         });
 
         return view('home.index', compact('banners'));
-	}
+    }
 
     public function roster()
     {

@@ -72,7 +72,7 @@ class PublicJoinController extends Controller
         $jr = JoinRequest::create($form);
         $jrUrl = url('/hub/applications/show/'.$jr->id);
 
-        Discord::notifyChannel(ChannelEnum::Staff, "**{$jr->name}** submitted an application\n{$jrUrl}");
+        Discord::notifyChannel(ChannelEnum::STAFF, "**{$jr->name}** submitted an application\n{$jrUrl}");
 
         Mail::to($jr->email)->send(new JoinRequestAcknowledged);
 

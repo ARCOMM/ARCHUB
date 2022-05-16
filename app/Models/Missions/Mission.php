@@ -103,7 +103,7 @@ class Mission extends Model implements HasMedia
     /**
      * Side represented as an integer as used by TMF_OrbatSettings
      * From: https://community.bistudio.com/wiki/BIS_fnc_sideID
-     * 
+     *
      * @var array
      */
     public static $sideMap = [
@@ -296,7 +296,7 @@ class Mission extends Model implements HasMedia
 
     /**
      * Returns true if this is an arcore mission
-     * 
+     *
      * @return bool
      */
     public function isLegacy()
@@ -306,12 +306,12 @@ class Mission extends Model implements HasMedia
 
     /**
      * Returns page url or nothing if it is a legacy mission
-     * 
+     *
      * @return string
      */
-    public function getPageUrl() 
+    public function getPageUrl()
     {
-        if($this->isLegacy()) {
+        if ($this->isLegacy()) {
             return '#';
         }
 
@@ -445,7 +445,7 @@ class Mission extends Model implements HasMedia
      *
      * @return object
      */
-    public function missionWeather() 
+    public function missionWeather()
     {
         return $this->weather;
     }
@@ -460,7 +460,7 @@ class Mission extends Model implements HasMedia
         return json_decode($this->dependencies);
     }
 
-    public function GetBriefings() 
+    public function getBriefings()
     {
         return json_decode($this->briefings);
     }
@@ -503,7 +503,7 @@ class Mission extends Model implements HasMedia
         }
 
         $this->display_name = $contents['mission']['name'];
-        if(array_key_exists('description', $contents['mission'])) {
+        if (array_key_exists('description', $contents['mission'])) {
             $this->summary = $contents['mission']['description'];
         }
 
@@ -516,10 +516,10 @@ class Mission extends Model implements HasMedia
             $this->orbatSettings = json_encode(array("Error extracting ORBAT:" => array($e->getMessage())));
         }
 
-        if(array_key_exists('date', $contents['mission'])) {
+        if (array_key_exists('date', $contents['mission'])) {
             $this->date = $contents['mission']['date'];
         }
-        if(array_key_exists('time', $contents['mission'])) {
+        if (array_key_exists('time', $contents['mission'])) {
             $this->time = $contents['mission']['time'];
         }
         $this->weather = json_encode($contents['mission']['weather']);
@@ -530,7 +530,7 @@ class Mission extends Model implements HasMedia
         return $this;
     }
 
-    private function validateMissionContents($contents) 
+    private function validateMissionContents($contents)
     {
         $errorText = "";
         $files = $contents['pbo']['files'];
@@ -722,7 +722,7 @@ class Mission extends Model implements HasMedia
     public function briefingFactions()
     {
         $filledFactions = [];
-        $briefings = $this->GetBriefings();
+        $briefings = $this->getBriefings();
 
         if ($briefings != null) {
             foreach ($briefings as $briefing) {
@@ -746,10 +746,12 @@ class Mission extends Model implements HasMedia
         return $filledFactions;
     }
 
-    private function parseFactionId($rawFaction) 
+    private function parseFactionId($rawFaction)
     {
         //Briefings are per faction numbers
-        if(is_int($rawFaction)) return $rawFaction;
+        if (is_int($rawFaction)) {
+            return $rawFaction;
+        }
 
         return 3;
     }
@@ -762,10 +764,10 @@ class Mission extends Model implements HasMedia
     public function briefing($factionId)
     {
         $filledSubjects = [];
-        $briefing = $this->GetBriefing($factionId);
+        $briefing = $this->getBriefing($factionId);
         $contents = $briefing[3];
 
-        foreach($contents as $name => $section) {
+        foreach ($contents as $name => $section) {
             $formattedSection = new stdClass();
             $formattedSection->title = $name;
             $formattedSection->paragraphs = $this->formatParagraphs($section);
@@ -776,11 +778,12 @@ class Mission extends Model implements HasMedia
         return $filledSubjects;
     }
 
-    private function GetBriefing($factionId) {
-        $availableBriefings = $this->GetBriefings();
-        foreach($availableBriefings as $briefing) {
+    private function getBriefing($factionId)
+    {
+        $availableBriefings = $this->getBriefings();
+        foreach ($availableBriefings as $briefing) {
             $id = $this->parseFactionId($briefing[1][0]);
-            if($id == $factionId) {
+            if ($id == $factionId) {
                 return $briefing;
             }
         }
@@ -788,19 +791,22 @@ class Mission extends Model implements HasMedia
         throw new Exception("Faction does not have a briefing file specified");
     }
 
-    private function formatParagraphs($paragraphs) {
+    private function formatParagraphs($paragraphs)
+    {
         return preg_replace("~<font(.*?)>(.*?)<\/font>~", "<b>$2</b>", $paragraphs);
     }
 
-    private function parseBriefings($briefings) {   
-        for($i = 0; $i < count($briefings); $i++) {
+    private function parseBriefings($briefings)
+    {
+        for ($i = 0; $i < count($briefings); $i++) {
             $briefings[$i][3] = $this->parseBriefing($briefings[$i][3]);
         }
 
         return $briefings;
     }
 
-    private function parseBriefing($briefing) {
+    private function parseBriefing($briefing)
+    {
         preg_match_all("~\"diary\", [\S\s]+?(?=\]\s*\]\s*;)~", $briefing, $diaryMatches);
 
         $dict = array();
@@ -867,8 +873,7 @@ class Mission extends Model implements HasMedia
         if (in_array($mode, $validModes)) {
             if ($mode == 'ade') {
                 $mode = 'arcade';
-            }
-            else if ($mode == 'tvt') {
+            } elseif ($mode == 'tvt') {
                 $mode = 'adversarial';
             }
         } else {
@@ -968,7 +973,7 @@ class Mission extends Model implements HasMedia
         $orbats = array_map('array_values', $orbats);
 
         $namedOrbats = array();
-        foreach($orbats as $faction => &$orbat) {
+        foreach ($orbats as $faction => &$orbat) {
             $factionName = array_search($faction, self::$sideMap);
             $namedOrbats[$factionName] = &$orbat;
         }
@@ -996,7 +1001,7 @@ class Mission extends Model implements HasMedia
     }
 
     private function replaceIntWithUnits(array &$item, int &$faction, array &$orbatGroups, bool &$orbatModified)
-    { 
+    {
         if (is_int($item[0])) {
             if (isset($orbatGroups[$faction][$item[0]])) {
                 $units = &$orbatGroups[$faction][$item[0]];
@@ -1008,13 +1013,12 @@ class Mission extends Model implements HasMedia
                     array_unshift($item, $unit);
                 }
                 $orbatModified = true;
-            }
-            else {
+            } else {
                 unset($item[0]);
             }
         }
 
-        foreach($item as &$subitem) {
+        foreach ($item as &$subitem) {
             if (is_array($subitem)) {
                 $this->replaceIntWithUnits($subitem, $faction, $orbatGroups, $orbatModified);
             }
@@ -1025,17 +1029,17 @@ class Mission extends Model implements HasMedia
     {
         // Only have name + empty array - remove entire item
         if (isset($item[1]) && is_array($item[1]) && empty($item[1])) {
-            $item = NULL;
+            $item = null;
             return;
         }
 
         // Recursively find every int and empty array and replace them will NULL
         foreach ($item as &$subitem) {
             if (is_int($subitem)) {
-                $subitem = NULL;
+                $subitem = null;
             } elseif (is_array($subitem)) {
                 if (empty($subitem)) {
-                    $subitem = NULL;
+                    $subitem = null;
                 } else {
                     $this->removeAllIntsAndEmptyArrays($subitem);
                 }
@@ -1044,7 +1048,7 @@ class Mission extends Model implements HasMedia
 
         // Double check if array is empty now that all the children have been unset
         if (isset($item[1]) && is_array($item[1]) && empty($item[1])) {
-            $item = NULL;
+            $item = null;
             return;
         }
 

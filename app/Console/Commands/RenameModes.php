@@ -45,14 +45,11 @@ class RenameModes extends Command
 
             if ($mission->mode == "adversarial") {
                 $file_mode = "TVT";
-            }
-            else if ($mission->mode == "arcade") {
+            } elseif ($mission->mode == "arcade") {
                 $file_mode = "ADE";
-            }
-            else if ($mission->mode == "coop") {
+            } elseif ($mission->mode == "coop") {
                 $file_mode = "COOP";
-            }
-            else {
+            } else {
                 throw new Exception("Invalid mode");
             }
 

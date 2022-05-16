@@ -44,7 +44,7 @@ class Video extends Model
      */
     public static function parseUrl($url)
     {
-        return ltrim(parse_url($url)["path"],"/");
+        return ltrim(parse_url($url)["path"], "/");
     }
 
     /**
@@ -54,6 +54,7 @@ class Video extends Model
      */
     public function url()
     {
-        return 'https://clips.twitch.tv/embed?clip=' . $this->video_key . "&parent=arcomm.co.uk&parent=arcomm.co&parent=localhost";
+        return 'https://clips.twitch.tv/embed?clip=' . $this->video_key .
+        "&parent=arcomm.co.uk&parent=arcomm.co&parent=localhost";
     }
 }

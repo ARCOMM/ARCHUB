@@ -48,7 +48,8 @@ class Operation extends Model
     public static function latest()
     {
         $target = Carbon::now()->addDay();
-        return Operation::whereRaw('DATE_ADD(starts_at, INTERVAL 2 DAY) > "' . $target->toDateTimeString() . '"')->first();
+        return Operation::whereRaw('DATE_ADD(starts_at, INTERVAL 2 DAY) > "' . $target->toDateTimeString() . '"')
+        ->first();
     }
 
     /**
@@ -58,7 +59,9 @@ class Operation extends Model
      */
     public static function nextWeek()
     {
-        return Operation::where('starts_at', '>', Carbon::now()->subHours(3)->toDateTimeString())->orderBy('starts_at', 'asc')->first();
+        return Operation::where('starts_at', '>', Carbon::now()->subHours(3)->toDateTimeString())
+        ->orderBy('starts_at', 'asc')
+        ->first();
     }
 
     /**
@@ -68,7 +71,9 @@ class Operation extends Model
      */
     public static function lastWeek()
     {
-        return Operation::where('starts_at', '<', Carbon::now()->subHours(3)->toDateTimeString())->orderBy('starts_at', 'desc')->first();
+        return Operation::where('starts_at', '<', Carbon::now()->subHours(3)->toDateTimeString())
+        ->orderBy('starts_at', 'desc')
+        ->first();
     }
 
     /**
@@ -78,7 +83,9 @@ class Operation extends Model
      */
     public static function future()
     {
-        return Operation::where('starts_at', '>', Carbon::now()->toDateTimeString())->orderBy('starts_at', 'asc')->get();
+        return Operation::where('starts_at', '>', Carbon::now()->toDateTimeString())
+        ->orderBy('starts_at', 'asc')
+        ->get();
     }
 
     /**
@@ -88,7 +95,8 @@ class Operation extends Model
      */
     public function missions()
     {
-        return $this->hasMany('App\Models\Operations\OperationMission')->orderBy('play_order');
+        return $this->hasMany('App\Models\Operations\OperationMission')
+        ->orderBy('play_order');
     }
 
     /**

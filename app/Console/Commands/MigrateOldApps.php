@@ -44,7 +44,9 @@ class MigrateOldApps extends Command
         $apps = DB::connection('mysql_old')->table('apps')->get();
 
         foreach ($apps as $item) {
-            if ($item->appStatus == 'Blacklisted') continue;
+            if ($item->appStatus == 'Blacklisted') {
+                continue;
+            }
 
             $jr = new JoinRequest();
             $jr->created_at = $item->appTimestamp;

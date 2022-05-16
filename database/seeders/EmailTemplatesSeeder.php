@@ -16,7 +16,9 @@ class EmailTemplatesSeeder extends Seeder
     {
         DB::table('email_templates')->insert([
             'subject' => 'Thank you for your application!',
-            'content' => 'Your application has been submitted and is awaiting review from an admin. Applications are usually reviewed within 2-3 days of submission. Once your application is reviewed you will receive an additional email as to whether or not it was accepted or declined.',
+            'content' => 'Your application has been submitted and is awaiting review from an admin.' .
+            ' Applications are usually reviewed within 2-3 days of submission.' .
+            ' Once your application is reviewed you will receive an additional email as to whether or not it was accepted or declined.',
             'locked' => true
         ]);
 

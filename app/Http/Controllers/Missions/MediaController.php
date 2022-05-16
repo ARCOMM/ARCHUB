@@ -85,7 +85,7 @@ class MediaController extends Controller
         $contents = 'TsvHttpData-1.0'.PHP_EOL;
         $missions = Mission::all();
 
-        $missions->each(function($mission) use(&$contents) {
+        $missions->each(function ($mission) use (&$contents) {
             foreach ($mission->getMedia('images') as $media) {
                 $hash = Hash::make($media->file_name);
                 $url = url($media->getUrl());

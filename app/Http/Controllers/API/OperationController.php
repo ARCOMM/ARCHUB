@@ -44,8 +44,8 @@ class OperationController extends Controller
      */
     public function index()
     {
-        $list = $this->operation->all()->map(function($item) {
-            $item->items = $item->missions->map(function($item) {
+        $list = $this->operation->all()->map(function ($item) {
+            $item->items = $item->missions->map(function ($item) {
                 $item->mission = $item->mission;
                 return $item;
             });

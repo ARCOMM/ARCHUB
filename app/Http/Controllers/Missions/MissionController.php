@@ -165,7 +165,7 @@ class MissionController extends Controller
                     $mission->summary = $old_mission_summary;
                     $mission->briefings = $old_mission->briefings;
                     $mission->weather = $old_mission->weather;
-                    if(isset($old_mission->date)) {
+                    if (isset($old_mission->date)) {
                         $mission->date = $old_mission->date;
                     }
                     $mission->time = $old_mission->time;
