@@ -12,7 +12,7 @@
         "fideloper/proxy": "^4.4",
         "graham-campbell/markdown": "^13.1",
         "guzzlehttp/guzzle": "^7.4",
-        "laravel/framework": "8.47.*",
+        "laravel/framework": "8.75.*",
         "laravel/legacy-factories": "^1.3",
         "laravel/sanctum": "^2.15",
         "laravel/socialite": "^5.5",
