@@ -25,7 +25,7 @@
     });
 </script>
 
-<div class="modal fade" id="emailCreateModal" role="dialog">
+<div class="modal" id="emailCreateModal" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

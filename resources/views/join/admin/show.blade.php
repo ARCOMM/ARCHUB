@@ -42,7 +42,7 @@
                     <i class="fa fa-paper-plane"></i>
                 </button>
 
-                <div class="modal fade" id="emailModal" role="dialog">
+                <div class="modal" id="emailModal" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
