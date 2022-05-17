@@ -2,7 +2,7 @@
 
 namespace App\Models\Missions;
 
-use Storage;
+use Exception;
 use \stdClass;
 use Carbon\Carbon;
 use App\Helpers\ArmaConfigError;
@@ -13,6 +13,7 @@ use App\Models\Operations\OperationMission;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -433,11 +434,7 @@ class Mission extends Model implements HasMedia
      */
     public function download()
     {
-        return Storage::cloud()
-        ->getAdapter()
-        ->getBucket()
-        ->object($this->cloud_pbo)
-        ->signedUrl(new \DateTime('10 min'));
+        return Storage::cloud()->temporaryUrl($this->cloud_pbo, now()->addMinutes(10));
     }
 
     /**

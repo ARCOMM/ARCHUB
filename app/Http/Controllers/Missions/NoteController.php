@@ -79,8 +79,8 @@ class NoteController extends Controller
             return;
         }
 
-        $a = $request->id;
-        if ($request->id == -1) {
+        $id = (int)$request->id;
+        if ($id == -1) {
             // Create a new note
             $note = new MissionNote;
             $note->user_id = auth()->user()->id;
@@ -93,7 +93,7 @@ class NoteController extends Controller
             Discord::missionUpdate($content, $mission, true, true, $url);
         } else {
             // Update an existing one
-            $note = MissionNote::find($request->id);
+            $note = MissionNote::find($id);
 
             $note->text = $request->text;
             $note->save();

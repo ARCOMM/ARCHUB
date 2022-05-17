@@ -155,7 +155,6 @@ return [
 
         Spatie\MediaLibrary\MediaLibraryServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
-        Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class,
         \SocialiteProviders\Manager\ServiceProvider::class,
         GrahamCampbell\Markdown\MarkdownServiceProvider::class,
     ],
