@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Exception;
 use App\ChannelEnum;
 use App\RoleEnum;
 use App\Models\Missions\Mission;
@@ -35,15 +34,9 @@ class Discord
         self::notifyChannel(ChannelEnum::ARCHUB, $content);
     }
 
-    public static function notifyChannel(int $channel, string $content)
+    public static function notifyChannel(ChannelEnum $channel, string $content)
     {
-        $webhook = match ($channel) {
-            ChannelEnum::ARCHUB => config('services.discord.archub_webhook'),
-            ChannelEnum::STAFF => config('services.discord.staff_webhook'),
-            default => throw new Exception("Webhook not found"),
-        };
-
-        $response = HTTP::post($webhook, [
+        $response = HTTP::post($channel->id(), [
             'content' => $content,
         ]);
 
@@ -79,24 +72,11 @@ class Discord
         return self::getUser($discord_id)["roles"];
     }
 
-    public static function hasARole(int $discord_id, int ...$roles)
+    public static function hasARole(int $discord_id, RoleEnum ...$roles)
     {
         $usersRoles = self::getRoles($discord_id);
         foreach ($roles as $role) {
-            $roleId = match ($role) {
-                RoleEnum::RECRUIT => config('services.discord.recruit_role'),
-                RoleEnum::MEMBER => config('services.discord.member_role'),
-                RoleEnum::RETIRED => config('services.discord.retired_role'),
-                RoleEnum::TESTER => config('services.discord.tester_role'),
-                RoleEnum::SENIOR_TESTER => config('services.discord.senior_tester_role'),
-                RoleEnum::OPERATIONS => config('services.discord.operations_role'),
-                RoleEnum::RECRUITER => config('services.discord.recruiter_role'),
-                RoleEnum::STAFF => config('services.discord.staff_role'),
-                RoleEnum::ADMIN => config('services.discord.admin_role'),
-                default => throw new Exception("RoleId not found"),
-            };
-
-            if (in_array($roleId, $usersRoles)) {
+            if (in_array($role->id(), $usersRoles)) {
                 return true;
             }
         }

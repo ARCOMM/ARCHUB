@@ -2,8 +2,19 @@
 
 namespace App;
 
-class ChannelEnum
+use Exception;
+
+enum ChannelEnum
 {
-    const ARCHUB = 0;
-    const STAFF = 1;
+    case ARCHUB;
+    case STAFF;
+
+    public function id(): string
+    {
+        return match ($this) {
+            ChannelEnum::ARCHUB => config('services.discord.archub_webhook'),
+            ChannelEnum::STAFF => config('services.discord.staff_webhook'),
+            default => throw new Exception("Webhook not found"),
+        };
+    }
 }

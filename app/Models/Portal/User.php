@@ -2,9 +2,8 @@
 
 namespace App\Models\Portal;
 
-use Auth;
-use Carbon\Carbon;
 use App\Discord;
+use App\RoleEnum;
 use App\Models\Missions\Mission;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -44,7 +43,7 @@ class User extends Authenticatable implements HasMedia
     {
     }
 
-    public function hasARole(int ...$roles)
+    public function hasARole(RoleEnum ...$roles)
     {
         return Discord::hasARole($this->discord_id, ...$roles);
     }
