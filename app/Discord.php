@@ -2,9 +2,9 @@
 
 namespace App;
 
+use Exception;
 use App\ChannelEnum;
 use App\RoleEnum;
-use App\Models\Portal\User;
 use App\Models\Missions\Mission;
 use App\Models\Missions\MissionSubscription;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -35,25 +35,19 @@ class Discord
         self::notifyChannel(ChannelEnum::ARCHUB, $content);
     }
 
-    public static function notifyChannel(string $channel, string $content)
+    public static function notifyChannel(int $channel, string $content)
     {
-        $webhook = self::getWebhookFromChannel($channel);
+        $webhook = match($channel) {
+            ChannelEnum::ARCHUB => config('services.discord.archub_webhook'),
+            ChannelEnum::STAFF => config('services.discord.staff_webhook'),
+            default => throw new Exception("Webhook not found"),
+        };
+
         $response = HTTP::post($webhook, [
             'content' => $content,
         ]);
 
         return $response;
-    }
-
-    private static function getWebhookFromChannel(int $channel)
-    {
-        if ($channel == ChannelEnum::ARCHUB) {
-            return config('services.discord.archub_webhook');
-        } elseif ($channel == ChannelEnum::STAFF) {
-            return config('services.discord.staff_webhook');
-        } else {
-            throw new Exception("Webhook not found");
-        }
     }
 
     private static function getUser(int $discord_id)
@@ -89,37 +83,23 @@ class Discord
     {
         $usersRoles = self::getRoles($discord_id);
         foreach ($roles as $role) {
-            $roleId = self::getRoleIdFromRole($role);
+            $roleId = match($role) {
+                RoleEnum::RECRUIT => config('services.discord.recruit_role'),
+                RoleEnum::MEMBER => config('services.discord.member_role'),
+                RoleEnum::RETIRED => config('services.discord.retired_role'),
+                RoleEnum::TESTER => config('services.discord.tester_role'),
+                RoleEnum::SENIOR_TESTER => config('services.discord.senior_tester_role'),
+                RoleEnum::OPERATIONS => config('services.discord.operations_role'),
+                RoleEnum::RECRUITER => config('services.discord.recruiter_role'),
+                RoleEnum::STAFF => config('services.discord.staff_role'),
+                RoleEnum::ADMIN => config('services.discord.admin_role'),
+                default => throw new Exception("RoleId not found"),
+            };
 
             if (in_array($roleId, $usersRoles)) {
                 return true;
             }
         }
         return false;
-    }
-
-    private static function getRoleIdFromRole(int $role)
-    {
-        if ($role == RoleEnum::RECRUIT) {
-            return config('services.discord.recruit_role');
-        } elseif ($role == RoleEnum::MEMBER) {
-            return config('services.discord.member_role');
-        } elseif ($role == RoleEnum::RETIRED) {
-            return config('services.discord.retired_role');
-        } elseif ($role == RoleEnum::TESTER) {
-            return config('services.discord.tester_role');
-        } elseif ($role == RoleEnum::SENIOR_TESTER) {
-            return config('services.discord.senior_tester_role');
-        } elseif ($role == RoleEnum::OPERATIONS) {
-            return config('services.discord.operations_role');
-        } elseif ($role == RoleEnum::RECRUITER) {
-            return config('services.discord.recruiter_role');
-        } elseif ($role == RoleEnum::STAFF) {
-            return config('services.discord.staff_role');
-        } elseif ($role == RoleEnum::ADMIN) {
-            return config('services.discord.admin_role');
-        } else {
-            throw new Exception("RoleId not found");
-        }
     }
 }

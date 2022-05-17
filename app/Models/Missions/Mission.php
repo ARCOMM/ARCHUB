@@ -868,18 +868,13 @@ class Mission extends Model implements HasMedia
 
         $group = $parts[0];
         $mode = strtolower($parts[1]);
-        $validModes = ['coop', 'tvt', 'ade'];
 
-        if (in_array($mode, $validModes)) {
-            if ($mode == 'ade') {
-                $mode = 'arcade';
-            } elseif ($mode == 'tvt') {
-                $mode = 'adversarial';
-            }
-        } else {
-            abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or ADE');
-            return;
-        }
+        $mode = match($mode) {
+            'ade' => 'arcade',
+            'coop' => 'coop',
+            'tvt' => 'adversarial',
+            default => abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or ADE'),
+        };
 
         $details = new stdClass();
         $details->mode = $mode;
