@@ -77,8 +77,8 @@ class SQMConfig {
   public $errorReason;
 
   private static $errorReasons = array(
-    'STRUCTURE_ERROR' => 'Błąd składniowy w pliku misji (mission.sqm).',
-    'BINARIZED_FILE' => 'Błąd odczytu pliku misji (mission.sqm). Prawdopodobnie plik jest zbinaryzowany.',
+    'STRUCTURE_ERROR' => 'Syntax error in mission file (mission.sqm).',
+    'BINARIZED_FILE' => 'Error while reading file (mission.sqm). Most likely your file is binarized.',
   );
 
   function __construct($data) {
@@ -128,7 +128,7 @@ class SQMConfig {
 
     // Read end of class/attribute
     if ($line == '}') {
-      if ($this->mode == SQM_READ_MODE_CLASS) {
+      if ($this->mode == "class" || $this->mode == SQM_READ_MODE_CLASS) {
         // Check if we are within structure
         if ($this->currentClass->parentClass == null) {
           $this->error = true;

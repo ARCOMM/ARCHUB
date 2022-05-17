@@ -62,7 +62,7 @@
     public $info;
 
     private static $errorReasons = array(
-      'UNREADABLE_FILE' => 'Błąd odczytu pliku pbo. Sprawdź czy plik nie jest zbinaryzowany lub zapisany w formacie skompresowanym.',
+      'UNREADABLE_FILE' => 'Error while reading PBO file. Check whether your file is binarized or saved in a compressed format.',
     );
 
     function __construct(string $filepath, string $filename) {
