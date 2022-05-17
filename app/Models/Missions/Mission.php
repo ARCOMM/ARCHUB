@@ -866,7 +866,7 @@ class Mission extends Model implements HasMedia
         $group = $parts[0];
         $mode = strtolower($parts[1]);
 
-        $mode = match($mode) {
+        $mode = match ($mode) {
             'ade' => 'arcade',
             'coop' => 'coop',
             'tvt' => 'adversarial',

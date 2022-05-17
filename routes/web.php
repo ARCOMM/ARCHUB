@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Missions\MissionController;
+use App\Http\Controllers\Missions\MissionTagController;
 use Illuminate\Support\Facades\Route;
 
 //--- Home
@@ -61,57 +63,61 @@ Route::group(['middleware' => 'can:manage-operations'], function () {
 
 //--- Missions
 Route::group(['middleware' => 'can:access-hub'], function () {
-    Route::get('/hub/missions/tags', 'Missions\MissionTagController@allTags');
-    Route::get('/hub/missions/{mission}/tags', 'Missions\MissionTagController@index');
-    Route::post('/hub/missions/{mission}/tags', 'Missions\MissionTagController@store');
-    Route::delete('/hub/missions/{mission}/tags', 'Missions\MissionTagController@destroy');
-    Route::get('/hub/missions/search', 'Missions\MissionTagController@search');
+    Route::controller(MissionTagController::class)->group(function () {
+        Route::get('/hub/missions/tags', 'allTags');
+        Route::get('/hub/missions/{mission}/tags', 'index');
+        Route::post('/hub/missions/{mission}/tags', 'store');
+        Route::delete('/hub/missions/{mission}/tags', 'destroy');
+        Route::get('/hub/missions/search', 'search');
+    });
 
-    Route::get('/hub/users', 'Users\UserController@index');
-    Route::get('/hub/users/search', 'Users\UserController@search');
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/hub/users', 'index');
+        Route::get('/hub/users/search', 'search');
+    });
 
-    // Mission Media
-    Route::post('/hub/missions/media/add-photo', 'Missions\MediaController@uploadPhoto');
-    Route::post('/hub/missions/media/delete-photo', 'Missions\MediaController@deletePhoto');
-    Route::post('/hub/missions/media/add-video', 'Missions\MediaController@addVideo');
-    Route::post('/hub/missions/media/delete-video', 'Missions\MediaController@removeVideo');
+    Route::controller(MediaController::class)->group(function () {
+        Route::post('/hub/missions/media/add-photo', 'uploadPhoto');
+        Route::post('/hub/missions/media/delete-photo', 'deletePhoto');
+        Route::post('/hub/missions/media/add-video', 'addVideo');
+        Route::post('/hub/missions/media/delete-video', 'removeVideo');
+    });
 
-    // Mission Operations
-    Route::post('/hub/missions/operations/remove-mission', 'Missions\OperationController@removeMission');
-    Route::post('/hub/missions/operations/add-mission', 'Missions\OperationController@addMission');
-    Route::post('/hub/missions/operations/create-operation', 'Missions\OperationController@create');
-    Route::post('/hub/missions/operations/delete-operation', 'Missions\OperationController@destroy');
+    Route::controller(OperationController::class)->group(function () {
+        Route::post('/hub/missions/operations/remove-mission', 'removeMission');
+        Route::post('/hub/missions/operations/add-mission', 'addMission');
+        Route::post('/hub/missions/operations/create-operation', 'create');
+        Route::post('/hub/missions/operations/delete-operation', 'destroy');
+    });
 
     // Mission Comments
     Route::resource('/hub/missions/comments', 'Missions\CommentController', [
-        'except' => ['create', 'show', 'update']
+    'except' => ['create', 'show', 'update']
     ]);
 
-    // Mission Briefings
-    Route::post('/hub/missions/briefing', 'Missions\MissionController@briefing');
-    Route::post('/hub/missions/briefing/update', 'Missions\MissionController@setBriefingLock');
-
-    // Mission ORBAT
-    Route::post('/hub/missions/orbat', 'Missions\MissionController@orbat');
-
-    // Missions
-    Route::get('/hub/missions/{mission}/delete', 'Missions\MissionController@destroy');
-    Route::post('/hub/missions/{mission}/update', 'Missions\MissionController@update');
-    Route::post('/hub/missions/{mission}/set-verification', 'Missions\MissionController@updateVerification');
-
-    // Download
-    Route::get('/hub/missions/{mission}/download', 'Missions\MissionController@download');
+    Route::controller(MissionController::class)->group(function () {
+        // Mission Briefings
+        Route::post('/hub/missions/briefing', 'briefing');
+        Route::post('/hub/missions/briefing/update', 'setBriefingLock');
+        // Mission ORBAT
+        Route::post('/hub/missions/orbat', 'orbat');
+        // Missions
+        Route::get('/hub/missions/{mission}/delete', 'destroy');
+        Route::post('/hub/missions/{mission}/update', 'update');
+        Route::post('/hub/missions/{mission}/set-verification', 'updateVerification');
+        // Download
+        Route::get('/hub/missions/{mission}/download', 'download');
+        // Panels
+        Route::get('/hub/missions/{mission}/{panel}', 'panel');
+    });
 
     // Notes
     Route::resource('/hub/missions/{mission}/notes', 'Missions\NoteController');
 
-    // Panels
-    Route::get('/hub/missions/{mission}/{panel}', 'Missions\MissionController@panel');
-
     Route::resource('/hub/missions', 'Missions\MissionController', [
-        'except' => ['create', 'edit']
+    'except' => ['create', 'edit']
     ]);
-
+    
     Route::get('/hub/settings/avatar-sync', 'Users\SettingsController@avatarSync');
     Route::resource('/hub/settings', 'Users\SettingsController');
 
@@ -121,13 +127,13 @@ Route::group(['middleware' => 'can:access-hub'], function () {
 
     // Hub Index
     Route::resource('/hub', 'HubController', [
-        'only' => ['index']
+    'only' => ['index']
     ]);
 
     Route::get('/tokens/create', function (Request $request) {
         auth()->user()->tokens()->delete();
         $token = auth()->user()->createToken('api_token');
-    
+
         return ['token' => $token->plainTextToken];
     });
 });

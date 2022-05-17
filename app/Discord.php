@@ -37,7 +37,7 @@ class Discord
 
     public static function notifyChannel(int $channel, string $content)
     {
-        $webhook = match($channel) {
+        $webhook = match ($channel) {
             ChannelEnum::ARCHUB => config('services.discord.archub_webhook'),
             ChannelEnum::STAFF => config('services.discord.staff_webhook'),
             default => throw new Exception("Webhook not found"),
@@ -83,7 +83,7 @@ class Discord
     {
         $usersRoles = self::getRoles($discord_id);
         foreach ($roles as $role) {
-            $roleId = match($role) {
+            $roleId = match ($role) {
                 RoleEnum::RECRUIT => config('services.discord.recruit_role'),
                 RoleEnum::MEMBER => config('services.discord.member_role'),
                 RoleEnum::RETIRED => config('services.discord.retired_role'),
