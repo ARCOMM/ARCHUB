@@ -2,7 +2,6 @@
 @import 'bootstrap-material-design/scss/bootstrap-material-design';
 @import 'magnific-popup/dist/magnific-popup';
 @import 'font-awesome/css/font-awesome';
-@import 'laravel-mentions';
 @import 'select2';
 
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
@@ -106,15 +105,6 @@ a {
     padding-top: 5rem;
     border-top: 1px solid #ddd;
     margin-top: 5rem;
-}
-
-.text-mention {
-    font-weight: 600;
-}
-
-.mention-node {
-    font-weight: bold;
-    color: $brand-primary;
 }
 
 .highlight {

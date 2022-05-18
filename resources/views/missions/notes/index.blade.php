@@ -64,29 +64,6 @@
             event.preventDefault();
         });
 
-        new Mentions({
-            input: '.has-mentions',
-            mentions: '#mentions',
-            pools: [{
-                trigger: '@',
-                pool: 'users',
-                display: 'username',
-                reference: 'id'
-            }, {
-                trigger: '#',
-                pool: 'missions',
-                display: 'display_name',
-                reference: 'id'
-            }]
-        });
-
-        $('.mission-comments .mention-node[data-object*="missions"]').each(function(i, node) {
-            node = $(node);
-            text = node.html();
-            id = node.data('object').split(':')[1];
-            node.replaceWith('<a href="{{ url('/hub/missions') }}/' + id + '" class="mention-node">' + text + '</a>');
-        });
-
         $('.mission-comments .mission-comment-item[id="' + window.location.hash.substr(1) + '"]').addClass('highlight');
     });
 </script>
@@ -99,7 +76,6 @@
 
 <div class="mission-comments-form pull-left w-100">
     <form method="post" id="submit-mission-comment">
-        <input type="hidden" name="mentions" id="mentions" value="">
         <input type="hidden" name="id" value="-1'">
 
         <textarea

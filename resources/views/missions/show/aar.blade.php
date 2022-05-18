@@ -101,29 +101,6 @@
                 event.preventDefault();
             });
 
-            new Mentions({
-                input: '.has-mentions',
-                output: '#mentions-list',
-                pools: [{
-                    trigger: '@',
-                    pool: 'users',
-                    display: 'username',
-                    reference: 'id'
-                }, {
-                    trigger: '#',
-                    pool: 'missions',
-                    display: 'display_name',
-                    reference: 'id'
-                }]
-            });
-
-            $('.mission-comments .mention-node[data-object*="missions"]').each(function(i, node) {
-                node = $(node);
-                text = node.html();
-                id = node.data('object').split(':')[1];
-                node.replaceWith('<a href="{{ url('/hub/missions') }}/' + id + '" class="mention-node">' + text + '</a>');
-            });
-
             $('.mission-comments .mission-comment-item[id="' + window.location.hash.substr(1) + '"]').addClass('highlight');
 
             setInterval(function() {
@@ -144,7 +121,6 @@
         <input type="hidden" name="id" value="{{ (!is_null($mission->draft())) ? $mission->draft()->id : '-1' }}">
         <input type="hidden" name="mission_id" value="{{ $mission->id }}">
         <input type="hidden" name="published" value="0">
-        <input type="hidden" name="mentions" value="" id="mentions-list">
 
         <textarea
             class="form-control-editable form-control mission-aar-textarea m-b-3 m-t-3"

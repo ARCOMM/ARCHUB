@@ -18425,25 +18425,6 @@ img.mfp-img {
   clip: auto;
 }
 
-.tribute-container {
-  margin-top: 1rem;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  background: white;
-}
-.tribute-container ul {
-  padding: 0.5rem 0;
-  margin: 0;
-}
-.tribute-container ul li {
-  padding: 1rem 2rem;
-  margin: 0;
-  color: black;
-  list-style-type: none;
-}
-.tribute-container ul li.highlight, .tribute-container ul li:hover {
-  background: #ddd;
-}
-
 .select2-container {
   box-sizing: border-box;
   display: inline-block;
@@ -20305,15 +20286,6 @@ a:hover, a:focus, a:active {
   padding-top: 5rem;
   border-top: 1px solid #ddd;
   margin-top: 5rem;
-}
-
-.text-mention {
-  font-weight: 600;
-}
-
-.mention-node {
-  font-weight: bold;
-  color: #bd2c2c;
 }
 
 .highlight {
