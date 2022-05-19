@@ -48,9 +48,15 @@
             }
         });
 
-        $('#filter_select').select2({
+        $('#whitelist_select').select2({
             multiple: true,
-            placeholder: "Tags",
+            placeholder: "Whitelist",
+            dropdownParent: $('#filter_modal')
+        });
+
+        $('#blacklist_select').select2({
+            multiple: true,
+            placeholder: "Blacklist",
             dropdownParent: $('#filter_modal')
         });
 
@@ -61,7 +67,9 @@
             success: function(tagIds) {
                 $.each(tagIds, function(index, value) {
                     var newOption = new Option(value["name"], index, false, false);
-                    $('#filter_select').append(newOption).trigger('change');
+                    var newOption2 = new Option(value["name"], index, false, false);
+                    $('#whitelist_select').append(newOption).trigger('change');
+                    $('#blacklist_select').append(newOption2).trigger('change');
                 });
             }
         });
@@ -76,7 +84,8 @@
                 data: {
                     "mode": mode.length > 0 ? mode[0]["text"] : null,
                     "author": author.length > 0 ? author[0]["text"] : null,
-                    "tags[]": $('#filter_select').select2('data').map(item => item.text),
+                    "whitelist[]": $('#whitelist_select').select2('data').map(item => item.text),
+                    "blacklist[]": $('#blacklist_select').select2('data').map(item => item.text),
                 },
 
                 success: function(data) {
@@ -88,7 +97,8 @@
         function clear() {
             $('#mode_select').val(null).trigger('change');
             $('#author_select').val(null).trigger('change');
-            $('#filter_select').val(null).trigger('change');
+            $('#whitelist_select').val(null).trigger('change');
+            $('#blacklist_select').val(null).trigger('change');
             filter();
         }
 
@@ -147,7 +157,8 @@
                 <div class="mission-tags">
                     <select name="mode" class="form-control" style="width: 100%" id="mode_select"></select>
                     <select name="author" class="form-control" style="width: 100%" id="author_select"></select>
-                    <select name="tags" class="form-control" style="width: 100%" id="filter_select"></select>
+                    <select name="whitelist" class="form-control" style="width: 100%" id="whitelist_select"></select>
+                    <select name="blacklist" class="form-control" style="width: 100%" id="blacklist_select"></select>
                 </div>
             </div>
             <div class="modal-footer">
