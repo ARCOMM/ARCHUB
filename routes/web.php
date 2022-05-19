@@ -4,6 +4,7 @@ use App\Http\Controllers\Missions\MediaController;
 use App\Http\Controllers\Missions\MissionController;
 use App\Http\Controllers\Missions\MissionTagController;
 use App\Http\Controllers\Missions\OperationController;
+use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
 //--- Home
@@ -71,6 +72,7 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         Route::post('/hub/missions/{mission}/tags', 'store');
         Route::delete('/hub/missions/{mission}/tags', 'destroy');
         Route::get('/hub/missions/search', 'search');
+        Route::get('/hub/missions/modes', 'modes');
     });
 
     Route::controller(UserController::class)->group(function () {

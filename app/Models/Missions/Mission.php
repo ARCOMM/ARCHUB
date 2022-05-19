@@ -95,7 +95,7 @@ class Mission extends Model implements HasMedia
      *
      * @var array
      */
-    protected $gamemodes = [
+    public static $gamemodes = [
         'coop' => 'Cooperative',
         'adversarial' => 'Adversarial',
         'arcade' => 'Arcade'
@@ -346,7 +346,7 @@ class Mission extends Model implements HasMedia
      */
     public function fulltextGamemode()
     {
-        return $this->gamemodes[strtolower($this->mode)];
+        return self::$gamemodes[strtolower($this->mode)];
     }
 
     /**

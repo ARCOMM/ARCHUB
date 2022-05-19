@@ -13,9 +13,29 @@
 
 <script>
     $(document).ready(function(event) {
+        $('#mode_select').select2({
+            placeholder: "Mode",
+            dropdownParent: $('#filter_modal'),
+            allowClear: true,
+        });
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ url("/hub/missions/modes") }}',
+
+            success: function(modes) {
+                $.each(modes, function(index, value) {
+                    var newOption = new Option(value, index, false, false);
+                    $('#mode_select').append(newOption);
+                });
+                $('#mode_select').val(null).trigger('change'); // Ensure selection starts empty
+            }
+        });
+
         $('#author_select').select2({
             placeholder: "Mission maker",
             dropdownParent: $('#filter_modal'),
+            allowClear: true,
             ajax: {
                 delay: 250,
                 type: 'GET',
@@ -47,13 +67,16 @@
         });
 
         function filter() {
-            var author = $('#author_select').select2('data')
+            var mode = $('#mode_select').select2('data');
+            var author = $('#author_select').select2('data');
+
             $.ajax({
                 type: 'GET',
                 url: "{{ url('/hub/missions/search') }}",
                 data: {
+                    "mode": mode.length > 0 ? mode[0]["text"] : null,
                     "author": author.length > 0 ? author[0]["text"] : null,
-                    "tags[]": $('#filter_select').select2('data').map(item => item.text)
+                    "tags[]": $('#filter_select').select2('data').map(item => item.text),
                 },
 
                 success: function(data) {
@@ -63,6 +86,7 @@
         }
 
         function clear() {
+            $('#mode_select').val(null).trigger('change');
             $('#author_select').val(null).trigger('change');
             $('#filter_select').val(null).trigger('change');
             filter();
@@ -121,6 +145,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="mission-tags">
+                    <select name="mode" class="form-control" style="width: 100%" id="mode_select"></select>
                     <select name="author" class="form-control" style="width: 100%" id="author_select"></select>
                     <select name="tags" class="form-control" style="width: 100%" id="filter_select"></select>
                 </div>
