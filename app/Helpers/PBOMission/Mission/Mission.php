@@ -21,6 +21,7 @@
     public $briefings;
     public $acreSettings;
     public $orbatSettings;
+    private $slottingDetails;
 
     private $groups = array();
     private $markers = array();
@@ -251,6 +252,11 @@
       if (!isset($intel)) return;
 
       $this->name = $this->translate($intel->attribute('briefingName'));
+
+      if ($intel->hasAttribute('overviewText')) {
+        $this->slottingDetails = $intel->attribute('overviewText');
+      }
+
       // true = friendly
       $this->resistance = array(
         'west' => (bool) $intel->attribute('resistanceWest', 1),
@@ -299,7 +305,7 @@
       // Simple values
       foreach (array('name','map','description','author','date','time','weather',
       'dependencies','resistance','stats','slotCount','curatorPresent','headlessPresent',
-      'briefings','acreSettings', 'orbatSettings') as $key) {
+      'briefings','acreSettings', 'orbatSettings', 'slottingDetails') as $key) {
         if (isset($this->{$key})) $data[$key] = $this->{$key};
       }
       // Object lists

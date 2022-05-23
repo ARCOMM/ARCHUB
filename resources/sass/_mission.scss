@@ -484,6 +484,16 @@ $mission-banner-author-font-sizes: (
     margin-left: -2rem;
     margin-top: -1rem;
 
+    .mission-slotting-details {
+        float: left;
+        width: 80%;
+        padding: 1rem 2rem 0 2rem;
+
+        @media screen and (max-width: 1024px) {
+            width: 100% !important;
+        }
+    }
+
     .mission-orbat-content {
         float: left;
         width: 80%;

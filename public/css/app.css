@@ -19855,6 +19855,16 @@ header .subnav .subnav-link.active {
   margin-left: -2rem;
   margin-top: -1rem;
 }
+.mission-orbat .mission-slotting-details {
+  float: left;
+  width: 80%;
+  padding: 1rem 2rem 0 2rem;
+}
+@media screen and (max-width: 1024px) {
+  .mission-orbat .mission-slotting-details {
+    width: 100% !important;
+  }
+}
 .mission-orbat .mission-orbat-content {
   float: left;
   width: 80%;

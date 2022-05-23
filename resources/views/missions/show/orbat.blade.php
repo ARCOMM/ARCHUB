@@ -37,5 +37,9 @@
         @endforeach
     </div>
 
+    <div class="mission-slotting-details">
+        {{ $mission->slottingDetails }}
+    </div>
+
     <div class="mission-orbat-content"></div>
 </div>

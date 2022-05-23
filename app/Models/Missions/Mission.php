@@ -512,6 +512,7 @@ class Mission extends Model implements HasMedia
         } catch (Exception $e) {
             $this->orbatSettings = json_encode(array("Error extracting ORBAT:" => array($e->getMessage())));
         }
+        $this->slottingDetails = $contents['mission']['slottingDetails'];
 
         if (array_key_exists('date', $contents['mission'])) {
             $this->date = $contents['mission']['date'];
