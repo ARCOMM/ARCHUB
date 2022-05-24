@@ -444,7 +444,7 @@ class Mission extends Model implements HasMedia
      */
     public function missionWeather()
     {
-        return $this->weather;
+        return json_decode($this->weather, true);
     }
 
     /**
@@ -635,12 +635,10 @@ class Mission extends Model implements HasMedia
      */
     public function rain()
     {
-        $startRain = $this->missionWeather()['start']['rain'] ?? 0;
         $forecastRain = $this->missionWeather()['forecast']['rain'] ?? 0;
-        $diff = $forecastRain - $startRain;
 
         return static::computeLessThan(
-            $diff,
+            $forecastRain,
             [
                 '' => 0,
                 'Slight Drizzle' => 0.2,
@@ -658,7 +656,11 @@ class Mission extends Model implements HasMedia
      */
     public function weather()
     {
-        return $this->overcast() . (($this->fog() == '') ? '' : ', ' . $this->fog()) . (($this->rain() == '') ? '' : ', ' . $this->rain());
+        return $this->overcast() . 
+        (($this->fog() == '') ? '' : ', ' . 
+        $this->fog()) . 
+        (($this->rain() == '') ? '' : ', ' . 
+        $this->rain());
     }
 
     /**
