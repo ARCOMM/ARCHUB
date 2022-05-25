@@ -1,10 +1,10 @@
+@import "bootstrap/scss/functions";
 @import 'variables';
-@import 'bootstrap-material-design/scss/bootstrap-material-design';
-@import 'magnific-popup/dist/magnific-popup';
-@import 'font-awesome/css/font-awesome';
-@import 'select2';
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
 
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
+@import 'magnific-popup/dist/magnific-popup';
+@import 'select2';
 
 body {
     overflow-y: scroll;
@@ -50,15 +50,15 @@ body {
 @import 'atwho';
 @import 'jr';
 
-.navbar
-    .navbar-nav
-    .nav-item.dropdown
-    .dropdown-menu
-    .list-group
-    .list-group-item.active
-    .list-group-item-text {
-    color: rgba(255, 255, 255, 0.75) !important;
-}
+// .navbar
+//     .navbar-nav
+//     .nav-item.dropdown
+//     .dropdown-menu
+//     .list-group
+//     .list-group-item.active
+//     .list-group-item-text {
+//     color: rgba(255, 255, 255, 0.75) !important;
+// }
 
 main {
     padding: 3rem 3rem 0 3rem;
@@ -134,40 +134,40 @@ a {
     width: 100%;
 }
 
-.nav.navbar-nav {
-    display: block !important;
+// .nav.navbar-nav {
+//     display: block !important;
 
-    div.pull-left,
-    div.pull-right {
-        .nav-item {
-            .nav-link {
-                position: relative;
-            }
+//     div.pull-left,
+//     div.pull-right {
+//         .nav-item {
+//             .nav-link {
+//                 position: relative;
+//             }
 
-            .dropdown-menu {
-                position: absolute;
-            }
-        }
-    }
+//             .dropdown-menu {
+//                 position: absolute;
+//             }
+//         }
+//     }
 
-    div.pull-left {
-        .nav-item {
-            .dropdown-menu {
-                left: 0;
-                right: auto;
-            }
-        }
-    }
+//     div.pull-left {
+//         .nav-item {
+//             .dropdown-menu {
+//                 left: 0;
+//                 right: auto;
+//             }
+//         }
+//     }
 
-    div.pull-right {
-        .nav-item {
-            .dropdown-menu {
-                right: 0;
-                left: auto;
-            }
-        }
-    }
-}
+//     div.pull-right {
+//         .nav-item {
+//             .dropdown-menu {
+//                 right: 0;
+//                 left: auto;
+//             }
+//         }
+//     }
+// }
 
 .modal-header,
 .card {

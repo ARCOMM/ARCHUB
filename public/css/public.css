@@ -12,11 +12,6 @@
   padding: 0;
 }
 
-.navbar-nav li {
-  float: right;
-  margin-top: 1rem;
-}
-
 .navbar-brand {
   margin: 0 !important;
   padding: 0 !important;
@@ -34,11 +29,6 @@
 
 .content {
   margin: 150px auto;
-}
-
-.darker .navbar-transparent .navbar-nav > li > a,
-[class*=navbar-ct] .navbar-nav > li > a {
-  color: #333;
 }
 
 label {
@@ -110,10 +100,6 @@ input.form-control {
 .select2-results .select2-results__option--highlighted.select2-results__option--selectable {
   background-color: white;
   color: black;
-}
-
-.footer:not(.footer-big) nav > ul li:first-of-type {
-  margin-left: 0;
 }
 
 .thumbnail {
@@ -271,7 +257,7 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  bottom: calc(-100% / 1.618);
+  bottom: -61.804697157%;
   width: 50%;
   background-position: center;
   background-repeat: no-repeat;

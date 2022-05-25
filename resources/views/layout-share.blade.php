@@ -15,9 +15,10 @@
             {{ env('SITE_NAME', 'ARCHUB') }}
         </title>
 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <link href="{{ url('/images/favicon.png') }}" rel="icon" type="image/png"></link>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="{{ url('/css/bootstrap.min.css') }}">
         <link href="{{ mix('/css/app.css') }}" rel="stylesheet"></link>
         <script src="{{ mix('/js/app.js') }}" type="text/javascript"></script>
 
@@ -43,18 +44,7 @@
                 class="header-colored header-{{ trim($__env->yieldContent('header-color')) }}"
             @endif>
 
-            <nav class="navbar navbar-light">
-                <div class="nav navbar-nav w-100">
-                    <div class="pull-left">
-                        @include('nav.brand')
-                        @yield('nav-left')
-                    </div>
-
-                    <div class="pull-right">
-                        @yield('nav-right')
-                    </div>
-                </div>
-            </nav>
+            @include('navbar')
 
             @if (trim($__env->yieldContent('subnav')))
                 <div class="subnav subnav-upper">
@@ -77,7 +67,7 @@
 
         <script>
             $(document).ready(function(e) {
-                $('body').bootstrapMaterialDesign();
+                $('body');
             });
         </script>
     </body>
