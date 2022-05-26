@@ -84,13 +84,13 @@
             name="text">{!! (!is_null($mission->draft())) ? $mission->draft()->text : '' !!}</textarea>
 
         <a
-            class="float-start l-3"
+            class="float-start mx-3"
             style="font-weight:600"
             href="https://docs.google.com/document/d/1vxyQSLEjB23ZDdZGHClXrOxN90SHbu26bEUXjq7fqLE/view"
             target="_newtab">
             Mission Checklist
         </a>
 
-        <button type="submit" class="btn btn-raised btn-primary float-end mr-3">Submit</button>
+        <button type="submit" class="btn btn-raised btn-primary float-end mx-3">Submit</button>
     </form>
 </div>

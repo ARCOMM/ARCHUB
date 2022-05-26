@@ -1,3 +1,9 @@
+@if ($mission->briefingLocked($faction))
+    <div class="alert alert-warning float-start w-100 mt-2" role="alert">
+        <strong>This briefing is locked!</strong> Only the mission maker and testers can see it.
+    </div>
+@endif
+
 @if ($mission->isMine() || auth()->user()->can('manage-missions'))
     <script>
         $(document).ready(function(e) {
@@ -40,12 +46,6 @@
             data-locked="{{ ($mission->briefingLocked($faction)) ? '0' : '1' }}">
             {{ ($mission->briefingLocked($faction)) ? 'Unlock' : 'Lock' }} {{ $mission->factions[$faction] }} Briefing
         </a>
-    </div>
-@endif
-
-@if ($mission->briefingLocked($faction))
-    <div class="alert alert-warning float-start w-100 mt-2" role="alert">
-        <strong>This briefing is locked!</strong> Only the mission maker and testers can see it.
     </div>
 @endif
 
