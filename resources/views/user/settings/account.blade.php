@@ -27,17 +27,17 @@
     });
 </script>
 
-<div class="row">
+<div class="text-center">
     <img class="user-avatar mx-auto img-thumbnail" src="{{ auth()->user()->avatar }}">
 </div>
 
-<div class="row">
-    <a href="javascript:void(0)" class="btn btn-primary mx-auto mt-1" id="avatar-sync">
+<div class="mt-3 text-center">
+    <a href="javascript:void(0)" class="btn btn-primary mx-auto mt-1 mb-2" id="avatar-sync">
         Sync From Discord
     </a>
 </div>
 
-<div class="row t-3">
+<div class="mt-3">
     <form method="post" class="mx-auto col-md-4" id="update-account">
         <div class="form-group">
             <label class="w-100 text-center">Username</label>

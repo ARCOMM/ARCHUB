@@ -89,7 +89,7 @@
             {{ $mission->date() }} &mdash; {{ $mission->time() }}
         </h6>
 
-        <p class="t-2">{{ $mission->summary }}</p>
+        <p class="mt-2">{{ $mission->summary }}</p>
     </div>
 
     <div class="col-md-4 mission-overview-card">

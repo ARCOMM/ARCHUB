@@ -1242,6 +1242,7 @@ header .navbar .navbar-nav #logo-white {
   display: none;
 }
 header .navbar .navbar-nav .nav-link {
+  margin-left: 0.5rem;
   text-transform: uppercase;
 }
 header .navbar .navbar-nav .nav-item, header .navbar .navbar-nav .nav-link {

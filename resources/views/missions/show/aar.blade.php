@@ -129,7 +129,7 @@
 
         <span id="auto-save-hint" class="float-start text-muted ps-3"></span>
 
-        <button type="submit" class="btn btn-raised btn-primary float-end mx-3">Publish</button>
+        <button type="submit" class="btn btn-raised btn-primary float-end ms-3">Publish</button>
         <button class="btn float-end" id="save-mission-comment">Save Draft</button>
     </form>
 </div>

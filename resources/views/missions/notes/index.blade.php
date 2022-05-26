@@ -91,6 +91,6 @@
             Mission Checklist
         </a>
 
-        <button type="submit" class="btn btn-raised btn-primary float-end mx-3">Submit</button>
+        <button type="submit" class="btn btn-raised btn-primary float-end ms-3">Submit</button>
     </form>
 </div>
