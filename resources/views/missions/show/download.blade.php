@@ -30,12 +30,12 @@
     });
 </script>
 
-<li class="nav-item dropdown m-l-2">
-    <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">
+<li class="nav-item dropdown hidden-sm-down">
+    <a class="nav-link dropdown-toggle" id="downloadDropdown" data-bs-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-download"></i>
     </a>
 
-    <div class="dropdown-menu">
-        <a href="javascript:void(0)" class="dropdown-item download-mission">Download</a>
-    </div>
+    <ul class="dropdown-menu" aria-labelledby="downloadDropdown">
+        <li><a class="dropdown-item download-mission" href="javascript:void(0)">Download</a></li>
+    </ul>
 </li>

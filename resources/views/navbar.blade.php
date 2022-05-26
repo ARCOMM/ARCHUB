@@ -13,7 +13,7 @@
                 <a href="{{ url('/hub/users') }}" class="nav-item hidden-sm-down">Users</a>
             @endcan
             <li class="nav-item dropdown hidden-sm-down">
-                <a class="nav-link dropdown-toggle" id="guidesDropdown" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" id="guidesDropdown" data-bs-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">
                     Guides
                 </a>
 
@@ -28,7 +28,7 @@
             </li>
 
             <li class="nav-item dropdown hidden-sm-down">
-                <a class="nav-link dropdown-toggle" id="tutorialsDropdown" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" id="tutorialsDropdown" data-bs-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">
                     Tutorials
                 </a>
 
@@ -51,7 +51,7 @@
             </a>
 
             <li class="nav-item dropdown hidden-sm-down">
-                <a class="nav-link dropdown-toggle" id="settingsDropdown" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" id="settingsDropdown" data-bs-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">
                     {{ auth()->user()->username }}
                 </a>
 

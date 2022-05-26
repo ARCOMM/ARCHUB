@@ -36,12 +36,8 @@
     @endfor
 
     <td>
-        <a href="javascript:void(0)" class="btn btn-primary pull-right m-l-1 oc-delete" data-id="{{ $operation->id }}"><i class="fa fa-trash"></i></a>
-
-        {{-- @if (!$operation->deployed)
-            <a href="javascript:void(0)" class="btn hub-btn btn-primary pull-right oc-deploy" data-id="{{ $operation->id }}">Deploy</a>
-        @else
-            <a href="javascript:void(0)" class="btn hub-btn btn-primary pull-right oc-deployed">Deployed</a>
-        @endif --}}
+        <a href="javascript:void(0)" class="btn btn-primary float-end m-l-1 oc-delete" data-id="{{ $operation->id }}">
+            <i class="fa fa-trash"></i>
+        </a>
     </td>
 </tr>

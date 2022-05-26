@@ -37,7 +37,7 @@
             </div>
 
             <div class="section-footnote">
-                <div class="container text-xs-center">
+                <div class="container text-center">
                     <h4 class="header-text">Arma-Centric Family of Gamers</h4>
 
                     <p>
@@ -50,7 +50,7 @@
         <div class="section section-fullpage section-presentation brand-background">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 text-xs-center">
+                    <div class="col-md-6 text-center">
                         <div class="description">
                             <h4 class="header-text">Team</h4>
 
@@ -60,7 +60,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 text-xs-center">
+                    <div class="col-md-6 text-center">
                         <div class="description">
                             <h4 class="header-text">Gameplay</h4>
 
@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 text-xs-center">
+                    <div class="col-md-6 text-center">
                         <div class="description">
                             <h4 class="header-text">Missions</h4>
 
@@ -81,7 +81,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-md-6 text-xs-center">
+                    <div class="col-md-6 text-center">
                         <div class="description">
                             <h4 class="header-text">Discussion</h4>
 
@@ -94,7 +94,7 @@
             </div>
         </div>
 
-        <div class="section section-fullpage section-presentation section-no-padding" style="color:#000;">
+        <div class="section section-fullpage section-presentation section-no-padding" style="background-color:white; color:black;">
             {{-- background-image: url({{ url('/images/public/banners/mars-g.jpg') }}); background-position: 0% center; --}}
             <div style="background-image: url({{ url('/images/public/mars.png') }})" id="mars-sword"></div>
 
@@ -126,7 +126,7 @@
         </div>
 
         <div class="section section-no-padding section-fullpage brand-background">
-            <div class="text-xs-center">
+            <div class="text-center">
                 <h1 class="archub-hero-title">ARC<b style="font-weight: 700;">HUB</b></h1>
                 <p class="archub-hero-text">Built in-house, our community mission suite.</p>
 
@@ -139,7 +139,7 @@
         <div class="section section-no-padding section-dark section-fullpage" {{-- style="color:#000;" --}}>
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 text-xs-center">
+                    <div class="col-md-6 text-center">
                         <div class="description">
                             <h4 class="header-text">Weather</h4>
 
@@ -151,7 +151,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 text-xs-center">
+                    <div class="col-md-6 text-center">
                         <div class="description">
                             <h4 class="header-text">Briefing</h4>
 
@@ -163,7 +163,7 @@
                 </div>
 
                 <div class="row m-t-3 p-t-3">
-                    <div class="col-md-6 text-xs-center">
+                    <div class="col-md-6 text-center">
                         <div class="description">
                             <h4 class="header-text">Media</h4>
 
@@ -174,7 +174,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-md-6 text-xs-center">
+                    <div class="col-md-6 text-center">
                         <div class="description">
                             <h4 class="header-text">After-Action Report</h4>
 
@@ -190,7 +190,7 @@
         <div
             class="section section-no-padding section-fullpage"
             style="background-attachment: fixed;background-image: url({{ url('/images/public/banners/3.jpg') }})">
-            <div class="info text-xs-center">
+            <div class="info text-center">
                 <h1 style="font-weight: 700;font-size: 64px;margin-bottom: 20px;text-transform: uppercase;">
                     Are you ready?
                 </h1>

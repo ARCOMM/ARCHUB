@@ -6,7 +6,7 @@
     @endif
 </div>
 
-<div class="mission-comments-form pull-left w-100">
+<div class="mission-comments-form float-start w-100">
     <script>
         $(document).ready(function(e) {
             $(document).on('click', '.mission-comment-control-edit', function(event) {
@@ -127,9 +127,9 @@
             id="submit-mission-comment-text"
             name="text">{!! (!is_null($mission->draft())) ? $mission->draft()->text : '' !!}</textarea>
 
-        <span id="auto-save-hint" class="pull-left text-muted p-l-3"></span>
+        <span id="auto-save-hint" class="float-start text-muted p-l-3"></span>
 
-        <button type="submit" class="btn btn-raised btn-primary pull-right m-l-3 m-r-3">Publish</button>
-        <button class="btn pull-right" id="save-mission-comment">Save Draft</button>
+        <button type="submit" class="btn btn-raised btn-primary float-end m-l-3 m-r-3">Publish</button>
+        <button class="btn float-end" id="save-mission-comment">Save Draft</button>
     </form>
 </div>

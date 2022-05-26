@@ -62,7 +62,7 @@
                     @include('join.admin.emails.form')
 
                     @if (!$email->locked)
-                        <button class="btn btn-danger pull-left m-t-3" id="delete-email">
+                        <button class="btn btn-danger float-start m-t-3" id="delete-email">
                             <i class="fa fa-trash m-r-2"></i>
                             Delete
                         </button>

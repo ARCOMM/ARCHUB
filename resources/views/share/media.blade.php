@@ -10,7 +10,7 @@
     });
 </script>
 
-<div class="pull-left w-100 mission-media">
+<div class="float-start w-100 mission-media">
     @if ($mission->photos()->isEmpty() && $mission->videos->isEmpty())
         <p class="text-xs-center text-muted">Upload a photo for the mission banner!</p>
     @else

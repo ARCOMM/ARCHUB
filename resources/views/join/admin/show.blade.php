@@ -35,7 +35,7 @@
                 </script>
 
                 <button
-                    class="btn btn-secondary pull-right"
+                    class="btn btn-secondary float-end"
                     type="button"
                     title="Choose an email to send"
                     id="send-app-email">
@@ -67,7 +67,7 @@
             @endcan
 
             @can('manage-applications')
-                <div id="status" class="pull-right">
+                <div id="status" class="float-end">
                     @include('join.admin.status', [
                         'joinStatuses' => $joinStatuses,
                         'jr' => $jr
@@ -77,7 +77,7 @@
 
             <h2>{{ $jr->name }}</h2>
 
-            <table class="table table-sm no-border pull-left" style="margin: 15px 0 30px 0">
+            <table class="table table-sm no-border float-start" style="margin: 15px 0 30px 0">
                 <tr>
                     <td width="50%">
                         <i class="jr-icon fa fa-envelope"></i>

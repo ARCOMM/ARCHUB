@@ -1,10 +1,10 @@
 @if ($mission->isMine() || auth()->user()->can('manage-missions'))
     <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-cog"></i>
         </a>
 
-        <div class="dropdown-menu">
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             @if ($mission->isMine() || auth()->user()->can('manage-missions'))
                 <script>
                     $(document).ready(function(e) {
@@ -25,7 +25,7 @@
                     });
                 </script>
 
-                <a href="javascript:void(0)" class="dropdown-item" id="update-mission">Update</a>
+                <a class="dropdown-item" id="update-mission" href="javascript:void(0)">Update</a>
             @endif
 
             @if ($mission->isMine() || auth()->user()->can('manage-missions'))
@@ -52,16 +52,3 @@
         </div>
     </li>
 @endif
-{{-- 
-<div class="mission-inner">
-    <div class="mission-nav" style="{{ !$can_see_nav ? 'box-shadow:none' : '' }}">
-        <span class="mission-version">
-            @if ($mission->hasBeenPlayed())
-                LAST PLAYED {{ $mission->last_played->diffForHumans() }} 
-            @else
-                PUBLISHED {{ $mission->created_at->diffForHumans() }}
-            @endif
-        </span>
-    </div>
-</div>
- --}}

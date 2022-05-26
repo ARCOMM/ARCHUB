@@ -202,7 +202,7 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" name="submit" class="btn btn-primary btn-fill btn-dark pull-right" value="Submit Application" />
+                <input type="submit" name="submit" class="btn btn-primary btn-fill btn-dark float-end" value="Submit Application" />
             </div>
         </form>
     </div>

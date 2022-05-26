@@ -144,8 +144,8 @@
     </div>
 </div>
 
-<div class="filter-div">
-    <button type="button" class="btn btn-primary btn-raised float-right" data-toggle="modal" data-target="#filter_modal">
+<div class="filter-div mr-auto">
+    <button type="button" class="btn btn-primary btn-raised float-end" data-toggle="modal" data-target="#filter_modal">
         Filter
     </button>
 </div>

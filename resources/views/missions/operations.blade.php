@@ -96,14 +96,14 @@
 @endphp
 
 <div class="large-panel-content full-page mb-5">
-    <div class="pull-left w-100">
-        <form id="create-operation-form" class="pull-right">
+    <div class="float-start w-100">
+        <form id="create-operation-form" class="float-end">
             <div class="row">
                 <div class="col">
                     <input type="datetime-local" class="form-control" name="starts_at">
                 </div>
                 <div class="col">
-                    <button type="submit" class="btn btn-raised btn-primary mb-0 mt-1">Create Operation</button>
+                    <button type="submit" class="btn btn-raised btn-primary">Create Operation</button>
                 </div>
             </div>
         </form>

@@ -16,11 +16,16 @@
 
         <script type="text/javascript" src="{{ mix('/js/app.js') }}"></script>
 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.1.0/mdb.min.css" rel="stylesheet"/>
+
         <link rel="icon" type="image/png" href="{{ url('/images/favicon.png') }}">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="{{ url('/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
-        <link rel="stylesheet" href="{{ url('/css/landing-page.css') }}">
         <link rel="stylesheet" href="{{ mix('/css/public.css') }}">
 
         @yield('head')
@@ -28,23 +33,13 @@
 
     <body class="landing-page">
         <main id="app">
-            <nav class="navbar navbar-transparent navbar-top" role="navigation">
+            <nav class="navbar navbar-expand-lg navbar-light navbar-transparent" role="navigation">
                 <div class="container">
-                    <div class="navbar-header">
-                        <a href="{{ url('/') }}" class="navbar-brand">
-                            <div class="logo-container">
-                                <div class="logo">
-                                    <img src="{{ url('/images/logo-white-full.png') }}" alt="Logo">
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                    <a class="navbar-brand ml-auto">
+                        <img src="{{ url('/images/logo-white-full.png') }}" alt="Logo" width="130" height="130" style="background: #bd2c2c; padding: 18px;">
+                    </a>
 
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{{ url('/roster') }}">Roster</a></li>
-                        <li><a href="{{ url('/media') }}">Media</a></li>
-                        <li><a href="{{ url('join') }}">Join</a></li>
-
+                    <div class="navbar-nav mr-auto">
                         @if (auth()->guest())
                             <li>
                                 <a href="{{ url('/auth/redirect') }}" style="padding-top: 8px">
@@ -54,10 +49,13 @@
                             </li>
                         @else
                             @can('access-hub')
-                                <li><a href="{{ url('/hub') }}">Hub</a></li>
+                                <a class="nav-item" href="{{ url('/hub') }}">Hub</a>
                             @endcan
                         @endif
-                    </ul>
+                        <a class="nav-item" href="{{ url('join') }}">Join</a>
+                        <a class="nav-item" href="{{ url('/media') }}">Media</a>
+                        <a class="nav-item" href="{{ url('/roster') }}">Roster</a>  
+                    </div>
                 </div>
             </nav>
 

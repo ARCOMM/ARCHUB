@@ -32,7 +32,7 @@
 
 <div class="row">
     <div class="col-md-12 p-x-3 p-t-1">
-        <a href="javascript:void(0)" class="btn btn-primary pull-right m-t-0 m-b-5" id="create-email">
+        <a href="javascript:void(0)" class="btn btn-primary float-end m-t-0 m-b-5" id="create-email">
             <i class="fa fa-plus m-r-1"></i>
             Create
         </a>

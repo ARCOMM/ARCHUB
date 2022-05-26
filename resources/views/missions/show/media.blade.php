@@ -84,17 +84,17 @@
     });
 </script>
 
-<div class="pull-left w-100 m-b-2" style="padding: .5rem .5rem 0 .5rem; border: 1px">
-    <a href="javascript:void(0)" class="mission-media-video-upload btn btn-primary btn-raised pull-right m-l-1" data-mission="{{ $mission->id }}">
+<div class="float-start w-100 m-b-2" style="padding: .5rem .5rem 0 .5rem; border: 1px">
+    <a href="javascript:void(0)" class="mission-media-video-upload btn btn-primary btn-raised float-end m-l-1" data-mission="{{ $mission->id }}">
         <i class="fa fa-twitch m-r-1"></i> Clip
     </a>
 
-    <a href="javascript:void(0)" class="mission-media-upload btn btn-primary btn-raised pull-right">
+    <a href="javascript:void(0)" class="mission-media-upload btn btn-primary btn-raised float-end">
         <i class="fa fa-picture-o m-r-1"></i> Photo
     </a>
 </div>
 
-<div class="pull-left w-100 mission-media">
+<div class="float-start w-100 mission-media">
     @if ($mission->photos()->isEmpty() && $mission->videos->isEmpty())
         <p class="text-xs-center text-muted">Upload a photo for the mission banner!</p>
     @else

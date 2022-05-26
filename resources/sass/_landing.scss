@@ -1,0 +1,101 @@
+.landing-page { 
+    .container {
+        max-width: 61%;
+    }
+
+    .navbar {
+        padding: 0 1rem !important;
+
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+
+        border: 0;
+        font-size: 16px;
+        box-shadow: none;
+    }
+
+    .nav-item {
+        padding: 10px 15px;
+        color: white;
+        border-color: white;
+        opacity: 0.8;
+        font-weight: 500;
+        background-color: transparent;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .section-footnote {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.925);
+        padding: 50px 0;
+    }
+
+    .section-fullpage {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+
+    .description{
+        padding: 50px 5px 0;
+    }
+
+    .header-text{
+        font-weight: 100;
+        color: inherit;
+        margin-bottom: 0px;
+        font-size: 34px;
+        position: relative;
+        line-height: 24px;
+    }
+
+    .section p{
+        margin-top: 20px;
+        line-height: 38px;
+        font-size: 22px;
+        font-weight: 200;
+    }
+
+    .section-dark p {
+        color: #AAA;
+    }
+
+    .archub-hero-title {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 25%;
+        text-align: center;
+        margin: 0 !important;
+        font-size: 72px;
+        font-weight: 100;
+    }
+
+    .parallax {
+        overflow: hidden;
+        position: absolute;
+        background-size: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        .parallax-background {
+            position: relative;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
