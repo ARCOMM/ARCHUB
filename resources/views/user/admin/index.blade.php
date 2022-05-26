@@ -17,7 +17,7 @@
                 <div class="list-group">
                     @foreach ($users as $user)
                         <li class="list-group-item list-group-item-action">
-                            <img src="{{ $user->avatar }}" class="img-circle me-2" width="32">
+                            <img src="{{ $user->avatar }}" class="rounded-circle me-2" width="32">
                             {{ $user->username }}
                         </li>
                     @endforeach
