@@ -127,7 +127,7 @@
             id="submit-mission-comment-text"
             name="text">{!! (!is_null($mission->draft())) ? $mission->draft()->text : '' !!}</textarea>
 
-        <span id="auto-save-hint" class="float-start text-muted pl-3"></span>
+        <span id="auto-save-hint" class="float-start text-muted ps-3"></span>
 
         <button type="submit" class="btn btn-raised btn-primary float-end mx-3">Publish</button>
         <button class="btn float-end" id="save-mission-comment">Save Draft</button>

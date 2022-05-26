@@ -35,11 +35,11 @@
         <main id="app">
             <nav class="navbar navbar-expand-lg navbar-light navbar-transparent" role="navigation">
                 <div class="container">
-                    <a class="navbar-brand ml-auto">
+                    <a class="navbar-brand">
                         <img src="{{ url('/images/logo-white-full.png') }}" alt="Logo" width="130" height="130" style="background: #bd2c2c; padding: 18px;">
                     </a>
 
-                    <div class="navbar-nav mr-auto">
+                    <div class="navbar-nav">
                         @if (auth()->guest())
                             <li>
                                 <a href="{{ url('/auth/redirect') }}" style="padding-top: 8px">

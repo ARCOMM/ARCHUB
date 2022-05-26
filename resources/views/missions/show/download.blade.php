@@ -14,7 +14,7 @@
                 type: 'GET',
                 url: "{{ url('/hub/missions/'.$mission->id.'/download') }}",
                 beforeSend: function() {
-                    caller.prepend('<i class="fa fa-spin fa-refresh mr-1"></i>');
+                    caller.prepend('<i class="fa fa-spin fa-refresh me-1"></i>');
                     caller.addClass('pending');
                 },
                 success: function(data) {

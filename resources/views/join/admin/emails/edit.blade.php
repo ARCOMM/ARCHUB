@@ -63,7 +63,7 @@
 
                     @if (!$email->locked)
                         <button class="btn btn-danger float-start mt-3" id="delete-email">
-                            <i class="fa fa-trash mr-2"></i>
+                            <i class="fa fa-trash me-2"></i>
                             Delete
                         </button>
                     @endif

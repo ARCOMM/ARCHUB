@@ -33,7 +33,7 @@
 <div class="row">
     <div class="col-md-12 px-3 pt-1">
         <a href="javascript:void(0)" class="btn btn-primary float-end mt-0 mb-5" id="create-email">
-            <i class="fa fa-plus mr-1"></i>
+            <i class="fa fa-plus me-1"></i>
             Create
         </a>
     </div>

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #bd2c2c !important;">
     <div class="container-fluid">
-        <div class="navbar-nav ml-auto">
+        <div class="navbar-nav">
             <a href="{{ url('/hub') }}" class="nav-link hidden-sm-down">
                 <img id="logo-white" src="{{ url('/images/logo.png') }}">
             </a>
@@ -43,7 +43,7 @@
             @yield('nav-left')
         </div>
         
-        <div class="navbar-nav mr-auto">
+        <div class="navbar-nav">
             @yield('nav-right')
             <a class="nav-link hidden-sm-down" href="https://github.com/ARCOMM/ARCMT/releases/latest/download/ARCMT.zip">
                 ARCMF

@@ -68,7 +68,7 @@
                             $.each(data, function(index, value) {
                                 var selected = selectedTagIds.indexOf(value["id"]) != -1;
                                 if (selected) {
-                                    $('.mission-tags').append('<span class="badge badge-primary">' + value["name"] + '</span>');
+                                    $('.mission-tags').append('<span class="badge bg-primary">' + value["name"] + '</span>');
                                 }
                             });
                         }
