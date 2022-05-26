@@ -30,7 +30,7 @@
     });
 </script>
 
-<a href="javascript:void(0)" class="btn btn-primary float-end mt-0 mb-5" id="create-email">
+<a href="javascript:void(0)" class="btn btn-primary float-end mt-0 mb-3" id="create-email">
     <i class="fa fa-plus me-1"></i>
     Create
 </a>

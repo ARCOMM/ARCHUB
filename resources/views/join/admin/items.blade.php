@@ -1,7 +1,7 @@
 @if ($joinRequests->isEmpty())
     <p class="pa-3 text-muted">No pending applications.</p>
 @else
-    <div class="list-group">
+    <div class="list-group list-group-flush">
         @foreach ($joinRequests as $jr)
             <a
                 href="{{ url('/hub/applications/show/' . $jr->id) }}"

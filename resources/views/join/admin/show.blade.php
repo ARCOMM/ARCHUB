@@ -13,7 +13,7 @@
 
 @section('content')
     <div class="container">
-        <div class="card pa-3">
+        <div class="card application-card p-3 mb-3">
             @can('manage-applications')
                 <script>
                     $(document).ready(function(e) {
@@ -65,7 +65,7 @@
             @endcan
 
             @can('manage-applications')
-                <div id="status" class="float-end">
+                <div id="status" class="float-end me-3">
                     @include('join.admin.status', [
                         'joinStatuses' => $joinStatuses,
                         'jr' => $jr
@@ -83,26 +83,26 @@
                     </td>
 
                     <td width="50%" class="{{ ($jr->age) ? 'text-success' : 'text-danger' }}">
-                        <i class="jr-icon fa fa-calendar"></i>
+                        <i class="jr-icon fa-regular fa-calendar-days"></i>
                         {{ $jr->age }}
                     </td>
                 </tr>
 
                 <tr>
                     <td>
-                        <i class="jr-icon fa fa-map-marker"></i>
+                        <i class="jr-icon fa-solid fa-location-dot"></i>
                         {{ $jr->location }}
                     </td>
 
                     <td>
-                        <i class="jr-icon fa fa-steam-square"></i>
+                        <i class="jr-icon fa-brands fa-steam-square"></i>
                         <a href="{{ $jr->steam }}" target="_newtab">Steam Account</a>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="{{ ($jr->available) ? 'text-success' : 'text-danger' }}">
-                        <i class="jr-icon fa fa-clock-o"></i>
+                        <i class="jr-icon fa-regular fa-clock"></i>
                         {{ ($jr->available) ? 'Available ' : 'Unavailable ' }} {{ env('SITE_OP_DAY') }}
                     </td>
 
@@ -119,7 +119,7 @@
                     </td>
 
                     <td>
-                        <i class="jr-icon fa fa-globe"></i>
+                        <i class="jr-icon fa-solid fa-earth-americas"></i>
                         {{ $jr->source->name }}
                         @if (strlen($jr->source_text))
                             ({{ $jr->source_text }})
@@ -135,10 +135,10 @@
             <p class="mb-0">{!! $jr->bio !!}</p>
         </div>
 
-        <div class="card pa-3">
+        <div class="card application-card p-3">
             <h4>Emails</h4>
 
-            <div class="list-group mb-0 pb-0" id="email-submissions">
+            <div class="list-group list-group-flush mb-0 pb-0" id="email-submissions">
                 @include('join.admin.email-submissions')
             </div>
         </div>

@@ -108,7 +108,7 @@
 
 @section('content')
     <div class="container">
-        <form method="post" id="join-filter-form" class="form-inline" style="text-align: right">
+        <form method="post" id="join-filter-form" class="form-inline mb-3" style="text-align: right">
             <div class="form-group">
                 <input type="text" name="search" id="search" class="form-control" placeholder="Search" style="width:250px">
             </div>

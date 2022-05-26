@@ -2276,45 +2276,6 @@ header.header-info .navbar .navbar-nav .nav-item.dropdown .nav-link .pulse.pulse
     box-shadow: 0 0 0 0 rgba(204, 169, 44, 0);
   }
 }
-.notifications-has-unread {
-  width: 0.5rem;
-  height: 0.5rem;
-  position: absolute;
-  top: 27%;
-  right: 32%;
-  background: #4084ec;
-  border-radius: 100%;
-}
-
-.notification-item {
-  padding: 0.75rem 1rem !important;
-}
-.notification-item .notification-text {
-  font-size: 14px !important;
-  font-weight: 500;
-  color: #444 !important;
-  float: left;
-  width: calc(100% - 2rem);
-  padding-left: 0.5rem;
-}
-.notification-item .notification-subtext {
-  float: left;
-  width: calc(100% - 2rem);
-  padding-left: 2.5rem;
-  font-size: 12px !important;
-}
-.notification-item .notification-image {
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  float: left;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 100%;
-  margin: 0 !important;
-  margin-bottom: -1rem !important;
-}
-
 .atwho-view {
   padding: 0.5rem 0;
   color: #666;
@@ -2441,4 +2402,14 @@ a:hover, a:focus, a:active {
 .modal-header,
 .card {
   display: block;
+}
+
+.card.application-card {
+  border: 0;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.list-group-item-text {
+  font-weight: 400;
+  line-height: 1.5rem;
 }

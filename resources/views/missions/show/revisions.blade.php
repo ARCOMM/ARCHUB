@@ -4,26 +4,17 @@
     </a>
 
     <ul class="dropdown-menu" aria-labelledby="revisionDropdown" style="width: 20rem">
-        <div class="list-group float-start w-100">
+        <div class="list-group list-group-flush float-start w-100">
             @if ($mission->revisions->isEmpty())
                 <li><p class="text-center text-muted py-2 mb-0">No revisions have been made!</p></li>
             @else
                 @foreach ($mission->revisions as $revision)
-                    <li><a
-                        href="javascript:void(0)"
-                        class="list-group-item notification-item"
-                        title="{{ $revision->created_at }}"
-                        style="text-decoration: none !important;cursor: default;">
-                        <span class="notification-image" style="'background-image: url('{{ $revision->user->avatar }}')"></span>
-
-                        <p class="list-group-item-text notification-text">
-                            Updated by {{ $revision->user->username }}
-                        </p>
-
-                        <p class="list-group-item-text notification-subtext">
+                    <li class="list-group-item-text my-1" title="{{ $revision->created_at }}" style="text-decoration: none !important;cursor: default;">
+                        <div class="ms-3 me-auto">
+                            <div class="fw-bold">{{ $revision->user->username }}</div>
                             {{ $revision->created_at->diffForHumans() }}
-                        </p>
-                    </a></li>
+                        </div>
+                    </li>
                 @endforeach
             @endif
         </div>
