@@ -15,11 +15,11 @@
             @if ($comment->isMine())
                 &nbsp;&nbsp;&middot;
 
-                <a href="javascript:void(0)" title="Edit" class="btn btn-sm m-a-0 mission-comment-control mission-comment-control-edit" data-id="{{ $comment->id }}">
+                <a href="javascript:void(0)" title="Edit" class="btn btn-sm ma-0 mission-comment-control mission-comment-control-edit" data-id="{{ $comment->id }}">
                     <i class="fa fa-pencil"></i>
                 </a>
 
-                <a href="javascript:void(0)" title="Delete" class="btn btn-sm m-a-0 mission-comment-control mission-comment-control-delete" data-id="{{ $comment->id }}">
+                <a href="javascript:void(0)" title="Delete" class="btn btn-sm ma-0 mission-comment-control mission-comment-control-delete" data-id="{{ $comment->id }}">
                     <i class="fa fa-trash"></i>
                 </a>
             @endif

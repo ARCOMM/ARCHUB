@@ -162,7 +162,7 @@
                     </div>
                 </div>
 
-                <div class="row m-t-3 p-t-3">
+                <div class="row mt-3 pt-3">
                     <div class="col-md-6 text-center">
                         <div class="description">
                             <h4 class="header-text">Media</h4>

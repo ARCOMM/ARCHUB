@@ -16,7 +16,7 @@
                 acceptedFiles: '',
                 addedfile: function(file) {},
                 sending: function() {
-                    $('#mission-upload-btn').prepend('<i class="fa fa-spin fa-refresh m-r-1"></i>');
+                    $('#mission-upload-btn').prepend('<i class="fa fa-spin fa-refresh mr-1"></i>');
                 },
                 success: function(file, data) {
                     $('#mission-upload-btn').find('i.fa').remove();

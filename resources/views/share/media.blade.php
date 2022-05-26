@@ -12,7 +12,7 @@
 
 <div class="float-start w-100 mission-media">
     @if ($mission->photos()->isEmpty() && $mission->videos->isEmpty())
-        <p class="text-xs-center text-muted">Upload a photo for the mission banner!</p>
+        <p class="text-center text-muted">Upload a photo for the mission banner!</p>
     @else
         @foreach ($mission->photos() as $media)
             @include('share.media-photo', [

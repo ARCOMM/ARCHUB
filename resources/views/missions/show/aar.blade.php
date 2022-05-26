@@ -1,6 +1,6 @@
 <div class="mission-comments">
     @if ($mission->comments->isEmpty())
-        <p class="text-xs-center p-y-3 text-muted">There are no after-action reports yet. Be the first to submit one!</p>
+        <p class="text-center py-3 text-muted">There are no after-action reports yet. Be the first to submit one!</p>
     @else
         @include('missions.comments.list', ['comments' => $mission->comments])
     @endif
@@ -123,13 +123,13 @@
         <input type="hidden" name="published" value="0">
 
         <textarea
-            class="form-control-editable form-control mission-aar-textarea m-b-3 m-t-3"
+            class="form-control-editable form-control mission-aar-textarea my-3"
             id="submit-mission-comment-text"
             name="text">{!! (!is_null($mission->draft())) ? $mission->draft()->text : '' !!}</textarea>
 
-        <span id="auto-save-hint" class="float-start text-muted p-l-3"></span>
+        <span id="auto-save-hint" class="float-start text-muted pl-3"></span>
 
-        <button type="submit" class="btn btn-raised btn-primary float-end m-l-3 m-r-3">Publish</button>
+        <button type="submit" class="btn btn-raised btn-primary float-end mx-3">Publish</button>
         <button class="btn float-end" id="save-mission-comment">Save Draft</button>
     </form>
 </div>

@@ -52,7 +52,7 @@
     });
 </script>
 
-<div class="btn-group m-t-0 jr-status-dropdown float-end {{ strtolower($jr->status->permalink) }}">
+<div class="btn-group mt-0 jr-status-dropdown float-end {{ strtolower($jr->status->permalink) }}">
     <button
         class="btn btn-secondary dropdown-toggle"
         type="button"

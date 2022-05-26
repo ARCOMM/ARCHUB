@@ -13,7 +13,7 @@
 
 @section('content')
     <div class="container">
-        <div class="card p-a-3">
+        <div class="card pa-3">
             @can('manage-applications')
                 <script>
                     $(document).ready(function(e) {
@@ -130,17 +130,17 @@
                 </tr>
             </table>
 
-            <h5 class="m-t-3">Arma Experience</h5>
+            <h5 class="mt-3">Arma Experience</h5>
             <p>{!! $jr->experience !!}</p>
 
-            <h5 class="m-t-3">About</h5>
-            <p class="m-b-0">{!! $jr->bio !!}</p>
+            <h5 class="mt-3">About</h5>
+            <p class="mb-0">{!! $jr->bio !!}</p>
         </div>
 
-        <div class="card p-a-3">
+        <div class="card pa-3">
             <h4>Emails</h4>
 
-            <div class="list-group m-b-0 p-b-0" id="email-submissions">
+            <div class="list-group mb-0 pb-0" id="email-submissions">
                 @include('join.admin.email-submissions')
             </div>
         </div>

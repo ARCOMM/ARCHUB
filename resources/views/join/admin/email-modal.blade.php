@@ -40,7 +40,7 @@
 <form method="post" id="f-form">
     <input type="hidden" name="jr_id" value="{{ $jr->id }}">
 
-    <div class="form-group p-t-0">
+    <div class="form-group pt-0">
         <select id="f-template" name="template" class="form-control">
             <option value="-1" selected="true">Select Preset (optional)</option>
             @foreach ($emails as $email)
@@ -51,7 +51,7 @@
         </select>
     </div>
 
-    <div class="form-group p-t-0">
+    <div class="form-group pt-0">
         <input name="subject" id="f-subject" type="text" class="form-control" placeholder="Subject">
     </div>
 

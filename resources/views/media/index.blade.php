@@ -19,7 +19,7 @@
 @endsection
 
 @section('content')
-    <div class="content p-a-0 container">
+    <div class="content pa-0 container">
         <div class="media-gallery">
             @foreach ($missions as $mission)
                 @foreach ($mission->photos() as $media)

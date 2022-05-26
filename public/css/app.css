@@ -1751,6 +1751,11 @@ header .subnav .subnav-link.active {
 .mission-container {
   min-height: calc(100vh - 5rem - 128px);
   margin-bottom: 0 !important;
+  font-size: 0.875rem;
+  font-weight: 400;
+  border: 0;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  background-color: white;
 }
 @media screen and (max-width: 768px) {
   .mission-container {
@@ -1762,7 +1767,7 @@ header .subnav .subnav-link.active {
   position: absolute;
   left: 0;
   right: 0;
-  top: -7rem;
+  top: 6rem;
   color: white;
   text-align: center;
   text-transform: uppercase;
@@ -1786,7 +1791,7 @@ header .subnav .subnav-link.active {
 }
 .mission-container .mission-author {
   font-size: 14px;
-  top: -3.5rem;
+  top: 9.5rem;
   font-weight: 500;
 }
 @media screen and (min-width: 480px) {
@@ -2347,6 +2352,11 @@ header.header-info .navbar .navbar-nav .nav-item.dropdown .nav-link .pulse.pulse
   background: transparent;
 }
 
+@media (min-width: 1400px) {
+  .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    max-width: 1140px;
+  }
+}
 main {
   padding: 3rem 3rem 0 3rem;
 }

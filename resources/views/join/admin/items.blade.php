@@ -1,5 +1,5 @@
 @if ($joinRequests->isEmpty())
-    <p class="p-a-3 text-muted">No pending applications.</p>
+    <p class="pa-3 text-muted">No pending applications.</p>
 @else
     <div class="list-group">
         @foreach ($joinRequests as $jr)

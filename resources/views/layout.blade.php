@@ -60,7 +60,7 @@
 
         <main>
             @if (app('request')->input('403'))
-                <div class="alert alert-danger m-b-3 col-md-6 m-x-auto text-xs-center" role="alert">
+                <div class="alert alert-danger col-md-6 mb-3 mx-auto text-center" role="alert">
                     <strong>You're not a mission tester!</strong> You don't have the necessary permissions to access that.
                 </div>
             @endif

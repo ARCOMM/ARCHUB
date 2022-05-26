@@ -6,7 +6,7 @@
     <ul class="dropdown-menu" aria-labelledby="revisionDropdown" style="width: 20rem">
         <div class="list-group float-start w-100">
             @if ($mission->revisions->isEmpty())
-                <li><p class="text-center text-muted p-y-2 m-b-0">No revisions have been made!</p></li>
+                <li><p class="text-center text-muted py-2 mb-0">No revisions have been made!</p></li>
             @else
                 @foreach ($mission->revisions as $revision)
                     <li><a

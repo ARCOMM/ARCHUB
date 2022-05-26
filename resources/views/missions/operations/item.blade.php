@@ -36,7 +36,7 @@
     @endfor
 
     <td>
-        <a href="javascript:void(0)" class="btn btn-primary float-end m-l-1 oc-delete" data-id="{{ $operation->id }}">
+        <a href="javascript:void(0)" class="btn btn-primary float-end ml-1 oc-delete" data-id="{{ $operation->id }}">
             <i class="fa fa-trash"></i>
         </a>
     </td>

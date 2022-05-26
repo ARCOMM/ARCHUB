@@ -126,7 +126,7 @@
 
         <div class="mission-inner">
             @if (app('request')->input('u'))
-                <div class="alert alert-success m-b-2 m-t-2" role="alert">
+                <div class="alert alert-success my-2" role="alert">
                     <strong>Mission Updated!</strong> Let the mission testers know what you changed by adding a note.
                 </div>
             @endif

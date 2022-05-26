@@ -8,11 +8,11 @@
             {{ $mission->date() }} &mdash; {{ $mission->time() }}
         </h6>
 
-        <p class="m-t-2">{{ $mission->summary }}</p>
+        <p class="mt-2">{{ $mission->summary }}</p>
     </div>
 
     <div class="col-md-4 mission-overview-card">
-        <h4 class="text-xs-center">
+        <h4 class="text-center">
             {{ $mission->weather() }}
         </h4>
 
@@ -24,9 +24,9 @@
             Published {{ $mission->created_at->diffForHumans() }}
         </h4>
 
-        <hr class="m-t-3">
+        <hr class="mt-3">
 
-        <p class="text-xs-center p-t-3">
+        <p class="text-center pt-3">
             @if ($mission->hasBeenPlayed())
                 Last played {{ $mission->last_played->diffForHumans() }}
             @else
@@ -42,7 +42,7 @@
             $commentCount = $mission->comments->where('published', 1)->count();
         @endphp
 
-        <h4 class="text-xs-center">
+        <h4 class="text-center">
             {{ $commentCount }} After-Action Report{{ $commentCount != 1 ? 's' : '' }}
         </h4>
 
@@ -56,7 +56,7 @@
             $imageCount = $mission->photos()->count();
         @endphp
 
-        <h4 class="text-xs-center">
+        <h4 class="text-center">
             {{ $imageCount }} Photo{{ $imageCount != 1 ? 's' : '' }}
         </h4>
 
@@ -70,7 +70,7 @@
             $videoCount = $mission->videos->count();
         @endphp
 
-        <h4 class="text-xs-center">
+        <h4 class="text-center">
             {{ $videoCount }} Video{{ $videoCount != 1 ? 's' : '' }}
         </h4>
 
