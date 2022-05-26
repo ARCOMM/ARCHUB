@@ -102,12 +102,22 @@ header {
         box-shadow: none;
         padding: .25rem 1.5rem;
 
+        .dropdown-item {
+            max-height: 3rem;
+            line-height: 2rem;
+        }
+
         .navbar-nav {
             #logo-white {
                 display: none;
             }
 
+            .nav-link {
+                text-transform: uppercase;
+            }
+
             .nav-item, .nav-link {
+                font-size: .875rem;
                 font-weight: 500;
                 min-height: 49px;
                 line-height: 49px;

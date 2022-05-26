@@ -1234,10 +1234,18 @@ header .navbar {
   box-shadow: none;
   padding: 0.25rem 1.5rem;
 }
+header .navbar .dropdown-item {
+  max-height: 3rem;
+  line-height: 2rem;
+}
 header .navbar .navbar-nav #logo-white {
   display: none;
 }
+header .navbar .navbar-nav .nav-link {
+  text-transform: uppercase;
+}
 header .navbar .navbar-nav .nav-item, header .navbar .navbar-nav .nav-link {
+  font-size: 0.875rem;
   font-weight: 500;
   min-height: 49px;
   line-height: 49px;
@@ -1756,6 +1764,7 @@ header .subnav .subnav-link.active {
   border: 0;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
   background-color: white;
+  padding: 1rem 15px;
 }
 @media screen and (max-width: 768px) {
   .mission-container {
