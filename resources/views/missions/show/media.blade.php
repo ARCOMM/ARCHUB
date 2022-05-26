@@ -86,11 +86,11 @@
 
 <div class="float-start w-100 mb-2" style="padding: .5rem .5rem 0 .5rem; border: 1px">
     <a href="javascript:void(0)" class="mission-media-video-upload btn btn-primary btn-raised float-end mx-1" data-mission="{{ $mission->id }}">
-        <i class="fa fa-twitch me-1"></i> Clip
+        <i class="fa-brands fa-twitch me-1"></i> Clip
     </a>
 
     <a href="javascript:void(0)" class="mission-media-upload btn btn-primary btn-raised float-end mx-1">
-        <i class="fa fa-picture-o me-1"></i> Photo
+        <i class="fa-regular fa-image me-1"></i> Photo
     </a>
 </div>
 

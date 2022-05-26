@@ -14,11 +14,11 @@
         @if ($note->isMine())
             &nbsp;&nbsp;&middot;
 
-            <a href="javascript:void(0)" title="Edit" class="btn btn-sm ma-0 mission-note-edit" data-id="{{ $note->id }}">
+            <a href="javascript:void(0)" title="Edit" class="btn btn-sm mx-1 float-end mission-note-edit" data-id="{{ $note->id }}">
                 <i class="fa fa-pencil"></i>
             </a>
 
-            <a href="javascript:void(0)" title="Delete" class="btn btn-sm ma-0 mission-note-delete" data-id="{{ $note->id }}">
+            <a href="javascript:void(0)" title="Delete" class="btn btn-sm mx-1 float-end mission-note-delete" data-id="{{ $note->id }}">
                 <i class="fa fa-trash"></i>
             </a>
         @endif
