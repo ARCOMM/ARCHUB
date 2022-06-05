@@ -5,30 +5,28 @@
         </a>
 
         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            @if ($mission->isMine() || auth()->user()->can('manage-missions'))
-                <script>
-                    $(document).ready(function(e) {
-                        $('#update-mission').dropzone({
-                            url: '{{ url('/hub/missions/' . $mission->id . '/update') }}',
-                            acceptedFiles: '',
-                            addedfile: function(file) {
-                                $('body').prepend('<div class="mission-update-cover"><i class="fa fa-spin fa-refresh"></i></div>');
-                            },
-                            success: function(file, data) {
-                                window.location = "{{ $mission->url() }}?u=1";
-                            },
-                            error: function(file, message) {
-                                alert(message.message);
-                                $('.mission-update-cover').remove();
-                            }
-                        });
+            <script>
+                $(document).ready(function(e) {
+                    $('#update-mission').dropzone({
+                        url: '{{ url('/hub/missions/' . $mission->id . '/update') }}',
+                        acceptedFiles: '',
+                        addedfile: function(file) {
+                            $('body').prepend('<div class="mission-update-cover"><i class="fa fa-spin fa-refresh"></i></div>');
+                        },
+                        success: function(file, data) {
+                            window.location = "{{ $mission->url() }}?u=1";
+                        },
+                        error: function(file, message) {
+                            alert(message.message);
+                            $('.mission-update-cover').remove();
+                        }
                     });
-                </script>
+                });
+            </script>
 
-                <a class="dropdown-item" id="update-mission" href="javascript:void(0)">Update</a>
-            @endif
+            <a class="dropdown-item" id="update-mission" href="javascript:void(0)">Update</a>
 
-            @if ($mission->isMine() || auth()->user()->can('manage-missions'))
+            @if (auth()->user()->can('delete-missions') || ($mission->isMine() && !($mission->existsInOperation() || $mission->hasBeenPlayed())))
                 <script>
                     $(document).ready(function(e) {
                         $('#delete-mission').click(function(event) {
@@ -39,15 +37,13 @@
                     });
                 </script>
 
-                @if (auth()->user()->can('manage-missions') || !($mission->existsInOperation() || $mission->hasBeenPlayed()))
-                    <a
-                        href="{{ url('/hub/missions/' . $mission->id . '/delete') }}"
-                        class="dropdown-item"
-                        id="delete-mission"
-                        title="Deletes the mission and all of its media, comments and files">
-                        Delete
-                    </a>
-                @endif
+                <a
+                    href="{{ url('/hub/missions/' . $mission->id . '/delete') }}"
+                    class="dropdown-item"
+                    id="delete-mission"
+                    title="Deletes the mission and all of its media, comments and files">
+                    Delete
+                </a>
             @endif
         </div>
     </li>

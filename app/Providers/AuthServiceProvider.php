@@ -48,7 +48,11 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('manage-missions', function ($user) {
-            // Includes updating and deleting missions
+            // Includes updating missions and locking briefings
+            return $user->hasARole(RoleEnum::SENIOR_TESTER);
+        });
+
+        Gate::define('delete-missions', function ($user) {
             return $user->hasARole(RoleEnum::OPERATIONS);
         });
 

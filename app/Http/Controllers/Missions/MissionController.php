@@ -199,7 +199,7 @@ class MissionController extends Controller
      */
     public function destroy(Mission $mission)
     {
-        if ($mission->existsInOperation() && !auth()->user()->can('manage-missions')) {
+        if ($mission->existsInOperation() && !auth()->user()->can('delete-missions')) {
             return redirect('/hub/missions/' . $mission->id);
         }
 
@@ -229,7 +229,7 @@ class MissionController extends Controller
     {
         $mission = Mission::find($request->mission_id);
 
-        if (!$mission->isMine() && !auth()->user()->can('manage-missions')) {
+        if (!($mission->isMine() || auth()->user()->can('manage-missions'))) {
             abort(403, 'You are not authorised to edit this mission');
             return;
         }
