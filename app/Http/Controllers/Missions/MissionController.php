@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Missions;
 
 use App\Discord;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Models\Missions\Mission;
 use App\Http\Controllers\Controller;
@@ -279,6 +280,38 @@ class MissionController extends Controller
     public function download(Mission $mission)
     {
         return $mission->download();
+    }
+
+    /**
+     * Deploy mission .pbo to arma server
+     * Uses https://github.com/Dahlgren/arma-server-web-admin/blob/master/routes/missions.js
+     */
+    public function deploy(Mission $mission)
+    {
+        $url = config('services.missions.url');
+        $headers = [
+            'Authorization' => "Basic " . 
+            base64_encode(config('services.missions.user') . ":" . config('services.missions.pass'))
+        ];
+        $userId = auth()->user()->id;
+
+        // Temp download .pbo locally
+        Storage::put("mission_deploy/{$userId}/{$mission->id}/{$mission->file_name}", 
+            Storage::cloud()->get($mission->cloud_pbo)
+        );
+
+        // Deploy .pbo to arma server
+        $response = HTTP::withHeaders($headers)->attach(
+            'missions', 
+            file_get_contents(storage_path("app/mission_deploy/{$userId}/{$mission->id}/{$mission->file_name}")), 
+            $mission->file_name
+        )->post($url);
+
+        // Refresh server mission .pbo list
+        HTTP::withHeaders($headers)->post("{$url}/refresh");
+
+        // Delete local temp files
+        Storage::deleteDirectory("mission_deploy/{$userId}");
     }
 
     /**

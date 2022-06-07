@@ -48,7 +48,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('manage-missions', function ($user) {
-            // Includes updating missions and locking briefings
+            // Includes updating missions, locking briefings, and deploying missions to arma server
             return $user->hasARole(RoleEnum::SENIOR_TESTER);
         });
 

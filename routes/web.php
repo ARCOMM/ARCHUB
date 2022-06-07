@@ -111,6 +111,7 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         Route::post('/hub/missions/{mission}/set-verification', 'updateVerification');
         // Download
         Route::get('/hub/missions/{mission}/download', 'download');
+        Route::post('/hub/missions/{mission}/deploy', 'deploy');
         // Panels
         Route::get('/hub/missions/{mission}/{panel}', 'panel');
     });
