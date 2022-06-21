@@ -34,7 +34,7 @@
     <body class="landing-page">
         <main id="app">
             <nav class="navbar navbar-expand-lg navbar-light navbar-transparent" role="navigation">
-                <div class="container">
+                <div class="container-fluid">
                     <a class="navbar-brand">
                         <img src="{{ url('/images/logo-white-full.png') }}" alt="Logo" width="130" height="130" style="background: #bd2c2c; padding: 18px;">
                     </a>
