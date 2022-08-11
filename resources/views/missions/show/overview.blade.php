@@ -5,7 +5,7 @@
 @if ($mission->isMine() || $canManageTags)
     <script>
         $(document).ready(function(event) {
-            $('select').select2({
+            $('#tag_select').select2({
                 multiple: true,
                 placeholder: "Tags",
                 tags: "{{ $canManageTags }}",
@@ -24,14 +24,14 @@
                             $.each(data, function(index, value) {
                                 var selected = selectedTagIds.indexOf(value["id"]) != -1;
                                 var newOption = new Option(value["name"], index, selected, selected);
-                                $('select').append(newOption).trigger('change');
+                                $('#tag_select').append(newOption).trigger('change');
                             });
                         }
                     });
                 }
             });
 
-            $('select').on('select2:select', function(e) {
+            $('#tag_select').on('select2:select', function(e) {
                 $.ajax({
                     type: 'POST',
                     url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
@@ -41,7 +41,7 @@
                 });
             });
 
-            $('select').on('select2:unselect', function(e) {
+            $('#tag_select').on('select2:unselect', function(e) {
                 $.ajax({
                     type: 'DELETE',
                     url: '{{ url("/hub/missions/{$mission->id}/tags") }}',
@@ -163,6 +163,6 @@
 
 <div class="mission-tags">
     @if ($mission->isMine() || $canManageTags)
-        <select name="tags" class="form-control"></select>
+        <select name="tags" class="form-control" id="tag_select"></select>
     @endif
 </div>

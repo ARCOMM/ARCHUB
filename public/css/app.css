@@ -1772,7 +1772,7 @@ header .subnav .subnav-link.active {
     margin-top: 9rem !important;
   }
 }
-.mission-container .mission-title, .mission-container .mission-author {
+.mission-container .mission-title, .mission-container .mission-author, .mission-container .mission-maintainer {
   font-size: 32px;
   position: absolute;
   left: 0;
@@ -1785,17 +1785,17 @@ header .subnav .subnav-link.active {
   margin: 0;
 }
 @media screen and (min-width: 480px) {
-  .mission-container .mission-title, .mission-container .mission-author {
+  .mission-container .mission-title, .mission-container .mission-author, .mission-container .mission-maintainer {
     font-size: 36px;
   }
 }
 @media screen and (min-width: 640px) {
-  .mission-container .mission-title, .mission-container .mission-author {
+  .mission-container .mission-title, .mission-container .mission-author, .mission-container .mission-maintainer {
     font-size: 44px;
   }
 }
 @media screen and (min-width: 1024px) {
-  .mission-container .mission-title, .mission-container .mission-author {
+  .mission-container .mission-title, .mission-container .mission-author, .mission-container .mission-maintainer {
     font-size: 48px;
   }
 }
@@ -1819,7 +1819,35 @@ header .subnav .subnav-link.active {
     font-size: 14px;
   }
 }
-.mission-container.mission-without-banner .mission-title, .mission-container.mission-without-banner .mission-author {
+.mission-container .mission-maintainer {
+  font-size: 14px;
+  top: 11rem;
+  font-weight: 500;
+}
+@media screen and (min-width: 480px) {
+  .mission-container .mission-maintainer {
+    font-size: 14px;
+  }
+}
+@media screen and (min-width: 640px) {
+  .mission-container .mission-maintainer {
+    font-size: 14px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .mission-container .mission-maintainer {
+    font-size: 14px;
+  }
+}
+.mission-container .maintainer-select {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 11rem;
+  width: 10rem;
+  margin: auto;
+}
+.mission-container.mission-without-banner .mission-title, .mission-container.mission-without-banner .mission-author, .mission-container.mission-without-banner .mission-maintainer {
   color: #666 !important;
 }
 .mission-container .mission-inner {

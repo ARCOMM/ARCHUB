@@ -3,6 +3,7 @@
 use App\Http\Controllers\Missions\MediaController;
 use App\Http\Controllers\Missions\MissionController;
 use App\Http\Controllers\Missions\MissionTagController;
+use App\Http\Controllers\Missions\MissionMaintainerController;
 use App\Http\Controllers\Missions\OperationController;
 use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +67,12 @@ Route::group(['middleware' => 'can:manage-operations'], function () {
 
 //--- Missions
 Route::group(['middleware' => 'can:access-hub'], function () {
+    Route::controller(MissionMaintainerController::class)->group(function () {
+        Route::get('/hub/missions/{mission}/maintainer', 'index');
+        Route::post('/hub/missions/{mission}/maintainer', 'store');
+        Route::delete('/hub/missions/{mission}/maintainer', 'destroy');
+    });
+
     Route::controller(MissionTagController::class)->group(function () {
         Route::get('/hub/missions/tags', 'allTags');
         Route::get('/hub/missions/{mission}/tags', 'index');

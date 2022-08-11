@@ -143,6 +143,73 @@ class Mission extends Model implements HasMedia
     }
 
     /**
+     * Gets all mission comments.
+     *
+     * @return Collection App\Models\Missions\MissionComment
+     */
+    public function comments()
+    {
+        return $this->hasMany(MissionComment::class)
+            ->orderBy('updated_at');
+    }
+
+    /**
+     * Gets the missions map.
+     *
+     * @return App\Models\Missions\Map
+     */
+    public function map()
+    {
+        return $this->belongsTo(Map::class);
+    }
+
+    /**
+     * Gets all notes for the mission.
+     *
+     * @return Collection App\Models\Missions\MissionNote
+     */
+    public function notes()
+    {
+        return $this->hasMany(MissionNote::class);
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(MissionTag::class);
+    }
+
+    /**
+     * Gets all videos for the mission.
+     * Sorted latest first.
+     *
+     * @return Collection App\Models\Portal\Video
+     */
+    public function videos()
+    {
+        return $this->hasMany('App\Models\Portal\Video')->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Gets the mission's user (author).
+     *
+     * @return App\Models\Portal\User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function maintainer()
+    {
+        return $this->belongsTo(User::class, 'maintainer_id');
+    }
+
+    public function hasMaintainer()
+    {
+        return !is_null($this->maintainer_id);
+    }
+
+    /**
      * Gets the loadout addons attribute.
      *
      * @return array
@@ -194,16 +261,6 @@ class Mission extends Model implements HasMedia
     }
 
     /**
-     * Gets the missions map.
-     *
-     * @return App\Models\Missions\Map
-     */
-    public function map()
-    {
-        return $this->belongsTo(Map::class);
-    }
-
-    /**
      * Gets the verified by user model.
      *
      * @return App\Models\Portal\User
@@ -211,16 +268,6 @@ class Mission extends Model implements HasMedia
     public function verifiedByUser()
     {
         return User::where('id', $this->verified_by)->first();
-    }
-
-    /**
-     * Gets the mission's user (author).
-     *
-     * @return App\Models\Portal\User
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**
@@ -244,27 +291,6 @@ class Mission extends Model implements HasMedia
     }
 
     /**
-     * Gets all mission comments.
-     *
-     * @return Collection App\Models\Missions\MissionComment
-     */
-    public function comments()
-    {
-        return $this->hasMany(MissionComment::class)
-            ->orderBy('updated_at');
-    }
-
-    /**
-     * Gets all notes for the mission.
-     *
-     * @return Collection App\Models\Missions\MissionNote
-     */
-    public function notes()
-    {
-        return $this->hasMany(MissionNote::class);
-    }
-
-    /**
      * Gets all revisions for the mission.
      *
      * @return Collection App\Models\Missions\MissionRevision
@@ -272,11 +298,6 @@ class Mission extends Model implements HasMedia
     public function revisions()
     {
         return $this->hasMany('App\Models\Missions\MissionRevision');
-    }
-
-    public function tags()
-    {
-        return $this->hasMany(MissionTag::class);
     }
 
     /**
@@ -361,17 +382,6 @@ class Mission extends Model implements HasMedia
         [$filenameNoMap, $map] = explode('.', $filename, 2);
 
         return "{$filenameNoMap}_{$revisions}.{$map}.pbo";
-    }
-
-    /**
-     * Gets all videos for the mission.
-     * Sorted latest first.
-     *
-     * @return Collection App\Models\Portal\Video
-     */
-    public function videos()
-    {
-        return $this->hasMany('App\Models\Portal\Video')->orderBy('created_at', 'desc');
     }
 
     /**

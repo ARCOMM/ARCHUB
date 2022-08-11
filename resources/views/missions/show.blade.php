@@ -41,6 +41,50 @@
 @section('content')
     <script>
         $(document).ready(function(e) {
+            $('#maintainer_select').select2({
+                placeholder: "Maintainer",
+                allowClear: true,
+                ajax: {
+                    delay: 250,
+                    type: 'GET',
+                    url: '{{ url("/hub/users/search") }}',
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ url("/hub/missions/{$mission->id}/maintainer") }}',
+
+                success: function(maintainer) {
+                    if (maintainer) {
+                        var newOption = new Option(maintainer, 1, true, true);
+                        $('#maintainer_select').append(newOption).trigger('change');
+                    }
+                }
+            });
+
+            $('#maintainer_select').on('select2:select', function(e) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ url("/hub/missions/{$mission->id}/maintainer") }}',
+                    data: {
+                        "username": e.params.data["text"],
+                    }
+                });
+            });
+
+            $('#maintainer_select').on('select2:unselect', function(e) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: '{{ url("/hub/missions/{$mission->id}/maintainer") }}',
+                });
+            });
+
             $('.mission-nav .subnav .subnav-link').click(function(event) {
                 var caller = $(this);
 
@@ -73,6 +117,18 @@
         <h3 class="mission-author">
             By {{ $mission->user->username }}
         </h3>
+
+        @can('set-maintainer')
+            <div class="maintainer-select">
+                <select class="form-control" id="maintainer_select"></select>
+            </div>
+        @else
+            @if ($mission->hasMaintainer())
+                <h4 class="mission-maintainer">
+                    Maintained by {{ $mission->maintainer->username }}
+                </h4>
+            @endif
+        @endcan
 
         <header class="mission-nav">
             <div class="subnav">

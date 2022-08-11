@@ -302,7 +302,7 @@ $mission-banner-author-font-sizes: (
     background-color: white;
     padding: 1rem 15px;
 
-    .mission-title, .mission-author {
+    .mission-title, .mission-author, .mission-maintainer {
         @include font-size($mission-banner-title-font-sizes);
         position: absolute;
         left: 0;
@@ -321,8 +321,23 @@ $mission-banner-author-font-sizes: (
         font-weight: 500;
     }
 
+    .mission-maintainer {
+        @include font-size($mission-banner-author-font-sizes);
+        top: 11rem;
+        font-weight: 500;
+    }
+
+    .maintainer-select {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 11rem;
+        width: 10rem;
+        margin: auto;
+    }
+
     &.mission-without-banner {
-        .mission-title, .mission-author {
+        .mission-title, .mission-author, .mission-maintainer {
             color: #666 !important;
         }
     }
