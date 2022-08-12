@@ -62,7 +62,7 @@
 
                 success: function(maintainer) {
                     if (maintainer) {
-                        var newOption = new Option(maintainer, 1, true, true);
+                        var newOption = new Option(maintainer.username, maintainer.id, true, true);
                         $('#maintainer_select').append(newOption).trigger('change');
                     }
                 }

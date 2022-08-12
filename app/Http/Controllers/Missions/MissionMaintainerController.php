@@ -10,9 +10,7 @@ class MissionMaintainerController extends Controller
 {
     public function index(Mission $mission)
     {
-        if (!is_null($mission->maintainer)) {
-            return $mission->maintainer->username;
-        }
+        return $mission->maintainer;
     }
 
     public function store(Request $request, Mission $mission)
