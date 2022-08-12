@@ -73,7 +73,7 @@
                     type: 'POST',
                     url: '{{ url("/hub/missions/{$mission->id}/maintainer") }}',
                     data: {
-                        "username": e.params.data["text"],
+                        "user_id": e.params.data["id"],
                     }
                 });
             });

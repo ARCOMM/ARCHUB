@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Missions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Missions\Mission;
-use App\Models\Portal\User;
 
 class MissionMaintainerController extends Controller
 {
@@ -18,13 +17,11 @@ class MissionMaintainerController extends Controller
 
     public function store(Request $request, Mission $mission)
     {
-        $user = User::where('username', $request->username)->first();
-
-        if ($mission->user->id == $user->id) {
+        if ($mission->user->id == $request->user_id) {
             return $this->destroy($mission);
         }
 
-        $mission->maintainer_id = $user->id;
+        $mission->maintainer_id = $request->user_id;
         $mission->save();
     }
 

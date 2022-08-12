@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Tags\Tag;
 use App\Models\Tags\MissionTag;
 use App\Models\Missions\Mission;
-use App\Models\Portal\User;
 
 class MissionTagController extends Controller
 {
@@ -61,7 +60,7 @@ class MissionTagController extends Controller
         }
 
         $mode = $request->query('mode');
-        $author = $request->query('author');
+        $author_id = $request->query('author_id');
         $whitelist = $request->query('whitelist');
         $blacklist = $request->query('blacklist');
 
@@ -83,9 +82,8 @@ class MissionTagController extends Controller
         ->when($mode, function ($query, $mode) {
             return $query->where('mode', $mode);
         })
-        ->when($author, function ($query, $author) {
-            $user = User::where('username', $author)->first();
-            return $query->where('user_id', $user->id);
+        ->when($author_id, function ($query, $author_id) {
+            return $query->where('user_id', $author_id);
         })
         ->when($whitelist || $blacklist, function ($query, $a) {
             return $query->groupBy('id');

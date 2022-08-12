@@ -83,7 +83,7 @@
                 url: "{{ url('/hub/missions/search') }}",
                 data: {
                     "mode": mode.length > 0 ? mode[0]["text"] : null,
-                    "author": author.length > 0 ? author[0]["text"] : null,
+                    "author_id": author.length > 0 ? author[0]["id"] : null,
                     "whitelist[]": $('#whitelist_select').select2('data').map(item => item.text),
                     "blacklist[]": $('#blacklist_select').select2('data').map(item => item.text),
                 },
