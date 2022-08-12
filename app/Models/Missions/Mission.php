@@ -287,7 +287,7 @@ class Mission extends Model implements HasMedia
      */
     public function isMine()
     {
-        return $this->user_id == auth()->user()->id;
+        return ($this->user_id == auth()->user()->id) || ($this->maintainer_id == auth()->user()->id);
     }
 
     /**
