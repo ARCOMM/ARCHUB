@@ -23,15 +23,15 @@
 @endif
 
 @section('nav-right')
-    @if ($mission->isMine() || auth()->user()->can('test-missions'))
+    @can('test-mission', $mission)
         @include('missions.show.verification')
         @include('missions.show.revisions')
         @include('missions.show.download')
-    @endif
+    @endcan
 
-    @if ($mission->isMine() || auth()->user()->can('manage-missions'))
+    @can('manage-mission', $mission)
         @include('missions.show.manage')
-    @endif
+    @endcan
 
     @can('share-missions')
         @include('missions.show.share')
@@ -164,7 +164,7 @@
                     class="subnav-link ripple"
                 >Media</a>
 
-                @if (auth()->user()->can('test-missions') || $mission->isMine())
+                @can('test-mission', $mission)
                     <a
                         href="javascript:void(0)"
                         data-panel="addons"
@@ -176,7 +176,7 @@
                         data-panel="notes"
                         class="subnav-link ripple"
                     >Notes</a>
-                @endif
+                @endcan
             </div>
         </header>
 

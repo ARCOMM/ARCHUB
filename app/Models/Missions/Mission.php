@@ -13,6 +13,7 @@ use App\Models\Operations\OperationMission;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -741,7 +742,7 @@ class Mission extends Model implements HasMedia
                     $factionId = $this->parseFactionId($briefing[1][0]);
                     $locked = $this->{'locked_'.strtolower($this->factions[$factionId]).'_briefing'};
 
-                    if ($locked == 0 || (!auth()->guest() && ($this->isMine() || auth()->user()->can('test-missions')))) {
+                    if ($locked == 0 || (!auth()->guest() && Gate::allows('test-mission', $this))) {
                         $nav = new stdClass();
                         $nav->name = $briefing[0];
                         $nav->faction = $factionId;

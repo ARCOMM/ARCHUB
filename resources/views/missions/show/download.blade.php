@@ -30,7 +30,7 @@
     });
 </script>
 
-@if (auth()->user()->can('manage-missions'))
+@can('deploy-missions')
 <script>
     $(document).ready(function(e) {
         $('.deploy-mission').click(function(event) {
@@ -61,7 +61,7 @@
         });
     });
 </script>
-@endif
+@endcan
 
 <li class="nav-item dropdown hidden-sm-down">
     <a class="nav-link dropdown-toggle" id="downloadDropdown" data-bs-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">
@@ -70,8 +70,8 @@
 
     <ul class="dropdown-menu" aria-labelledby="downloadDropdown">
         <li><a class="dropdown-item download-mission" href="javascript:void(0)">Download</a></li>
-        @if (auth()->user()->can('manage-missions'))
+        @can('deploy-missions')
             <li><a class="dropdown-item deploy-mission" href="javascript:void(0)">Deploy</a></li>
-        @endif
+        @endcan
     </ul>
 </li>

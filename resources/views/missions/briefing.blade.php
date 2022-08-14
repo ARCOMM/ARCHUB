@@ -4,7 +4,7 @@
     </div>
 @endif
 
-@if ($mission->isMine() || auth()->user()->can('manage-missions'))
+@can('manage-mission', $mission)
     <script>
         $(document).ready(function(e) {
             $('#lock-briefing').click(function(event) {
@@ -47,7 +47,7 @@
             {{ ($mission->briefingLocked($faction)) ? 'Unlock' : 'Lock' }} {{ $mission->factions[$faction] }} Briefing
         </a>
     </div>
-@endif
+@endcan
 
 <div class="float-start w-100 mt-3">
     @foreach ($mission->briefing($faction) as $subject)

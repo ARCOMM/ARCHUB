@@ -1,4 +1,4 @@
-@if ($mission->isMine() || auth()->user()->can('manage-missions'))
+@can('manage-mission', $mission)
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="dropdownMenuLink" data-bs-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-cog"></i>
@@ -26,7 +26,7 @@
 
             <a class="dropdown-item" id="update-mission" href="javascript:void(0)">Update</a>
 
-            @if (auth()->user()->can('delete-missions') || ($mission->isMine() && !($mission->existsInOperation() || $mission->hasBeenPlayed())))
+            @can('delete-mission', $mission)
                 <script>
                     $(document).ready(function(e) {
                         $('#delete-mission').click(function(event) {
@@ -44,7 +44,7 @@
                     title="Deletes the mission and all of its media, comments and files">
                     Delete
                 </a>
-            @endif
+            @endcan
         </div>
     </li>
-@endif
+@endcan

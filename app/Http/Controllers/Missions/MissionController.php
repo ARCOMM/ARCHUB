@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Missions;
 
-use App\Discord;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use App\Models\Missions\Mission;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+
+use App\Discord;
+use App\Http\Controllers\Controller;
+use App\Models\Missions\Mission;
 use App\Models\Missions\MissionRevision;
 
 class MissionController extends Controller
@@ -85,7 +87,7 @@ class MissionController extends Controller
      */
     public function show(Request $request, Mission $mission)
     {
-        if (!$mission->verified && !$mission->existsInOperation() && !auth()->user()->can('test-missions') && !$mission->isMine()) {
+        if (!($mission->verified || $mission->existsInOperation() || Gate::allows('test-mission', $mission))) {
             return redirect('/hub/missions?403=1');
         }
 
@@ -200,7 +202,7 @@ class MissionController extends Controller
      */
     public function destroy(Mission $mission)
     {
-        if ($mission->existsInOperation() && !auth()->user()->can('delete-missions')) {
+        if (Gate::allows('delete-mission', $mission)) {
             return redirect('/hub/missions/' . $mission->id);
         }
 
@@ -230,7 +232,7 @@ class MissionController extends Controller
     {
         $mission = Mission::find($request->mission_id);
 
-        if (!($mission->isMine() || auth()->user()->can('manage-missions'))) {
+        if (!Gate::allows('manage-mission', $mission)) {
             abort(403, 'You are not authorised to edit this mission');
             return;
         }
@@ -321,7 +323,7 @@ class MissionController extends Controller
      */
     public function panel(Request $request, Mission $mission, $panel)
     {
-        if (!$mission->verified && !$mission->existsInOperation() && !auth()->user()->can('test-missions') && !$mission->isMine()) {
+        if (!($mission->verified || $mission->existsInOperation() || Gate::allows('test-mission', $mission))) {
             return redirect('/hub/missions?403=1');
         }
 
