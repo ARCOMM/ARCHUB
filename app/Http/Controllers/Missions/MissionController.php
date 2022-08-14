@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Missions;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
-
 use App\Discord;
 use App\Http\Controllers\Controller;
 use App\Models\Missions\Mission;
 use App\Models\Missions\MissionRevision;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class MissionController extends Controller
 {

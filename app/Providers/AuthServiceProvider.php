@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use App\RoleEnum;
+use App\Models\Portal\User;
+use App\Models\Missions\Mission;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use App\Models\Portal\User;
-use App\Models\Missions\Mission;
 
 class AuthServiceProvider extends ServiceProvider
 {

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Missions;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-
 use App\Discord;
 use App\Http\Controllers\Controller;
-use App\Models\Missions\MissionNote;
 use App\Models\Missions\Mission;
+use App\Models\Missions\MissionNote;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class NoteController extends Controller
 {
