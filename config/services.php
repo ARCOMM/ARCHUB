@@ -52,6 +52,7 @@ return [
         'staff_role' => env("DISCORD_STAFF_ROLE"),
         'admin_role' => env("DISCORD_ADMIN_ROLE"),
 
+        'invite_link' => env('DISCORD_INVITE_LINK'),
         'archub_webhook' => env('DISCORD_ARCHUB_WEBHOOK'),
         'staff_webhook' => env('DISCORD_STAFF_WEBHOOK'),
     ],

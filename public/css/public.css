@@ -234,17 +234,6 @@ body {
   transform: rotate(180deg);
 }
 
-.shameless-plug {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 14px !important;
-  margin: 0 !important;
-  padding: 2.5rem 0;
-}
-
 .media-gallery {
   float: left;
   width: 100%;
@@ -280,21 +269,14 @@ body {
   font-weight: 500;
   font-size: 18px;
   color: white;
+  margin: 0 0 7px 0;
 }
 
-.help-block {
-  float: left;
-  width: 100%;
-  font-size: 14px;
-  opacity: 0.75;
-  margin: 3px 0 7px 0;
-}
-
-#join-form .form-control {
-  color: white !important;
-}
 #join-form textarea.form-control {
   padding: 12px !important;
+}
+#join-form .text-muted {
+  color: #757575 !important;
 }
 
 .btn-dark {
@@ -309,39 +291,6 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   transition: 1s;
-}
-
-.next-op {
-  position: fixed;
-  top: 4rem;
-  right: 0;
-  background: #000;
-  width: 283px;
-  border-radius: 3px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-}
-.next-op .next-op-pre {
-  float: left;
-  background: #bd2c2c;
-  padding: 0.5rem 1rem;
-  text-transform: uppercase;
-  font-weight: 500;
-  border-radius: 3px 0 0 0;
-}
-.next-op .next-op-countdown {
-  float: left;
-  padding: 0.5rem 1rem;
-  border-radius: 0;
-  text-transform: uppercase;
-  max-width: 200px;
-}
-.next-op .next-op-date {
-  float: left;
-  width: 100%;
-  text-align: center;
-  background: rgba(189, 44, 44, 0.8);
-  padding: 0.5rem 0;
-  border-radius: 0 0 0 3px;
 }
 
 .has-error {

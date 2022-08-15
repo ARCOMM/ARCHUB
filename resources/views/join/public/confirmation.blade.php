@@ -7,6 +7,6 @@
 @section('content')
     <div class="content container">
         <h3>Your application has been sent</h3>
-        <p>We have sent an acknowledgment email to <strong>{{ $email }}</strong>. It can take up to 1 week to process.<br />You will either receive an approved or declined email.</p>
+        <p>Please join <a href="{{ config('services.discord.invite_link') }}" target="_newtab">our Discord server</a> so that we can contact you about your application</p>
     </div>
 @endsection

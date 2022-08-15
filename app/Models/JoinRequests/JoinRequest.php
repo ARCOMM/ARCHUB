@@ -2,12 +2,12 @@
 
 namespace App\Models\JoinRequests;
 
-use Validator;
-use Illuminate\Support\Facades\Request;
 use App\Models\JoinRequests\JoinSource;
 use App\Models\JoinRequests\JoinStatus;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Request;
 
 class JoinRequest extends Model
 {
@@ -22,11 +22,9 @@ class JoinRequest extends Model
         'name',
         'age',
         'location',
-        'email',
+        'discord',
         'steam',
         'available',
-        'apex',
-        'groups',
         'experience',
         'bio',
         'source_id',

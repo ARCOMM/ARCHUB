@@ -5,7 +5,9 @@ use App\Http\Controllers\Missions\MissionController;
 use App\Http\Controllers\Missions\MissionTagController;
 use App\Http\Controllers\Missions\MissionMaintainerController;
 use App\Http\Controllers\Missions\OperationController;
+use App\Http\Controllers\Join\PublicJoinController;
 use App\Http\Controllers\Users\UserController;
+
 use Illuminate\Support\Facades\Route;
 
 //--- Home
@@ -25,10 +27,12 @@ Route::get('/auth/redirect', 'Auth\DiscordController@redirect');
 Route::get('/auth/callback', 'Auth\DiscordController@callback');
 
 //--- Public Applications
-Route::get('/join/acknowledged', 'PublicJoinController@acknowledged');
-Route::resource('join', 'PublicJoinController', [
-    'only' => ['index', 'store', 'create']
-]);
+Route::controller(PublicJoinController::class)->group(function () {
+    Route::get('/join', 'index');
+    Route::post('/join', 'store');
+    Route::post('/join/create', 'create');
+    Route::get('/join/acknowledged', 'acknowledged');
+});
 
 //--- Media
 Route::resource('media', 'MediaController');
