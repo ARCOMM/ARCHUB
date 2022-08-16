@@ -204,12 +204,11 @@ class MissionController extends Controller
      */
     public function destroy(Mission $mission)
     {
-        if (Gate::allows('delete-mission', $mission)) {
+        if (!Gate::allows('delete-mission', $mission)) {
             return redirect('/hub/missions/' . $mission->id);
         }
 
         $mission->delete();
-
         return redirect('/hub/missions');
     }
 
