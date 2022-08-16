@@ -78,8 +78,13 @@
             <table class="table table-sm no-border float-start" style="margin: 15px 0 30px 0">
                 <tr>
                     <td width="50%">
-                        <i class="jr-icon fa fa-envelope"></i>
-                        {{ $jr->email }}
+                        @if (!is_null($jr->email))
+                            <i class="jr-icon fa fa-envelope"></i>
+                            {{ $jr->email }}
+                        @else
+                            <i class="jr-icon fa-brands fa-discord"></i>
+                            {{ $jr->discord }}
+                        @endif
                     </td>
 
                     <td width="50%" class="{{ ($jr->age) ? 'text-success' : 'text-danger' }}">
@@ -103,19 +108,7 @@
                 <tr>
                     <td class="{{ ($jr->available) ? 'text-success' : 'text-danger' }}">
                         <i class="jr-icon fa-regular fa-clock"></i>
-                        {{ ($jr->available) ? 'Available ' : 'Unavailable ' }} {{ env('SITE_OP_DAY') }}
-                    </td>
-
-                    <td class="{{ ($jr->groups) ? 'text-danger' : 'text-success' }}">
-                        <i class="jr-icon fa fa-users"></i>
-                        {{ ($jr->groups) ? 'Other groups' : 'No other groups' }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="{{ ($jr->apex) ? 'text-success' : 'text-danger' }}">
-                        <i class="jr-icon fa fa-gift"></i>
-                        {{ ($jr->apex) ? 'Owns Apex' : 'Does not own Apex' }}
+                        {{ ($jr->available) ? 'Available ' : 'Unavailable ' }} for operations
                     </td>
 
                     <td>
@@ -128,7 +121,7 @@
                 </tr>
             </table>
 
-            <h5 class="mt-3">Arma Experience</h5>
+            <h5 class="mt-3">Game Experience</h5>
             <p>{!! $jr->experience !!}</p>
 
             <h5 class="mt-3">About</h5>
