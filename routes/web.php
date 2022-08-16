@@ -46,9 +46,6 @@ Route::group(['middleware' => 'can:view-applications'], function () {
     Route::get('/hub/applications/api/items', 'Join\JoinController@items');
     Route::get('/hub/applications/show/{jr}', 'Join\JoinController@show');
 
-    Route::post('/hub/applications/api/send-email', 'Join\JoinController@email');
-    Route::get('/hub/applications/api/email-submissions', 'Join\JoinController@emailSubmissions');
-
     // Statuses
     Route::post('/hub/applications/api/status', 'Join\JoinStatusController@store');
     Route::put('/hub/applications/api/{jr}/status', 'Join\JoinStatusController@update');
@@ -57,10 +54,6 @@ Route::group(['middleware' => 'can:view-applications'], function () {
     Route::get('/hub/applications/{status}', 'Join\JoinController@index');
 
     Route::resource('/hub/applications', 'Join\JoinController');
-});
-
-Route::group(['middleware' => 'can:manage-applications'], function () {
-    Route::resource('/hub/applications/api/emails', 'Join\EmailTemplateController');
 });
 
 Route::group(['middleware' => 'can:manage-operations'], function () {
