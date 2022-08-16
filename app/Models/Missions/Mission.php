@@ -793,9 +793,11 @@ class Mission extends Model implements HasMedia
     {
         $availableBriefings = $this->getBriefings();
         foreach ($availableBriefings as $briefing) {
-            $id = $this->parseFactionId($briefing[1][0]);
-            if ($id == $factionId) {
-                return $briefing;
+            if (!empty($briefing[1])) {
+                $id = $this->parseFactionId($briefing[1][0]);
+                if ($id == $factionId) {
+                    return $briefing;
+                }
             }
         }
         
