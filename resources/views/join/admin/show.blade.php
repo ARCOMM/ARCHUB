@@ -15,56 +15,6 @@
     <div class="container">
         <div class="card application-card p-3 mb-3">
             @can('manage-applications')
-                <script>
-                    $(document).ready(function(e) {
-                        $('#send-app-email').click(function(event) {
-                            $('#emailModal').modal('show');
-                            event.preventDefault();
-                        });
-
-                        reloadSubmissions = function() {
-                            $.ajax({
-                                type: 'GET',
-                                url: '{{ url('/hub/applications/api/email-submissions?jr_id='.$jr->id) }}',
-                                success: function(data) {
-                                    $('#email-submissions').html(data);
-                                }
-                            });
-                        }
-                    });
-                </script>
-
-                <button
-                    class="btn btn-secondary float-end"
-                    type="button"
-                    title="Choose an email to send"
-                    id="send-app-email">
-                    <i class="fa fa-paper-plane"></i>
-                </button>
-
-                <div class="modal" id="emailModal" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button>
-
-                                <h4 class="modal-title">Email {{ $jr->name }}</h4>
-                            </div>
-
-                            <div class="modal-body">
-                                @include('join.admin.email-modal')
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary" id="email-modal-send">Send</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endcan
-
-            @can('manage-applications')
                 <div id="status" class="float-end me-3">
                     @include('join.admin.status', [
                         'joinStatuses' => $joinStatuses,
@@ -126,14 +76,6 @@
 
             <h5 class="mt-3">About</h5>
             <p class="mb-0">{!! $jr->bio !!}</p>
-        </div>
-
-        <div class="card application-card p-3">
-            <h4>Emails</h4>
-
-            <div class="list-group list-group-flush mb-0 pb-0" id="email-submissions">
-                @include('join.admin.email-submissions')
-            </div>
         </div>
     </div>
 @endsection

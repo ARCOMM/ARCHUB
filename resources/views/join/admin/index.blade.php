@@ -78,32 +78,6 @@
             {{ $status->text }} &middot; {{ $status->count() }}
         </a>
     @endforeach
-
-    @can('manage-applications')
-        <script>
-            $(document).ready(function(e) {
-                reloadEmails = function() {
-                    $.ajax({
-                        type: 'GET',
-                        url: '{{ url('/hub/applications/api/emails') }}',
-                        success: function(data) {
-                            $('#join-requests').html(data);
-                            $('#join-filter-form').hide();
-                        }
-                    });
-                }
-
-                $('#app-emails').click(function(event) {
-                    reloadEmails();
-                    $('.subnav-link').removeClass("active");
-                    $(this).addClass("active");
-                    event.preventDefault();
-                });
-            });
-        </script>
-
-        <a href="javascript:void(0)" class="subnav-link" id="app-emails">Email Templates</a>
-    @endcan
 @endsection
 
 @section('content')

@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Join;
 use App\ChannelEnum;
 use App\Discord;
 use App\Http\Controllers\Controller;
-use App\Mail\JoinRequestAcknowledged;
 use App\Models\JoinRequests\JoinRequest;
 use App\Models\JoinRequests\JoinSource;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class PublicJoinController extends Controller
 {
@@ -74,9 +72,7 @@ class PublicJoinController extends Controller
 
         Discord::notifyChannel(ChannelEnum::STAFF, "**{$jr->name}** submitted an application\n{$jrUrl}");
 
-        //Mail::to($jr->email)->send(new JoinRequestAcknowledged);
-
-        return redirect('/join/acknowledged?email=' . $jr->email);
+        return redirect('/join/acknowledged');
     }
 
     /**
@@ -86,8 +82,6 @@ class PublicJoinController extends Controller
      */
     public function acknowledged(Request $request)
     {
-        $email = $request->email;
-
-        return view('join.public.confirmation', compact('email'));
+        return view('join.public.confirmation');
     }
 }
