@@ -76,6 +76,8 @@ class MissionController extends Controller
             Discord::missionUpdate($content, $mission, false, false, $mission->url());
 
             return $mission->url();
+        } else {
+            abort(400, $request->file->getErrorMessage());
         }
     }
 
