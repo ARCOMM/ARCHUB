@@ -28,6 +28,8 @@
             ]) !!};
         </script>
 
+        @livewireStyles
+
         @yield('head')
     </head>
 
@@ -45,12 +47,6 @@
             @endif>
 
             @include('navbar')
-
-            @if (trim($__env->yieldContent('subnav')))
-                <div class="subnav subnav-upper">
-                    @yield('subnav')
-                </div>
-            @endif
         </header>
 
         <main>
@@ -70,5 +66,7 @@
                 $('body');
             });
         </script>
+
+        @livewireScripts
     </body>
 </html>

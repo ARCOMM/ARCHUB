@@ -8,6 +8,8 @@ use App\Http\Controllers\Missions\OperationController;
 use App\Http\Controllers\Join\PublicJoinController;
 use App\Http\Controllers\Users\UserController;
 
+use App\Http\Livewire\Share\ShowMission;
+
 use Illuminate\Support\Facades\Route;
 
 //--- Home
@@ -17,10 +19,7 @@ Route::get('/arma3sync', function () {
     return redirect('https://docs.google.com/document/d/1i-LzCJE0l_7PtOj8WU717mmmzX1U2KaaNGEnj0KzkIw/view');
 });
 
-//--- Shared Missions
-Route::get('/share/{mission}', 'ShareController@show');
-Route::get('/share/{mission}/{panel}', 'SharePanelController@show');
-Route::get('/share/{mission}/briefing/{faction}', 'ShareBriefingController@show');
+Route::get('/share/{mission}', ShowMission::class);
 
 //--- Authentication
 Route::get('/auth/redirect', 'Auth\DiscordController@redirect');
