@@ -1,4 +1,4 @@
-@extends('layout-share')
+@extends('layouts.share')
 
 @section('title')
     {{ $mission->display_name }}

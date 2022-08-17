@@ -34,6 +34,7 @@
         </script>
 
         @yield('head')
+        @livewireStyles
     </head>
 
     <body class="bd-docs">
@@ -75,5 +76,7 @@
                 $('body');
             });
         </script>
+
+        @livewireScripts
     </body>
 </html>
