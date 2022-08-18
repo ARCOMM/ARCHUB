@@ -1,4 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #bd2c2c !important;">
+    @if (!auth()->guest())
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#hubNavbarToggler" aria-controls="hubNavbarToggler" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fa fa-bars"></i>
@@ -67,4 +68,5 @@
             </div>
         </div>
     </div>
+    @endif
 </nav>
