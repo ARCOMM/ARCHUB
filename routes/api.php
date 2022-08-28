@@ -1,11 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Models\Missions\Map;
 use App\Models\Portal\User;
 use App\Models\Missions\Mission;
 use App\Models\Missions\MissionSubscription;
 use App\Models\Operations\Operation;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +56,22 @@ Route::middleware('auth:sanctum')->get('operations/next', function (Request $req
         
         return $missions;
     }
+
+    return response()->noContent(204);
+});
+
+Route::middleware('auth:sanctum')->get('maps', function (Request $request) {
+    return Map::select('display_name', 'class_name')->orderBy('class_name')->get()->toArray();
+});
+
+Route::middleware('auth:sanctum')->patch('maps', function (Request $request) {
+    $old_name = $request->query('old_name');
+    $new_name = $request->query('new_name');
+    // Check that a map exists with the given class name
+    $map = Map::where('class_name', $old_name)->firstOrFail();
+
+    $map->display_name = $new_name;
+    $map->save();
 
     return response()->noContent(204);
 });
