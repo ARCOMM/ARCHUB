@@ -13,7 +13,7 @@ return new class extends Migration
         });
 
         Schema::table('mission_notes', function (Blueprint $table) {
-            $table->boolean('published');
+            $table->boolean('published')->nullable();
         });
     }
 
