@@ -98,8 +98,8 @@ class Mission extends Model implements HasMedia
      */
     public static $gamemodes = [
         'coop' => 'Cooperative',
-        'adversarial' => 'Adversarial',
-        'arcade' => 'Arcade'
+        'tvt' => 'Adversarial',
+        'ade' => 'Arcade'
     ];
 
     /**
@@ -882,12 +882,10 @@ class Mission extends Model implements HasMedia
         $group = $parts[0];
         $mode = strtolower($parts[1]);
 
-        $mode = match ($mode) {
-            'ade' => 'arcade',
-            'coop' => 'coop',
-            'tvt' => 'adversarial',
-            default => abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or ADE'),
-        };
+        $validModes = ['ade', 'coop', 'tvt'];
+        if (!in_array($mode, $validModes)) {
+            abort(400, 'Mission game mode is invalid. Must be one of COOP, TVT or ADE');
+        }
 
         $details = new stdClass();
         $details->mode = $mode;

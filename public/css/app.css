@@ -1614,10 +1614,10 @@ header .subnav .subnav-link.active {
 .mission-group .mission-item .mission-item-inner.coop {
   background: #4084ec;
 }
-.mission-group .mission-item .mission-item-inner.adversarial {
+.mission-group .mission-item .mission-item-inner.tvt {
   background: #ec3e52;
 }
-.mission-group .mission-item .mission-item-inner.arcade {
+.mission-group .mission-item .mission-item-inner.ade {
   background: #2ab27b;
 }
 .mission-group .mission-item .mission-item-inner .mission-item-title {
