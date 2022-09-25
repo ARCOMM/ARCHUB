@@ -237,7 +237,8 @@ class MissionController extends Controller
             return;
         }
 
-        $mission->lockBriefing($request->faction, $request->locked);
+        $locked = $request->locked == "1" ? true : false;
+        $mission->lockBriefing($request->faction, $locked);
     }
 
     public function orbat(Request $request)

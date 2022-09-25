@@ -179,6 +179,11 @@ class Mission extends Model implements HasMedia
         return $this->hasMany(MissionTag::class);
     }
 
+    public function briefing_models()
+    {
+        return $this->hasMany(MissionBriefing::class);
+    }
+
     /**
      * Gets all videos for the mission.
      * Sorted latest first.
@@ -313,7 +318,7 @@ class Mission extends Model implements HasMedia
         if (count($media) > 0) {
             return $media[0]->getUrl();
         }
-        
+
         return '';
     }
 
@@ -396,25 +401,13 @@ class Mission extends Model implements HasMedia
     }
 
     /**
-     * Sets the given briefing faction to locked or unlocked.
-     *
-     * @return void
-     */
-    public function lockBriefing($factionId, $state)
-    {
-        $this->{'locked_' . strtolower($this->factions[$factionId]) . '_briefing'} = $state;
-        $this->save();
-    }
-
-    /**
      * Gets the user's draft for the mission.
      *
      * @return App\Models\Missions\MissionComment
      */
     public function draft()
     {
-        $comment = MissionComment::
-            where('mission_id', $this->id)
+        $comment = MissionComment::where('mission_id', $this->id)
             ->where('user_id', auth()->user()->id)
             ->where('published', false)
             ->first();
@@ -517,6 +510,8 @@ class Mission extends Model implements HasMedia
 
         $briefingsArray = $this->parseBriefings($contents['mission']['briefings']);
         $this->briefings = json_encode($briefingsArray);
+        $this->storeBriefings($briefingsArray);
+
         $this->dependencies = json_encode($contents['mission']['dependencies']);
         try {
             $this->orbatSettings = json_encode($this->orbatFromOrbatSettings($contents['mission']['orbatSettings'], $contents['mission']['groups']));
@@ -537,6 +532,34 @@ class Mission extends Model implements HasMedia
         $this->deployCloudFiles($path);
 
         return $this;
+    }
+
+    public function storeBriefings($briefingsArray)
+    {
+        if (is_null($briefingsArray)) {
+            return;
+        }
+
+        $names = [];
+        $briefings = [];
+        foreach ($briefingsArray as $briefing) {
+            array_push($names, $briefing[0]);
+            array_push($briefings, [
+                'mission_id' => $this->id,
+                'name' => $briefing[0],
+                'sections' => json_encode($briefing[3]),
+            ]);
+        }
+
+        MissionBriefing::where('mission_id', $this->id)
+            ->whereNotIn('name', $names)
+            ->delete();
+
+        MissionBriefing::upsert(
+            $briefings,
+            ['mission_id', 'name'],
+            ['sections']
+        );
     }
 
     private function validateMissionContents($contents)
@@ -667,11 +690,11 @@ class Mission extends Model implements HasMedia
      */
     public function weather()
     {
-        return $this->overcast() . 
-        (($this->fog() == '') ? '' : ', ' . 
-        $this->fog()) . 
-        (($this->rain() == '') ? '' : ', ' . 
-        $this->rain());
+        return $this->overcast() .
+            (($this->fog() == '') ? '' : ', ' .
+                $this->fog()) .
+            (($this->rain() == '') ? '' : ', ' .
+                $this->rain());
     }
 
     /**
@@ -733,24 +756,15 @@ class Mission extends Model implements HasMedia
     public function briefingFactions()
     {
         $filledFactions = [];
-        $briefings = $this->getBriefings();
 
-        if ($briefings != null) {
-            foreach ($briefings as $briefing) {
-                // Skip briefings that aren't assigned to a faction
-                if (!empty($briefing[1])) {
-                    $factionId = $this->parseFactionId($briefing[1][0]);
-                    $locked = $this->{'locked_'.strtolower($this->factions[$factionId]).'_briefing'};
+        foreach ($this->briefing_models as $briefing) {
+            if (!$briefing->locked || (!auth()->guest() && Gate::allows('test-mission', $this))) {
+                $nav = new stdClass();
+                $nav->name = $briefing->name;
+                $nav->faction = $briefing->name;
+                $nav->locked = $briefing->locked;
 
-                    if ($locked == 0 || (!auth()->guest() && Gate::allows('test-mission', $this))) {
-                        $nav = new stdClass();
-                        $nav->name = $briefing[0];
-                        $nav->faction = $factionId;
-                        $nav->locked = $locked;
-
-                        array_push($filledFactions, $nav);
-                    }
-                }
+                array_push($filledFactions, $nav);
             }
         }
 
@@ -776,31 +790,26 @@ class Mission extends Model implements HasMedia
     {
         $filledSubjects = [];
         $briefing = $this->getBriefing($factionId);
-        $contents = $briefing[3];
 
-        foreach ($contents as $name => $section) {
+        foreach ($briefing->sections as $name => $section) {
             $formattedSection = new stdClass();
             $formattedSection->title = $name;
             $formattedSection->paragraphs = $this->formatParagraphs($section);
-            $formattedSection->locked = $this->{'locked_' . $factionId . '_briefing'};
+            $formattedSection->locked = $briefing->locked;
             array_push($filledSubjects, $formattedSection);
         }
 
         return $filledSubjects;
     }
 
-    private function getBriefing($factionId)
+    private function getBriefing($name)
     {
-        $availableBriefings = $this->getBriefings();
-        foreach ($availableBriefings as $briefing) {
-            if (!empty($briefing[1])) {
-                $id = $this->parseFactionId($briefing[1][0]);
-                if ($id == $factionId) {
-                    return $briefing;
-                }
+        foreach ($this->briefing_models as $briefing) {
+            if ($name == $briefing->name) {
+                return $briefing;
             }
         }
-        
+
         throw new Exception("Faction does not have a briefing file specified");
     }
 
@@ -829,7 +838,7 @@ class Mission extends Model implements HasMedia
             preg_match_all("~\"([^\"]+)\"~", $diary, $quotes);
             $dict[$quotes[1][1]] = $quotes[1][2];
         }
-        
+
         return $dict;
     }
 
@@ -841,7 +850,20 @@ class Mission extends Model implements HasMedia
      */
     public function briefingLocked($faction)
     {
-        return $this->{'locked_' . strtolower($this->factions[$faction]) . '_briefing'} > 0;
+        $briefing = $this->getBriefing($faction);
+        return $briefing->locked;
+    }
+
+    /**
+     * Sets the given briefing faction to locked or unlocked.
+     *
+     * @return void
+     */
+    public function lockBriefing($faction, $state)
+    {
+        $briefing = $this->getBriefing($faction);
+        $briefing->locked = $state;
+        $briefing->save();
     }
 
     /**
@@ -1012,9 +1034,9 @@ class Mission extends Model implements HasMedia
             if (isset($orbatGroups[$faction][$item[0]])) {
                 $units = &$orbatGroups[$faction][$item[0]];
                 unset($item[0]);
-                
+
                 $units = array_reverse($units);
-                
+
                 foreach ($units as $unit) {
                     array_unshift($item, $unit);
                 }

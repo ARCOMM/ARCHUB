@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\RenameModes::class,
         Commands\MigrateOldApps::class,
         Commands\ConvertIdToRevisions::class,
+        Commands\StoreBriefings::class,
     ];
 
     /**
