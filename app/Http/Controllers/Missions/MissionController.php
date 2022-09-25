@@ -89,7 +89,7 @@ class MissionController extends Controller
      */
     public function show(Request $request, Mission $mission)
     {
-        if (!($mission->verified || $mission->existsInOperation() || Gate::allows('test-mission', $mission))) {
+        if (!($mission->verified_by || $mission->existsInOperation() || Gate::allows('test-mission', $mission))) {
             return redirect('/hub/missions?403=1');
         }
 
@@ -123,8 +123,7 @@ class MissionController extends Controller
 
                 Storage::cloud()->move($old_mission_cloud_pbo_dir, "x{$old_mission_cloud_pbo_dir}");
 
-                if ($mission->verified && $mission->user_id == $user->id) {
-                    $mission->verified = 0;
+                if ($mission->verified_by && $mission->user->is($user)) {
                     $mission->verified_by = null;
                 }
 
@@ -187,7 +186,7 @@ class MissionController extends Controller
 
                 // Delete old cloud files
                 Storage::cloud()->delete("x{$old_mission_cloud_pbo_dir}");
-                
+
                 $content = "**{$revision->user->username}** has updated **{$revision->mission->display_name}**";
                 Discord::missionUpdate($content, $revision->mission, false, true);
 
@@ -255,24 +254,22 @@ class MissionController extends Controller
      */
     public function updateVerification(Request $request, Mission $mission)
     {
-        $mission->verified = !$mission->verified;
+        $user = auth()->user();
 
-        if ($mission->verified) {
-            $mission->verified_by = auth()->user()->id;
-        } else {
+        if ($mission->verified_by) {
             $mission->verified_by = null;
+        } else {
+            $mission->verified_by = $user->id;
         }
 
         $mission->save();
 
-        if ($mission->verified) {
-            $content = "**{$mission->verifiedByUser()->username}** has verified **{$mission->display_name}**";
+        if ($mission->verified_by) {
+            $content = "**{$user->username}** has verified **{$mission->display_name}**";
             Discord::missionUpdate($content, $mission, true);
         }
 
-        $updated_by = auth()->user()->username;
-
-        return "Verified by {$updated_by}";
+        return "Verified by {$user->username}";
     }
 
     /**
@@ -293,20 +290,21 @@ class MissionController extends Controller
     {
         $url = config('services.missions.url');
         $headers = [
-            'Authorization' => "Basic " . 
-            base64_encode(config('services.missions.user') . ":" . config('services.missions.pass'))
+            'Authorization' => "Basic " .
+                base64_encode(config('services.missions.user') . ":" . config('services.missions.pass'))
         ];
         $userId = auth()->user()->id;
 
         // Temp download .pbo locally
-        Storage::put("mission_deploy/{$userId}/{$mission->id}/{$mission->file_name}", 
+        Storage::put(
+            "mission_deploy/{$userId}/{$mission->id}/{$mission->file_name}",
             Storage::cloud()->get($mission->cloud_pbo)
         );
 
         // Deploy .pbo to arma server
         $response = HTTP::withHeaders($headers)->attach(
-            'missions', 
-            file_get_contents(storage_path("app/mission_deploy/{$userId}/{$mission->id}/{$mission->file_name}")), 
+            'missions',
+            file_get_contents(storage_path("app/mission_deploy/{$userId}/{$mission->id}/{$mission->file_name}")),
             $mission->file_name
         )->post($url);
 
@@ -324,7 +322,7 @@ class MissionController extends Controller
      */
     public function panel(Request $request, Mission $mission, $panel)
     {
-        if (!($mission->verified || $mission->existsInOperation() || Gate::allows('test-mission', $mission))) {
+        if (!($mission->verified_by || $mission->existsInOperation() || Gate::allows('test-mission', $mission))) {
             return redirect('/hub/missions?403=1');
         }
 
