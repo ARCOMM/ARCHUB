@@ -9,9 +9,9 @@
 
             $.ajax({
                 type: 'POST',
-                url: '{{ url('/hub/missions/briefing') }}',
+                url: "{{ url('/hub/missions/briefing')}} ",
                 data: {
-                    mission_id: {{ $mission->id }},
+                    mission_id: "{{ $mission->id }}",
                     faction: faction
                 },
                 success: function(data) {
@@ -30,13 +30,10 @@
 
 <div class="mission-briefing">
     <div class="mission-briefing-nav">
-        @foreach ($mission->briefingFactions() as $item)
-            <a
-                href="javascript:void(0)"
-                class="ripple"
-                data-faction="{{ $item->faction }}">
-                {{ $item->name }}
-            </a>
+        @foreach ($mission->briefingFactions() as $briefing)
+        <a href="javascript:void(0)" class="ripple" data-faction="{{ $briefing->name }}">
+            {{ $briefing->name }}
+        </a>
         @endforeach
     </div>
 
