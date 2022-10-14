@@ -48,11 +48,11 @@ class PickThumbnails extends Command
 
                 if ($photo) {
                     if (!File::exists($photo->getPath())) {
-                        $this->comment("{$mission->id} {$mission->display_name} has an invalid photo path");
                         $thumbnail = null;
+                        $this->comment("{$mission->id} {$mission->display_name} has an invalid photo path");
                     } else {
-                        $this->comment("{$mission->id} {$mission->display_name} thumbnail set to {$mission->thumbnail}");
                         $thumbnail = $photo->getUrl('thumb');
+                        $this->comment("{$mission->id} {$mission->display_name} thumbnail set to {$thumbnail}");
                     }
 
                     $mission->thumbnail = $thumbnail;
