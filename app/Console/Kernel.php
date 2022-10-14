@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\MigrateOldApps::class,
         Commands\ConvertIdToRevisions::class,
         Commands\StoreBriefings::class,
+        Commands\PickThumbnails::class,
     ];
 
     /**
