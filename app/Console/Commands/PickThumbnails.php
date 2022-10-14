@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Missions\Mission;
+use Illuminate\Support\Facades\File;
 
 class PickThumbnails extends Command
 {
@@ -39,12 +40,29 @@ class PickThumbnails extends Command
     public function handle()
     {
         foreach (Mission::all() as $mission) {
-            if (!$mission->thumbnail) {
+            $thumbnail = $mission->thumbnail;
+
+            if (!$thumbnail) {
                 $photos = $mission->photos();
-                $thumbnail = $photos->count() > 0 ? $photos[0]->getUrl('thumb') : null;
-                $mission->thumbnail = $thumbnail;
-                $mission->save();
-                $this->comment("{$mission->display_name} has no thumbnail, changed to {$thumbnail}");
+                $photo = $photos->count() > 0 ? $photos[0] : null;
+
+                if ($photo) {
+                    if (!File::exists($photo->getPath())) {
+                        $this->comment("{$mission->id} {$mission->display_name} has an invalid photo path");
+                        $thumbnail = null;
+                    } else {
+                        $this->comment("{$mission->id} {$mission->display_name} thumbnail set to {$mission->thumbnail}");
+                        $thumbnail = $photo->getUrl('thumb');
+                    }
+
+                    $mission->thumbnail = $thumbnail;
+                    $mission->save();
+                    continue;
+                } else {
+                    $this->comment("{$mission->id} {$mission->display_name} has no photos");
+                }
+            } else {
+                $this->comment("{$mission->id} {$mission->display_name} already has a thumbnail, assumed ok");
             }
         }
     }
