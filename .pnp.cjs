@@ -3721,13 +3721,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["big.js", [\
-        ["npm:3.2.0", {\
-          "packageLocation": "./.yarn/cache/big.js-npm-3.2.0-85bc444414-299449e405.zip/node_modules/big.js/",\
-          "packageDependencies": [\
-            ["big.js", "npm:3.2.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:5.2.2", {\
           "packageLocation": "./.yarn/cache/big.js-npm-5.2.2-e147c30820-b89b6e8419.zip/node_modules/big.js/",\
           "packageDependencies": [\
@@ -5231,13 +5224,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["emojis-list", [\
-        ["npm:2.1.0", {\
-          "packageLocation": "./.yarn/cache/emojis-list-npm-2.1.0-e19a336e35-fb61fa6356.zip/node_modules/emojis-list/",\
-          "packageDependencies": [\
-            ["emojis-list", "npm:2.1.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:3.0.0", {\
           "packageLocation": "./.yarn/cache/emojis-list-npm-3.0.0-7faa48e6fd-ddaaa02542.zip/node_modules/emojis-list/",\
           "packageDependencies": [\
@@ -6359,7 +6345,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["img-loader", "virtual:5162d06312bf03b66286ef5e63e43cb16dca2da7b1d53c51396304f126c1b27fdeb0007223cebb4b50b904fbb8acb6f5bdc1fd716b930100c6d733268d8f7fa1#npm:4.0.0"],\
             ["@types/imagemin", null],\
             ["imagemin", "npm:7.0.1"],\
-            ["loader-utils", "npm:1.1.0"]\
+            ["loader-utils", "npm:1.4.1"]\
           ],\
           "packagePeers": [\
             "@types/imagemin",\
@@ -6752,10 +6738,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["json5", [\
-        ["npm:0.5.1", {\
-          "packageLocation": "./.yarn/cache/json5-npm-0.5.1-dad9a6cdb1-9b85bf0695.zip/node_modules/json5/",\
+        ["npm:1.0.1", {\
+          "packageLocation": "./.yarn/cache/json5-npm-1.0.1-647fc8794b-e76ea23dbb.zip/node_modules/json5/",\
           "packageDependencies": [\
-            ["json5", "npm:0.5.1"]\
+            ["json5", "npm:1.0.1"],\
+            ["minimist", "npm:1.2.7"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -6948,13 +6935,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["loader-utils", [\
-        ["npm:1.1.0", {\
-          "packageLocation": "./.yarn/cache/loader-utils-npm-1.1.0-881d0fe891-576f543375.zip/node_modules/loader-utils/",\
+        ["npm:1.4.1", {\
+          "packageLocation": "./.yarn/cache/loader-utils-npm-1.4.1-91a9c6b986-ea0b648cba.zip/node_modules/loader-utils/",\
           "packageDependencies": [\
-            ["loader-utils", "npm:1.1.0"],\
-            ["big.js", "npm:3.2.0"],\
-            ["emojis-list", "npm:2.1.0"],\
-            ["json5", "npm:0.5.1"]\
+            ["loader-utils", "npm:1.4.1"],\
+            ["big.js", "npm:5.2.2"],\
+            ["emojis-list", "npm:3.0.0"],\
+            ["json5", "npm:1.0.1"]\
           ],\
           "linkType": "HARD"\
         }],\
@@ -7341,6 +7328,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/minimist-npm-1.2.5-ced0e1f617-86706ce5b3.zip/node_modules/minimist/",\
           "packageDependencies": [\
             ["minimist", "npm:1.2.5"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:1.2.7", {\
+          "packageLocation": "./.yarn/cache/minimist-npm-1.2.7-51d33b1371-7346574a10.zip/node_modules/minimist/",\
+          "packageDependencies": [\
+            ["minimist", "npm:1.2.7"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10575,7 +10569,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["vue-style-loader", "npm:4.1.3"],\
             ["hash-sum", "npm:1.0.2"],\
-            ["loader-utils", "npm:1.1.0"]\
+            ["loader-utils", "npm:1.4.1"]\
           ],\
           "linkType": "HARD"\
         }]\
