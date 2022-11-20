@@ -100,8 +100,11 @@ Route::group(['middleware' => 'can:access-hub'], function () {
 
     // Mission Comments
     Route::resource('/hub/missions/comments', 'Missions\CommentController', [
-    'except' => ['create', 'show', 'update']
+        'except' => ['create', 'show', 'update']
     ]);
+
+    // Notes
+    Route::resource('/hub/missions/{mission}/notes', 'Missions\NoteController');
 
     Route::controller(MissionController::class)->group(function () {
         // Mission Briefings
@@ -120,13 +123,10 @@ Route::group(['middleware' => 'can:access-hub'], function () {
         Route::get('/hub/missions/{mission}/{panel}', 'panel');
     });
 
-    // Notes
-    Route::resource('/hub/missions/{mission}/notes', 'Missions\NoteController');
-
     Route::resource('/hub/missions', 'Missions\MissionController', [
-    'except' => ['create', 'edit']
+        'except' => ['create', 'edit']
     ]);
-    
+
     Route::get('/hub/settings/avatar-sync', 'Users\SettingsController@avatarSync');
     Route::resource('/hub/settings', 'Users\SettingsController');
 
@@ -136,7 +136,7 @@ Route::group(['middleware' => 'can:access-hub'], function () {
 
     // Hub Index
     Route::resource('/hub', 'HubController', [
-    'only' => ['index']
+        'only' => ['index']
     ]);
 
     Route::get('/tokens/create', function (Request $request) {
