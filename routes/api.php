@@ -45,11 +45,16 @@ Route::middleware('auth:sanctum')->get('operations/next', function (Request $req
         $missions = [];
         
         foreach ($opMissions as $opMission) {
-            $mission = $opMission->mission()->select('id', 'user_id', 'display_name', 'mode', 'summary')->first();
-            $maker = User::where('id', $mission->user_id)->select('username')->first();
+            $mission = $opMission->mission()->select('id', 'user_id', 'maintainer_id', 'display_name', 'mode', 'summary')->first();
+            $user_id = $mission->hasMaintainer() ? $mission->maintainer_id : $mission->user_id;
+            $user = User::where('id', $user_id)->select('username')->first();
 
-            $mission['maker'] = $maker['username'];
+            $mission['user'] = $user['username'];
+            $mission['hasMaintainer'] = $mission->hasMaintainer();
+            $mission['thumbnail'] = $mission->thumbnail();
             unset($mission['user_id']);
+            unset($mission['maintainer_id']);
+            unset($mission['media']);
 
             array_push($missions, $mission);
         }
