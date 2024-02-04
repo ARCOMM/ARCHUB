@@ -363,7 +363,7 @@ class Mission extends Model implements HasMedia
             return $media[0]->getUrl('thumb');
         }
 
-        return url('/images/arcomm-placeholder.jpg');
+        return '/images/arcomm-placeholder.jpg';
     }
 
     /**
