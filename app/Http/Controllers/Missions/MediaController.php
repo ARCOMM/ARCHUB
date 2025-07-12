@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Missions;
 
 use Illuminate\Http\Request;
+use Spatie\Image\Image;
 use App\Http\Controllers\Controller;
 use App\Models\Missions\Mission;
 use App\Models\Portal\Video;
@@ -20,9 +21,18 @@ class MediaController extends Controller
     {
         $mission = Mission::find($request->mission_id);
 
+        $file = $request->file('file');
+        $image = Image::load($file->getPathname());
+        $width = $image->getWidth();
+        $height = $image->getHeight();
+
         $mission
-            ->addMedia($request->file('file'))
-            ->withCustomProperties(['user_id' => auth()->user()->id])
+            ->addMedia($file)
+            ->withCustomProperties([
+                'user_id' => auth()->user()->id,
+                'width' => $width,
+                'height' => $height,
+            ])
             ->toMediaCollection('images');
 
         $media = $mission->getMedia('images')->last();
